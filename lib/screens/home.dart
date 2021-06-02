@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/models/post_model.dart';
-import 'package:treaget/screens/view_post_screen.dart';
+// import 'package:treaget/screens/view_post_screen.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -11,13 +15,7 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  bool _isVisible = true;
-
-  void showDescription() {
-    setState(() {
-      _isVisible = !_isVisible;
-    });
-  }
+  bool _isVisible = false;
 
   Widget _buildPost(int index) {
     return Padding(
@@ -84,27 +82,82 @@ class _FeedScreenState extends State<FeedScreen> {
               InkWell(
                   onDoubleTap: () => print('Like post'),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ViewPostScreen(post: posts[index]),
-                      ),
-                    );
+                    setState(() {
+                      _isVisible = !_isVisible;
+                    });
                   },
                   child: Row(
                     children: [
                       Expanded(
                         child: Container(
+                          width: double.infinity,
                           margin: EdgeInsets.all(10.0),
                           child: Stack(
+                            alignment: Alignment.center,
+                            fit: StackFit.passthrough,
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  "https://picsum.photos/300",
-                                  fit: BoxFit.fitHeight,
-                                ),
+                                child: CachedNetworkImage(
+                                    imageUrl: "https://picsum.photos/700/700",
+                                    fit: BoxFit.fitHeight,
+                                    placeholder: (context, url) {
+                                      return Shimmer.fromColors(
+                                        baseColor: Colors.grey[400],
+                                        highlightColor: Colors.white,
+                                        enabled: true,
+                                        child: Container(
+                                          height: 200,
+                                          color: Colors.grey.withOpacity(0.2),
+                                          // width: 100,
+                                        ),
+                                      );
+                                    }),
                               ),
+                              Visibility(
+                                visible: _isVisible,
+                                child: Positioned.fill(
+                                    child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  padding: EdgeInsets.all(20),
+                                  alignment: Alignment.bottomCenter,
+                                  child: ClipRect(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 5, sigmaY: 5),
+                                      child: Container(
+                                        padding: EdgeInsets.all(20),
+                                        height: double.infinity,
+                                        child: SingleChildScrollView(
+                                          child: Row(
+                                            // mainAxisAlignment:
+                                            //     MainAxisAlignment.end,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14),
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          color: Colors.black.withOpacity(.3),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                              )
                             ],
                           ),
                           decoration: BoxDecoration(
@@ -112,7 +165,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             borderRadius: BorderRadius.circular(8.0),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withOpacity(0.14),
                                 offset: Offset(0.0, 7.0),
                                 blurRadius: 9.0,
                               ),
@@ -332,8 +385,8 @@ class _FeedScreenState extends State<FeedScreen> {
         onClose: () => print('DIAL CLOSED'),
         // tooltip: 'Speed Dial',
         heroTag: 'speed-dial-hero-tag',
-        backgroundColor: Colors.deepOrange[700],
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.grey[200],
+        foregroundColor: Colors.black,
         elevation: 8.0,
         shape: CircleBorder(),
         // orientation: SpeedDialOrientation.Up,

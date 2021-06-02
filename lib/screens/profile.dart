@@ -1,8 +1,11 @@
 // import 'dart:html';
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
 
 class IntSize {
@@ -71,12 +74,12 @@ class Profile extends StatelessWidget {
                                   children: [
                                     Text(
                                       "Ali shams",
-                                      style: TextStyle(fontSize: 26),
+                                      style: TextStyle(fontSize: 20),
                                     ),
                                     Text(
                                       "alishams",
                                       style: TextStyle(
-                                          fontSize: 18, color: Colors.grey),
+                                          fontSize: 14, color: Colors.grey),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 50),
@@ -165,6 +168,8 @@ class Profile extends StatelessWidget {
                                                             10.0),
                                                     child: Text(
                                                       "دنبال کردن",
+                                                      style: TextStyle(
+                                                          fontSize: 13),
                                                       textAlign:
                                                           TextAlign.center,
                                                     ),
@@ -356,8 +361,23 @@ class Profile extends StatelessWidget {
                               const StaggeredTile.fit(2),
                         ),
                       ),
-                      TimeLineProfile(),
-                      Icon(Icons.directions_bike),
+                      ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return TimeLineProfile(index: index);
+                        },
+                        controller: scrollController,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: ListView.builder(
+                          itemCount: 10,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Services();
+                          },
+                          controller: scrollController,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -387,11 +407,21 @@ class _Tile extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(18.0),
-                  child: FadeInImage.assetNetwork(
-                    image:
-                        'https://picsum.photos/${size.width}/${size.height}/',
-                    placeholder: "assets/images/Ajax-Preloader.gif",
-                  )),
+                  child: CachedNetworkImage(
+                      imageUrl:
+                          'https://picsum.photos/${size.width}/${size.height}/',
+                      placeholder: (context, url) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[400],
+                          highlightColor: Colors.white,
+                          enabled: true,
+                          child: Container(
+                            height: 200,
+                            color: Colors.grey.withOpacity(0.2),
+                            // width: 900,
+                          ),
+                        );
+                      })),
             ),
           ],
         ),

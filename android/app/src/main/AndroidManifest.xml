@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.treaget">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="treaget"
         android:icon="@mipmap/ic_launcher">
