@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/models/post_model.dart';
 // import 'package:treaget/screens/view_post_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:treaget/services/home_services.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -16,6 +18,28 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   bool _isVisible = false;
+  List _products = [];
+  int _currentPage = 1;
+  // bool _viewStream = true;
+  bool _isLoading = true;
+  ScrollController _listScrollController = new ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getPost();
+
+    _listScrollController.addListener(() {
+      double maxScroll = _listScrollController.position.maxScrollExtent;
+      double currentScroll = _listScrollController.position.pixels;
+
+      if (maxScroll - currentScroll <= 200) {
+        if (!_isLoading) {
+          _getPost(page: _currentPage + 1);
+        }
+      }
+    });
+  }
 
   Widget _buildPost(int index) {
     return Padding(
@@ -212,13 +236,54 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  List<Widget> _buildPosts() {
-    // ignore: deprecated_member_use
-    List<Widget> postWidgets = List<Widget>();
-    for (int i = 0; i < posts.length; i++) {
-      postWidgets.add(_buildPost(i));
-    }
-    return postWidgets;
+  _getPost({int page: 1, bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    setState(() async {
+      if (refresh) _products.clear();
+      var response = await PostService.getPosts(page);
+      _products.addAll(response['products']);
+      _currentPage = response["current_page"];
+      _isLoading = false;
+    });
+  }
+
+  Widget loadingView() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: new LinearProgressIndicator(
+        color: Colors.deepOrange,
+        backgroundColor: Colors.deepOrange[100],
+      ),
+    );
+  }
+
+  Widget listIsEmpty() {
+    return new Center(
+      child: new Text('محصولی برای نمایش وجود ندارد'),
+    );
+  }
+
+  Future<Null> _handleRefresh() async {
+    await _getPost(refresh: true);
+    return null;
+  }
+
+  Widget streamListView() {
+    return _products.length == 0 && _isLoading
+        ? loadingView()
+        : _products.length == 0
+            ? listIsEmpty()
+            : new RefreshIndicator(
+                child: new ListView.builder(
+                    padding: const EdgeInsets.only(top: 0),
+                    itemCount: _products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildPost(index);
+                    }),
+                onRefresh: _handleRefresh);
   }
 
   @override
@@ -307,6 +372,13 @@ class _FeedScreenState extends State<FeedScreen> {
                       ListTile(
                         leading: Icon(LineIcons.fileExport),
                         title: Text('خروج'),
+                        onTap: () async {
+                          SharedPreferences preferences =
+                              await SharedPreferences.getInstance();
+                          await preferences.remove('user.api_token');
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/login', (_) => false);
+                        },
                       ),
                     ],
                   )
@@ -342,9 +414,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 5.0),
-                    Column(
-                      children: _buildPosts(),
-                    ),
+                    Column(children: [streamListView()]),
                   ],
                 ),
               ),

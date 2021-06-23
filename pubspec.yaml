@@ -38,6 +38,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   shimmer: ^2.0.0
   cached_network_image: ^3.0.0
+  connectivity: ^3.0.6
+  shared_preferences: ^2.0.6
+  validators: ^3.0.0
+  double_back_to_close_app: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +63,7 @@ flutter:
   assets:
     - assets/images/Ajax-Preloader.gif
     - assets/images/pattern.png
+    - assets/images/logo.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

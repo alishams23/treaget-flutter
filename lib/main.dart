@@ -4,7 +4,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:treaget/screens/dashboard.dart';
 import 'package:treaget/screens/explore.dart';
 import 'package:treaget/screens/home.dart';
+import 'package:treaget/screens/login.dart';
 import 'package:treaget/screens/profile.dart';
+import 'package:treaget/screens/splash.dart';
 // import 'package:badges/badges.dart';
 
 void main() => runApp(MyApp());
@@ -14,13 +16,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
-        builder: (context, child) {
-          return Directionality(textDirection: TextDirection.ltr, child: child);
-        },
-        title: 'treaget',
-        theme: ThemeData(primaryColor: Colors.white, fontFamily: "Vazir"),
-        debugShowCheckedModeBanner: false,
-        home: Example());
+      builder: (context, child) {
+        return Directionality(textDirection: TextDirection.ltr, child: child);
+      },
+      title: 'treaget',
+      theme: ThemeData(primaryColor: Colors.white, fontFamily: "Vazir"),
+      debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      routes: {
+        "/": (context) => new SplashScreen(),
+        "/home": (context) => Example(),
+        "/login": (context) => new Directionality(
+            textDirection: TextDirection.rtl, child: new LoginScreen()),
+        // "/setting" : (context) => new SettingScreen(),
+        // "/new_chat" : (context) => new CreateChatScreen()
+      },
+    );
   }
 }
 
