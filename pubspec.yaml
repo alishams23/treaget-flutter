@@ -64,6 +64,7 @@ flutter:
     - assets/images/Ajax-Preloader.gif
     - assets/images/pattern.png
     - assets/images/logo.png
+    - assets/images/Gradient.jpg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

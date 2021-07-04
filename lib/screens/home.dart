@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:treaget/global.dart';
 import 'package:treaget/models/post_model.dart';
 // import 'package:treaget/screens/view_post_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 
 // ignore: must_be_immutable
@@ -17,10 +19,12 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  bool _isVisible = false;
+  final snackBar = SnackBar(content: Text('متاسفانه این پست لایک نشد'));
   List _products = [];
   int _currentPage = 1;
   // bool _viewStream = true;
+  bool _isLoadingInfo = true;
+  Map userInfo;
   bool _isLoading = true;
   ScrollController _listScrollController = new ScrollController();
 
@@ -28,6 +32,7 @@ class _FeedScreenState extends State<FeedScreen> {
   void initState() {
     super.initState();
     _getPost();
+    _getCurrentUserInfo();
 
     _listScrollController.addListener(() {
       double maxScroll = _listScrollController.position.maxScrollExtent;
@@ -41,7 +46,7 @@ class _FeedScreenState extends State<FeedScreen> {
     });
   }
 
-  Widget _buildPost(int index) {
+  Widget pictureCard(int index, productsData) {
     return Padding(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
       child: Container(
@@ -82,20 +87,22 @@ class _FeedScreenState extends State<FeedScreen> {
                         width: 50.0,
                         height: 50.0,
                         image: NetworkImage(
-                            "https://picsum.photos/seed/picsum/200/300"),
+                            productsData.author["username"] != null
+                                ? "${productsData.author['image']}"
+                                : "assets/images/Gradient.jpg"),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
                 title: Text(
-                  posts[index].authorName,
+                  productsData.author["username"],
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 subtitle: Text(
-                  posts[index].timeAgo,
+                  productsData.createdAdd,
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.more_horiz),
@@ -104,10 +111,18 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ),
               InkWell(
-                  onDoubleTap: () => print('Like post'),
+                  onDoubleTap: () async {
+                    var likeTest = await LikePost.likePost(productsData.id);
+
+                    likeTest == true
+                        ? setState(() {
+                            productsData.likePost();
+                          })
+                        : ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
                   onTap: () {
                     setState(() {
-                      _isVisible = !_isVisible;
+                      productsData.visiblity();
                     });
                   },
                   child: Row(
@@ -123,7 +138,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: CachedNetworkImage(
-                                    imageUrl: "https://picsum.photos/700/700",
+                                    imageUrl: "${productsData.image}",
                                     fit: BoxFit.fitHeight,
                                     placeholder: (context, url) {
                                       return Shimmer.fromColors(
@@ -139,7 +154,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     }),
                               ),
                               Visibility(
-                                visible: _isVisible,
+                                visible: productsData.visible,
                                 child: Positioned.fill(
                                     child: Container(
                                   decoration: BoxDecoration(
@@ -207,12 +222,29 @@ class _FeedScreenState extends State<FeedScreen> {
                     Row(
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(LineIcons.heart),
+                          icon: Icon(
+                            productsData.like == true
+                                ? LineIcons.heartAlt
+                                : LineIcons.heart,
+                            color: productsData.like == true
+                                ? Colors.red
+                                : Colors.black,
+                          ),
                           iconSize: 30.0,
-                          onPressed: () => print('Like post'),
+                          onPressed: () async {
+                            var likeTest =
+                                await LikePost.likePost(productsData.id);
+                            // ignore: unrelated_type_equality_checks
+                            likeTest == true
+                                ? setState(() {
+                                    productsData.likePost();
+                                  })
+                                : ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                          },
                         ),
                         Text(
-                          '2,515',
+                          "${productsData.likeCount}",
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
@@ -236,34 +268,94 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
+  Widget drawerTop() {
+    return Column(children: [
+      ClipRRect(
+        borderRadius: BorderRadius.circular(33.0), //or 15.0
+        child: Container(
+            height: 90.0,
+            width: 90.0,
+            color: Colors.black,
+            child: Image.network(
+              "${userInfo['image']}",
+              fit: BoxFit.cover,
+            )),
+      ),
+      Padding(
+          padding: EdgeInsets.only(bottom: 9, top: 50, left: 10, right: 10),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(
+              children: [
+                Text("دنبال کننده"),
+                Text("${userInfo['followers'].length}",
+                    style: TextStyle(color: Colors.grey[600]))
+              ],
+            ),
+            Column(
+              children: [
+                Text(
+                  "بازدید",
+                  style: TextStyle(color: Colors.grey[900]),
+                ),
+                Text("${userInfo['visitorCount']}",
+                    style: TextStyle(color: Colors.grey[600]))
+              ],
+            ),
+            Column(
+              children: [
+                Text("دنبال شونده"),
+                Text("${userInfo['following'].length}",
+                    style: TextStyle(color: Colors.grey[600]))
+              ],
+            )
+          ]))
+    ]);
+  }
+
+  Widget _buildPost(int index, productsData) {
+    print(productsData.item);
+    return productsData.item == "request"
+        ? Text("data")
+        : pictureCard(index, productsData);
+  }
+
   _getPost({int page: 1, bool refresh: false}) async {
     setState(() {
       _isLoading = true;
     });
 
-    setState(() async {
+    var response = await PostService.getPosts(page);
+    setState(() {
       if (refresh) _products.clear();
-      var response = await PostService.getPosts(page);
       _products.addAll(response['products']);
       _currentPage = response["current_page"];
       _isLoading = false;
     });
   }
 
+  _getCurrentUserInfo() async {
+    var response = await CurrentUserService.information();
+    if (response["result"] != false) {
+      setState(() {
+        _isLoadingInfo = false;
+        userInfo = response["result"];
+      });
+    }
+  }
+
   Widget loadingView() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: new LinearProgressIndicator(
-        color: Colors.deepOrange,
-        backgroundColor: Colors.deepOrange[100],
+        color: Colors.black,
+        backgroundColor: Colors.grey[100],
       ),
     );
   }
 
   Widget listIsEmpty() {
-    return new Center(
-      child: new Text('محصولی برای نمایش وجود ندارد'),
-    );
+    return Text('محصولی برای نمایش وجود ندارد');
   }
 
   Future<Null> _handleRefresh() async {
@@ -272,16 +364,18 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget streamListView() {
+    print(_products);
     return _products.length == 0 && _isLoading
         ? loadingView()
         : _products.length == 0
             ? listIsEmpty()
             : new RefreshIndicator(
                 child: new ListView.builder(
+                    controller: _listScrollController,
                     padding: const EdgeInsets.only(top: 0),
                     itemCount: _products.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return _buildPost(index);
+                      return _buildPost(index, _products[index]);
                     }),
                 onRefresh: _handleRefresh);
   }
@@ -291,6 +385,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       // extendBodyBehindAppBar: true,
+
       drawer: Drawer(
           child: ListView(
         padding: EdgeInsets.zero,
@@ -301,50 +396,7 @@ class _FeedScreenState extends State<FeedScreen> {
               child: DrawerHeader(
                   child: Column(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(33.0), //or 15.0
-                    child: Container(
-                        height: 90.0,
-                        width: 90.0,
-                        color: Colors.black,
-                        child: Image.network(
-                          "https://treaget.com/media/profile/2021/01/03/66708141_2379602192358271_7304296654685244567_n.jpg",
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: 9, top: 50, left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text("دنبال کننده"),
-                            Text("2000",
-                                style: TextStyle(color: Colors.grey[600]))
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "بازدید",
-                              style: TextStyle(color: Colors.grey[900]),
-                            ),
-                            Text("2000",
-                                style: TextStyle(color: Colors.grey[600]))
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text("دنبال شونده"),
-                            Text("2000",
-                                style: TextStyle(color: Colors.grey[600]))
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
+                  _isLoadingInfo != false ? loadingView() : drawerTop()
                 ],
               )),
               margin: EdgeInsets.all(0.0),
@@ -389,7 +441,26 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: const Text('treaget'),
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: EdgeInsets.only(right: 0),
+          child: Builder(
+              builder: (context) => Row(
+                    children: [
+                      GestureDetector(
+                        child: Icon(
+                          Icons.clear_all,
+                          size: 28,
+                        ),
+                        onTap: () => Scaffold.of(context).openDrawer(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text("treaget"),
+                      )
+                    ],
+                  )),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 20),
@@ -405,23 +476,8 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 5.0),
-                    Column(children: [streamListView()]),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: streamListView(),
+
       floatingActionButton: SpeedDial(
         /// both default to 16
         marginEnd: 18,

@@ -116,7 +116,7 @@ class LoginScreenState extends State<LoginScreen>
     print(response);
     print(response['token']);
     if (response['token'] != null) {
-      await storeUserData(response);
+      await storeUserData(response, _emailValue);
       await _loginButtonController.forward();
       Navigator.pushNamedAndRemoveUntil(context, "/home", (_) => false);
     } else {
@@ -129,9 +129,9 @@ class LoginScreenState extends State<LoginScreen>
     }
   }
 
-  storeUserData(Map userData) async {
+  storeUserData(Map userData, username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('user.api_token', userData['token']);
-    // await prefs.setInt('user.user_id', userData['user_id']);
+    await prefs.setString('user.username', username);
   }
 }
