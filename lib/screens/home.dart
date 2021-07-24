@@ -449,8 +449,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     children: [
                       GestureDetector(
                         child: Icon(
-                          Icons.clear_all,
-                          size: 28,
+                          LineIcons.bars,
+                          size: 24,
                         ),
                         onTap: () => Scaffold.of(context).openDrawer(),
                       ),
