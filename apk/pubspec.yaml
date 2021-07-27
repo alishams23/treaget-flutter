@@ -1,4 +1,4 @@
-name: treaget
+name: apk
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -18,31 +18,16 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  google_nav_bar: ^5.0.5
-  line_icons: ^2.0.0
-  badges: ^1.2.0
-  flutter_speed_dial: ^3.0.5
-  flutter_staggered_grid_view: ^0.4.0
-  transparent_image: ^2.0.0
-  parallax_image: ^0.3.1+1
-  timelines: ^0.1.0
-  drop_shadow_image: ^0.9.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  shimmer: ^2.0.0
-  cached_network_image: ^3.0.0
-  connectivity: ^3.0.6
-  shared_preferences: ^2.0.6
-  validators: ^3.0.0
-  double_back_to_close_app: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -53,20 +38,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-  fonts:
-    - family: Vazir
-      fonts:
-        - asset: assets/fonts/Vazir-Bold.ttf
-        - asset: assets/fonts/Vazir-Light.ttf
-        - asset: assets/fonts/Vazir-Medium.ttf
-        - asset: assets/fonts/Vazir-Thin.ttf
-        - asset: assets/fonts/Vazir.ttf
-  assets:
-    - assets/images/Ajax-Preloader.gif
-    - assets/images/pattern.png
-    - assets/images/logo.png
-    - assets/images/Gradient.jpg
-    - assets/images/avatar.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

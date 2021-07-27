@@ -18,7 +18,8 @@ class PostExploreService {
     });
     // print(response.body);
     if (response.statusCode == 200) {
-      var responseBody = json.decode(response.body);
+      String source = Utf8Decoder().convert(response.bodyBytes);
+      var responseBody = json.decode(source);
 
       List<Post> post = [];
       responseBody.forEach((item) {

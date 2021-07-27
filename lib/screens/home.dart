@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:treaget/global.dart';
-import 'package:treaget/models/post_model.dart';
+import 'package:treaget/components/loading.dart';
 // import 'package:treaget/screens/view_post_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
+import 'package:drop_shadow_image/drop_shadow_image.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -204,7 +204,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             borderRadius: BorderRadius.circular(8.0),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.14),
+                                color: Colors.black.withOpacity(0.1),
                                 offset: Offset(0.0, 7.0),
                                 blurRadius: 9.0,
                               ),
@@ -344,16 +344,6 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Widget loadingView() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: new LinearProgressIndicator(
-        color: Colors.black,
-        backgroundColor: Colors.grey[100],
-      ),
-    );
-  }
-
   Widget listIsEmpty() {
     return Text('محصولی برای نمایش وجود ندارد');
   }
@@ -364,20 +354,24 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget streamListView() {
-    print(_products);
-    return _products.length == 0 && _isLoading
-        ? loadingView()
-        : _products.length == 0
-            ? listIsEmpty()
-            : new RefreshIndicator(
-                child: new ListView.builder(
-                    controller: _listScrollController,
-                    padding: const EdgeInsets.only(top: 0),
-                    itemCount: _products.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildPost(index, _products[index]);
-                    }),
-                onRefresh: _handleRefresh);
+    return Stack(
+      children: [
+        _products.length == 0 && _isLoading
+            ? loadingView()
+            : _products.length == 0
+                ? listIsEmpty()
+                : new RefreshIndicator(
+                    child: new ListView.builder(
+                        controller: _listScrollController,
+                        padding: const EdgeInsets.only(top: 0),
+                        itemCount: _products.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildPost(index, _products[index]);
+                        }),
+                    onRefresh: _handleRefresh),
+        _products.length != 0 && _isLoading ? loadingView() : Text("")
+      ],
+    );
   }
 
   @override

@@ -56,7 +56,12 @@ class _ExampleState extends State<Example> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: IndexedStack(children: <Widget>[
+          _widgetOptions.elementAt(0),
+          _widgetOptions.elementAt(1),
+          _widgetOptions.elementAt(2),
+          _widgetOptions.elementAt(3),
+        ], index: _selectedIndex),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
