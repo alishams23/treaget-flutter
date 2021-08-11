@@ -8,20 +8,11 @@ import 'package:shimmer/shimmer.dart';
 import 'package:timelines/timelines.dart';
 import 'package:treaget/components/indicator_tab.dart';
 import 'package:treaget/components/loading.dart';
+import 'package:treaget/components/explore/samplesExplore.dart';
 import 'package:treaget/services/explore_service.dart';
-
-// List<IntSize> _createSizes(int count) {
-//   final rnd = Random();
-//   return List.generate(
-//       count, (i) => IntSize(rnd.nextInt(500) + 200, rnd.nextInt(800) + 200));
-// }
 
 // ignore: must_be_immutable
 class Example08 extends StatefulWidget {
-  // Example08() : _sizes = _createSizes(_kItemCount).toList();
-
-  // static const int _kItemCount = 30;
-  // final List<IntSize> _sizes;
   ScrollController _controller = ScrollController();
   @override
   _ViewPostScreenState createState() => _ViewPostScreenState();
@@ -63,7 +54,7 @@ class _ViewPostScreenState extends State<Example08>
                         // controller: widget._controller,
                         controller: _listScrollController,
                         itemBuilder: (context, index) {
-                          return _Tile(index, _products[index]);
+                          return samplesExplore(index, _products[index]);
                         },
                         staggeredTileBuilder: (index) =>
                             const StaggeredTile.fit(2),
@@ -121,7 +112,7 @@ class _ViewPostScreenState extends State<Example08>
           child: Icon(LineIcons.search),
         ),
         appBar: AppBar(
-          elevation: 0,
+          elevation: 1,
           backgroundColor: Colors.white,
           // title: const Text('TabBar Widget'),
           flexibleSpace: Column(
@@ -160,88 +151,6 @@ class _ViewPostScreenState extends State<Example08>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _Tile(int index, productsData) {
-    return Column(
-      children: <Widget>[
-        Stack(
-          children: <Widget>[
-            Container(
-              padding: (index == 0 || index == 1)
-                  ? EdgeInsets.only(right: 2, left: 2, bottom: 2, top: 20)
-                  : EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18.0),
-                  child: CachedNetworkImage(
-                      imageUrl: "${productsData.image}",
-                      placeholder: (context, url) {
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey[400],
-                          highlightColor: Colors.white,
-                          enabled: true,
-                          child: Container(
-                            height: 200,
-                            color: Colors.grey.withOpacity(0.2),
-                            // width: 900,
-                          ),
-                        );
-                      })),
-            ),
-            Positioned.fill(
-                child: Container(
-              // height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.all(10),
-              alignment: Alignment.bottomCenter,
-
-              child: ClipRRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    height: 22,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text("${productsData.author['username']}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis),
-                        ),
-                        Padding(padding: EdgeInsets.only(right: 10)),
-                        Flexible(
-                          child: productsData.alt != null
-                              ? Text("${productsData.alt}",
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
-                                  ),
-                                  overflow: TextOverflow.ellipsis)
-                              : Container(),
-                        )
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withOpacity(0.3)),
-                  ),
-                ),
-              ),
-            )),
-          ],
-        ),
-      ],
     );
   }
 }

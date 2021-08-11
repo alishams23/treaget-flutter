@@ -16,7 +16,7 @@ class DashboardWidget extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0,
+          elevation: 1,
           backgroundColor: Colors.white,
           // title: const Text('TabBar Widget'),
 

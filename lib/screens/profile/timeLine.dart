@@ -4,12 +4,13 @@ import 'package:timelines/timelines.dart';
 // ignore: must_be_immutable
 class TimeLineProfile extends StatelessWidget {
   int index;
-  TimeLineProfile({Key key, this.index}) : super(key: key);
+  Map data;
+  TimeLineProfile({Key key, this.index, this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // ignore: todo
-    // TODO: implement build
+    // TODO: implement build;
 
     return Container(
       alignment: Alignment.topLeft,
@@ -19,10 +20,6 @@ class TimeLineProfile extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: TimelineTile(
               nodeAlign: TimelineNodeAlign.start,
-              // oppositeContents: Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Text('opposite\ncontents'),
-              // ),
               contents: Padding(
                 padding: EdgeInsets.all(10),
                 child: Container(
@@ -48,22 +45,8 @@ class TimeLineProfile extends StatelessWidget {
                                 padding: EdgeInsets.only(
                               left: 10,
                             )),
-                            // Container(
-                            //   decoration: BoxDecoration(
-                            //     gradient: LinearGradient(
-                            //         begin: Alignment.topRight,
-                            //         colors: [
-                            //           Colors.grey[300],
-                            //           Colors.grey[200]
-                            //         ]),
-                            //     borderRadius: BorderRadius.circular(9.0),
-                            //   ),
-                            //   height: 20,
-                            //   width: 2,
-                            // ),
-
                             Text(
-                              "1400/8/9  -  1400/10/4",
+                              data["createdAdd"],
                               style: TextStyle(
                                 color: Colors.grey[400],
                                 fontSize: 12,
@@ -71,12 +54,10 @@ class TimeLineProfile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Text(
-                            'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.صلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.'),
+                        Text(data["body"]),
                       ],
                     )),
               ),
-
               node: TimelineNode(
                 // theme: TimelineThemeData(color: Colors.orange),
 

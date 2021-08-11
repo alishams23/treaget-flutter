@@ -17,27 +17,6 @@ class GalleryProfile extends StatefulWidget {
 
   @override
   _ViewPostScreenState createState() => _ViewPostScreenState();
-  // @override
-  // State<StatefulWidget> createState() {
-  //   Widget build(BuildContext context) {
-  //     return Scaffold(
-  //       body: StaggeredGridView.countBuilder(
-  //         primary: false,
-  //         crossAxisCount: 4,
-  //         mainAxisSpacing: 4,
-  //         crossAxisSpacing: 4,
-  //         controller: _controller,
-  //         // ignore: missing_return
-  //         itemBuilder: (context, index) {
-  //           if (_sizes.length > index) {
-  //             return _Tile(index, _sizes[index]);
-  //           }
-  //         },
-  //         staggeredTileBuilder: (index) => const StaggeredTile.fit(2),
-  //       ),
-  //     );
-  //   }
-  // }
 }
 
 class _ViewPostScreenState extends State<GalleryProfile> {
