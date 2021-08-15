@@ -367,10 +367,15 @@ Widget topPage(Map info) {
                                   )
                                 ]),
                                 child: info.length != 0
-                                    ? Image.network(
-                                        info['image'],
-                                        fit: BoxFit.cover,
-                                      )
+                                    ? info['image'] != null
+                                        ? Image.network(
+                                            info['image'],
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            "assets/images/Gradient.jpg",
+                                            fit: BoxFit.cover,
+                                          )
                                     : Image.asset(
                                         "assets/images/Gradient.jpg",
                                         fit: BoxFit.cover,
