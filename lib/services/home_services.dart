@@ -18,7 +18,7 @@ class PostService {
     });
     // print(response.body);
     if (response.statusCode == 200) {
-      var responseBody = json.decode(response.body);
+      var responseBody = json.decode(Utf8Decoder().convert(response.bodyBytes));
 
       List<Post> post = [];
       responseBody.forEach((item) {

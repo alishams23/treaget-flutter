@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/components/loading.dart';
@@ -11,6 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 import 'package:drop_shadow_image/drop_shadow_image.dart';
+import 'package:validators/validators.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -48,221 +50,249 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Widget pictureCard(int index, productsData) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
+      padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 15.0),
       child: Container(
         // width: double.infinity,
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(23.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.15),
-                spreadRadius: 1,
-                blurRadius: 5,
+                color: Colors.grey.withOpacity(0.13),
+                spreadRadius: 2,
+                blurRadius: 9,
                 offset: Offset(0, 2),
               )
             ]),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.0),
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                leading: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.black45,
-                    //     offset: Offset(0.0, 2.0),
-                    //     blurRadius: 6.0,
-                    //   ),
-                    // ],
-                  ),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey[300],
-                    child: ClipOval(
-                      child: Image(
-                        width: 50.0,
-                        height: 50.0,
-                        image: NetworkImage(
-                            productsData.author["username"] != null
-                                ? "${productsData.author['image']}"
-                                : "assets/images/Gradient.jpg"),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                title: Text(
-                  productsData.author["username"],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  productsData.createdAdd,
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.more_horiz),
-                  color: Colors.black,
-                  onPressed: () => print('More'),
-                ),
-              ),
-              InkWell(
-                  onDoubleTap: () async {
-                    var likeTest = await LikePost.likePost(productsData.id);
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            InkWell(
+              onDoubleTap: () async {
+                var likeTest = await LikePost.likePost(productsData.id);
 
-                    likeTest == true
-                        ? setState(() {
-                            productsData.likePost();
-                          })
-                        : ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  onTap: () {
-                    setState(() {
-                      productsData.visiblity();
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.all(10.0),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            fit: StackFit.passthrough,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: CachedNetworkImage(
-                                    imageUrl: "${productsData.image}",
-                                    fit: BoxFit.fitHeight,
-                                    placeholder: (context, url) {
-                                      return Shimmer.fromColors(
-                                        baseColor: Colors.grey[400],
-                                        highlightColor: Colors.white,
-                                        enabled: true,
-                                        child: Container(
-                                          height: 200,
-                                          color: Colors.grey.withOpacity(0.2),
-                                          // width: 100,
-                                        ),
-                                      );
-                                    }),
+                likeTest == true
+                    ? setState(() {
+                        productsData.likePost();
+                      })
+                    : ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+              onTap: () {
+                setState(() {
+                  productsData.visiblity();
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(23.0),
+                      child: CachedNetworkImage(
+                          imageUrl: "${productsData.image}",
+                          fit: BoxFit.fitHeight,
+                          placeholder: (context, url) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[400],
+                              highlightColor: Colors.white,
+                              enabled: true,
+                              child: Container(
+                                height: 200,
+                                color: Colors.grey.withOpacity(0.2),
+                                // width: 100,
                               ),
-                              Visibility(
-                                visible: productsData.visible,
-                                child: Positioned.fill(
-                                    child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  padding: EdgeInsets.all(20),
-                                  alignment: Alignment.bottomCenter,
-                                  child: ClipRect(
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 5, sigmaY: 5),
-                                      child: Container(
-                                        padding: EdgeInsets.all(20),
-                                        height: double.infinity,
-                                        child: SingleChildScrollView(
-                                          child: Row(
-                                            // mainAxisAlignment:
-                                            //     MainAxisAlignment.end,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 14),
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                            );
+                          }),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                          padding: EdgeInsets.only(bottom: 10, right: 10),
+                          alignment: Alignment.topRight,
+                          width: 120,
+                          height: 60,
+                          child: Container(
+                              child: Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(13.0),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                child: Container(
+                                  width: 100,
+                                  padding: EdgeInsets.all(0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(
+                                          productsData.like == true
+                                              ? LineIcons.heartAlt
+                                              : LineIcons.heart,
+                                          color: productsData.like == true
+                                              ? Colors.red
+                                              : Colors.black,
                                         ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          color: Colors.black.withOpacity(.3),
-                                        ),
+                                        iconSize: 24.0,
+                                        onPressed: () async {
+                                          var likeTest =
+                                              await LikePost.likePost(
+                                                  productsData.id);
+                                          // ignore: unrelated_type_equality_checks
+                                          likeTest == true
+                                              ? setState(() {
+                                                  productsData.likePost();
+                                                })
+                                              : ScaffoldMessenger.of(context)
+                                                  .showSnackBar(snackBar);
+                                        },
                                       ),
-                                    ),
+                                      IconButton(
+                                        icon: Icon(LineIcons.bookmark),
+                                        iconSize: 27.0,
+                                        onPressed: () => print('Save post'),
+                                      ),
+                                    ],
                                   ),
-                                )),
-                              )
-                            ],
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(8.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0.0, 7.0),
-                                blurRadius: 9.0,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.2)),
+                                    borderRadius: BorderRadius.circular(19.0),
+                                    color: Colors.white.withOpacity(.2),
+                                  ),
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  )),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(
-                            productsData.like == true
-                                ? LineIcons.heartAlt
-                                : LineIcons.heart,
-                            color: productsData.like == true
-                                ? Colors.red
-                                : Colors.black,
-                          ),
-                          iconSize: 30.0,
-                          onPressed: () async {
-                            var likeTest =
-                                await LikePost.likePost(productsData.id);
-                            // ignore: unrelated_type_equality_checks
-                            likeTest == true
-                                ? setState(() {
-                                    productsData.likePost();
-                                  })
-                                : ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                          },
-                        ),
-                        Text(
-                          "${productsData.likeCount}",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 20.0),
-                      ],
+                            ),
+                          ))),
                     ),
-                    IconButton(
-                      icon: Icon(LineIcons.bookmark),
-                      iconSize: 30.0,
-                      onPressed: () => print('Save post'),
-                    ),
+                    Container(
+                        padding: EdgeInsets.only(top: 10, left: 10),
+                        alignment: Alignment.topLeft,
+                        width: 100,
+                        height: 60,
+                        child: Container(
+                            child: Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(13.0),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                              child: Container(
+                                padding: EdgeInsets.all(4),
+                                child: Icon(
+                                  Icons.more_horiz,
+                                  color: Colors.black,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.white.withOpacity(0.1)),
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  color: Colors.white.withOpacity(.2),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )))
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 12, right: 20),
+              child: Text(
+                productsData.alt,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(fontSize: 17),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                softWrap: false,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 21,
+                        backgroundColor: Colors.grey[300],
+                        child: ClipOval(
+                          child: productsData.author["image"] != null
+                              ? Image(
+                             
+                                  image: NetworkImage(
+                                      "${productsData.author['image']}"),
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  "assets/images/avatar.png",
+                            
+                                ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            productsData.author["username"],
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            productsData.createdAdd,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            Positioned(
+                                right: 7,
+                                child: CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor: Colors.grey[200],
+                                )),
+                            Positioned(
+                                right: 21,
+                                child: CircleAvatar(
+                                  radius: 14,
+                                  backgroundColor: Colors.orange[200],
+                                )),
+                            Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 32)),
+                            Positioned(
+                                child: CircleAvatar(
+                              radius: 14,
+                              backgroundColor: Colors.deepOrange[400],
+                            ))
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(right: 1)),
+                        CircleAvatar(
+                          child: Text(
+                            "20",
+                            style: TextStyle(fontSize: 13),
+                          ),
+                          radius: 14,
+                          backgroundColor: Colors.orange[50],
+                          foregroundColor: Colors.deepOrange,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -276,10 +306,12 @@ class _FeedScreenState extends State<FeedScreen> {
             height: 90.0,
             width: 90.0,
             color: Colors.black,
-            child: Image.network(
-              "${userInfo['image']}",
-              fit: BoxFit.cover,
-            )),
+            child: userInfo['image'] != null
+                ? Image.network(
+                    "${userInfo['image']}",
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset("assets/images/avatar.png")),
       ),
       Padding(
           padding: EdgeInsets.only(bottom: 9, top: 50, left: 10, right: 10),
@@ -476,8 +508,9 @@ class _FeedScreenState extends State<FeedScreen> {
         /// both default to 16
         marginEnd: 18,
         marginBottom: 20,
-        // animatedIcon: AnimatedIcons.menu_close,
-        // animatedIconTheme: IconThemeData(size: 22.0),
+        // animatedIcon: AnimatedIcons,
+        animatedIconTheme: IconThemeData(size: 22.0),
+
         /// This is ignored if animatedIcon is non null
         icon: Icons.add,
         activeIcon: Icons.remove,
@@ -511,7 +544,7 @@ class _FeedScreenState extends State<FeedScreen> {
         shape: CircleBorder(),
         // orientation: SpeedDialOrientation.Up,
         // childMarginBottom: 2,
-        // childMarginTop: 2,
+        childMarginTop: 2,
         children: [
           SpeedDialChild(
             child: Icon(

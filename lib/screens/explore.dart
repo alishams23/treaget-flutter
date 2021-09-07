@@ -13,7 +13,7 @@ import 'package:treaget/services/explore_service.dart';
 
 // ignore: must_be_immutable
 class Example08 extends StatefulWidget {
-  ScrollController _controller = ScrollController();
+ 
   @override
   _ViewPostScreenState createState() => _ViewPostScreenState();
 }
@@ -21,6 +21,7 @@ class Example08 extends StatefulWidget {
 class _ViewPostScreenState extends State<Example08>
     with AutomaticKeepAliveClientMixin<Example08> {
   List _products = [];
+  ScrollController _scrollController;
   @override
   bool get wantKeepAlive => true;
   int _currentPage = 1;
@@ -37,22 +38,21 @@ class _ViewPostScreenState extends State<Example08>
   }
 
   Widget streamListView() {
-    return Stack(
-      children: [
+    return 
         _products.length == 0 && _isLoading
             ? loadingView()
             : _products.length == 0
                 ? listIsEmpty()
-                : new RefreshIndicator(
+                :  Scaffold(body: RefreshIndicator(
                     child: Padding(
                       child: StaggeredGridView.countBuilder(
-                        primary: false,
+                    
                         crossAxisCount: 4,
                         mainAxisSpacing: 4,
                         crossAxisSpacing: 4,
                         itemCount: _products.length,
                         // controller: widget._controller,
-                        controller: _listScrollController,
+                        // controller: _listScrollController,
                         itemBuilder: (context, index) {
                           return samplesExplore(index, _products[index]);
                         },
@@ -61,10 +61,7 @@ class _ViewPostScreenState extends State<Example08>
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 10),
                     ),
-                    onRefresh: _handleRefresh),
-        _products.length != 0 && _isLoading ? loadingView() : Text("")
-      ],
-    );
+                    onRefresh: _handleRefresh),);
   }
 
   @override
@@ -72,15 +69,15 @@ class _ViewPostScreenState extends State<Example08>
     super.initState();
     _getPost();
 
-    _listScrollController.addListener(() {
-      double maxScroll = _listScrollController.position.maxScrollExtent;
-      double currentScroll = _listScrollController.position.pixels;
+    _scrollController.addListener(() {
+      // double maxScroll = _listScrollController.position.maxScrollExtent;
+      // double currentScroll = _listScrollController.position.pixels;
 
-      if (maxScroll - currentScroll <= 200) {
-        if (!_isLoading) {
-          _getPost(page: _currentPage + 1);
-        }
-      }
+      // if (maxScroll - currentScroll <= 200) {
+      //   if (!_isLoading) {
+      //     _getPost(page: _currentPage + 1);
+      //   }
+      // }
     });
   }
 
@@ -100,57 +97,130 @@ class _ViewPostScreenState extends State<Example08>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.grey[200],
-          foregroundColor: Colors.black,
-          onPressed: () {},
-          child: Icon(LineIcons.search),
-        ),
-        appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.white,
-          // title: const Text('TabBar Widget'),
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TabBar(
-                // isScrollable: true,
-                // indicatorColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
-                indicator: MD2Indicator(
-                  indicatorSize: MD2IndicatorSize.normal,
-                  indicatorHeight: 2.0,
-                  indicatorColor:
-                      _isLoading == false ? Colors.black : Colors.transparent,
-                ),
-                tabs: <Widget>[
-                  Tab(
-                    // icon: Icon(Icons.cloud_outlined),
-                    child: Text("نمونه کار"),
-                  ),
-                  Tab(
-                    // icon: Icon(Icons.beach_access_sharp),
-                    child: Text("درخواست ها"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: <Widget>[
-            streamListView(),
-            Center(
-              child: Text('It\'s sunny here'),
-            ),
-          ],
-        ),
-      ),
-    );
+    return NestedScrollView(
+        headerSliverBuilder: (context, value) {
+          return [topPage()];
+        },
+        controller: _scrollController,
+        body: Container(
+            child: DefaultTabController(
+                length: 2,
+                child: Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: AppBar(
+                        elevation: 0,
+                        flexibleSpace: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TabBar(
+                              isScrollable: false,
+                              indicatorColor: Colors.transparent,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              unselectedLabelColor: Colors.grey[400],
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.2),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    blurRadius: 25,
+                                    offset: Offset(0, 15),
+                                  ),
+                                ],
+                              ),
+                              tabs: <Widget>[
+                                Tab(
+                                  // icon: Icon(Icons.cloud_outlined),
+                                  child: Text("نمونه کار"),
+                                ),
+                                Tab(
+                                  // icon: Icon(Icons.beach_access_sharp),
+                                  child: Text("درخواست ها"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                    body: TabBarView(children: [
+                      Container(child: streamListView(),),
+                      Center(
+                        child: Text('It\'s sunny here'),
+                      ),
+                    ])))));
   }
+Widget topPage() {
+  return SliverToBoxAdapter(
+    child: Container(
+      child: Column(
+        children: [
+          AppBar(
+            elevation: 0,
+            title: Row(
+              textDirection: TextDirection.rtl,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [Text("data")],
+            ),
+          ),
+           Text("data"),                 ],
+      ),
+    ),
+  );
+}
+
+
+  // @override
+  // Widget buildnew(BuildContext context) {
+  //   return DefaultTabController(
+  //     initialIndex: 0,
+  //     length: 2,
+  //     child: Scaffold(
+  //       backgroundColor: Colors.white,
+  //       floatingActionButton: FloatingActionButton(
+  //         backgroundColor: Colors.grey[200],
+  //         foregroundColor: Colors.black,
+  //         onPressed: () {},
+  //         child: Icon(LineIcons.search),
+  //       ),
+  //       appBar: AppBar(
+  //         elevation: 1,
+  //         backgroundColor: Colors.white,
+  //         // title: const Text('TabBar Widget'),
+  //         flexibleSpace: Column(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             TabBar(
+  //               // isScrollable: true,
+  //               // indicatorColor: Colors.black,
+  //               unselectedLabelColor: Colors.grey,
+  //               indicator: MD2Indicator(
+  //                 indicatorSize: MD2IndicatorSize.normal,
+  //                 indicatorHeight: 2.0,
+  //                 indicatorColor:
+  //                     _isLoading == false ? Colors.black : Colors.transparent,
+  //               ),
+  //               tabs: <Widget>[
+  //                 Tab(
+  //                   // icon: Icon(Icons.cloud_outlined),
+  //                   child: Text("نمونه کار"),
+  //                 ),
+  //                 Tab(
+  //                   // icon: Icon(Icons.beach_access_sharp),
+  //                   child: Text("درخواست ها"),
+  //                 ),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       body: TabBarView(
+  //         children: <Widget>[
+  //           streamListView(),
+  //           Center(
+  //             child: Text('It\'s sunny here'),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

@@ -65,7 +65,6 @@ flutter:
     - assets/images/Ajax-Preloader.gif
     - assets/images/pattern.png
     - assets/images/logo.png
-    - assets/images/Gradient.jpg
     - assets/images/avatar.png
 
   # The following line ensures that the Material Icons font is

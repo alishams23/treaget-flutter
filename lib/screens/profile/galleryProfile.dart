@@ -82,7 +82,7 @@ class _Tile extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18.0),
+                  borderRadius: BorderRadius.circular(10.0),
                   child: FadeInImage.assetNetwork(
                     image:
                         'https://picsum.photos/${size.width}/${size.height}/',

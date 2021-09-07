@@ -20,14 +20,13 @@ class SampleProfile extends StatelessWidget {
               width: 250,
               // heigsht: 170,
               alignment: Alignment.bottomCenter,
-              padding: EdgeInsets.only(right: 4, left: 4, bottom: 5),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              padding: EdgeInsets.only(right: 3, left: 3, bottom: 4),
+
               child:
                   // height: double.infinity,
 
                   ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(8.0),
                       child: CachedNetworkImage(
                           imageUrl: "${productsData.image}",
                           placeholder: (context, url) {

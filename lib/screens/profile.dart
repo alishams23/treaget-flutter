@@ -373,11 +373,11 @@ Widget topPage(Map info) {
                                             fit: BoxFit.cover,
                                           )
                                         : Image.asset(
-                                            "assets/images/Gradient.jpg",
+                                            "assets/images/avatar.png",
                                             fit: BoxFit.cover,
                                           )
                                     : Image.asset(
-                                        "assets/images/Gradient.jpg",
+                                        "assets/images/avatar.png",
                                         fit: BoxFit.cover,
                                       ),
                               ))),

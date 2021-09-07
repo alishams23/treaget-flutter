@@ -34,7 +34,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 //               ListTile(
 //                 leading: Container(
 //                   width: 50.0,
-//                   height: 50.0,
+//                   : 50.0,
 //                   decoration: BoxDecoration(
 //                     shape: BoxShape.circle,
 //                     // boxShadow: [
