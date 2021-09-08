@@ -1,8 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 
-// Color darkBlue = Color(0xff033e76);
-// Color lightBlue = Color(0xff006bcf);
 Color darkBlue = Colors.deepOrange[600];
 Color lightBlue = Colors.deepOrange[700];
 
@@ -23,15 +23,8 @@ class DashboardMain extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
-                      colors: [Color(0xffee4c0f), Color(0xffef726e)]),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      spreadRadius: 1,
-                      blurRadius: 19,
-                      offset: Offset(0, 9),
-                    )
-                  ],
+                      colors: [Color(0xffEA4C5F), Color(0xffE9511E)]),
+
                   // color: darkBlue,
                   image: DecorationImage(
                     image: AssetImage("assets/images/pattern.png"),
@@ -79,16 +72,6 @@ class DashboardMain extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Row(
-                    //   children: <Widget>[
-                    //     Icon(Icons.lock, color: Colors.grey[300]),
-                    //     SizedBox(width: 5.0),
-                    //     Text(
-                    //       "Freezing amount: 1.0173 ETH",
-                    //       style: TextStyle(color: Colors.grey[300]),
-                    //     )
-                    //   ],
-                    // ),
                     SizedBox(
                       height: 11.0,
                     ),
@@ -96,72 +79,92 @@ class DashboardMain extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Flexible(
-                          child: RaisedButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 5.0),
-                            color: Color(0xffff4600),
-                            onPressed: () {},
-                            child: Row(
-                              children: [
-                                Text(
-                                  'شارژ کیف پول',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          )),
+                                  shadowColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.all(0)),
                                 ),
-                                Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 4)),
-                                CircleAvatar(
-                                  radius: 18,
-                                  child: Icon(
-                                    LineIcons.alternateSignIn,
-                                    color: Colors.white,
+                                onPressed: () {},
+                                child: Container(
+                                    child: Container(
+                                        child: Container(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(13.0),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 5, sigmaY: 5),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 20),
+                                        child: Text(
+                                          "شارژ کیف پول",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.black
+                                                  .withOpacity(0.03)),
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          color: Colors.black.withOpacity(.1),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                )
-                              ],
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(9.0),
-                            ),
-                          ),
-                        ),
-                        // Flexible(
-                        //   child: RaisedButton(
-                        //     padding: EdgeInsets.symmetric(
-                        //         horizontal: 15.0, vertical: 11.0),
-                        //     color: darkBlue,
-                        //     onPressed: () {},
-                        //     child: Text(
-                        //       'شارژ کیف پول',
-                        //       style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontWeight: FontWeight.bold),
-                        //     ),
-                        //     shape: RoundedRectangleBorder(
-                        //         borderRadius: new BorderRadius.circular(9.0),
-                        //         side: BorderSide(color: Colors.white)),
-                        //   ),
-                        // ),
+                                ))))),
                         Flexible(
-                          child: RaisedButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 11.0),
-                            color: darkBlue,
-                            onPressed: () {},
-                            child: Text(
-                              'دریافت وجه',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(9.0),
-                                side: BorderSide(color: Colors.white)),
-                          ),
-                        ),
+                            child: ElevatedButton(
+                                style: ButtonStyle(shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          )),
+                                  shadowColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.all(0)),
+                                ),
+                                onPressed: () {},
+                                child: Container(
+                                    child: Container(
+                                        child: Container(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(13.0),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 5, sigmaY: 5),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 10),
+                                        child: Text(
+                                          "دریافت وجه",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.black
+                                                  .withOpacity(0.05)),
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          color: Colors.black.withOpacity(.1),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ))))),
                       ],
                     )
                   ],
@@ -249,11 +252,13 @@ class DashboardMain extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(19.0),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.04)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.13),
                                 spreadRadius: 1,
-                                blurRadius: 19,
+                                blurRadius: 8,
                                 offset: Offset(0, 9),
                               )
                             ]),
@@ -302,11 +307,13 @@ class DashboardMain extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(19.0),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.04)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.13),
                                 spreadRadius: 1,
-                                blurRadius: 19,
+                                blurRadius: 8,
                                 offset: Offset(0, 9),
                               )
                             ]),
@@ -355,11 +362,13 @@ class DashboardMain extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(19.0),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.04)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.13),
                                 spreadRadius: 1,
-                                blurRadius: 19,
+                                blurRadius: 8,
                                 offset: Offset(0, 9),
                               )
                             ]),

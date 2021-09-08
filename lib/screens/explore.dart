@@ -12,6 +12,7 @@ import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/explore/samplesExplore.dart';
 import 'package:treaget/services/explore_service.dart';
+import 'package:treaget/services/global_service.dart';
 
 // ignore: must_be_immutable
 class Example08 extends StatefulWidget {
@@ -27,6 +28,8 @@ class _ViewPostScreenState extends State<Example08>
   bool get wantKeepAlive => true;
   int _currentPage = 1;
   bool _isLoading = true;
+  Map userInfo;
+  bool loadingUser = true;
   ScrollController _listScrollController = new ScrollController();
 
   Widget listIsEmpty() {
@@ -66,10 +69,21 @@ class _ViewPostScreenState extends State<Example08>
               );
   }
 
+  _getCurrentUserInfo() async {
+    var response = await CurrentUserService.information();
+    if (response["result"] != false) {
+      setState(() {
+        loadingUser = false;
+        userInfo = response["result"];
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _getPost();
+    _getCurrentUserInfo();
     _scrollController.addListener(_scrollListener);
   }
 
@@ -78,8 +92,9 @@ class _ViewPostScreenState extends State<Example08>
       double maxScroll = _scrollController.position.maxScrollExtent;
       double currentScroll = _scrollController.position.pixels;
 
-      if (maxScroll - currentScroll <= 200) {
+      if (maxScroll - currentScroll <= 10) {
         if (!_isLoading) {
+         
           _getPost(page: _currentPage + 1);
         }
       }
@@ -95,7 +110,7 @@ class _ViewPostScreenState extends State<Example08>
     setState(() {
       if (refresh) _products.clear();
       _products.addAll(response['products']);
-      _currentPage = response["current_page"];
+      _currentPage +=1;
       _isLoading = false;
     });
   }
@@ -109,21 +124,22 @@ class _ViewPostScreenState extends State<Example08>
         controller: _scrollController,
         body: Container(
             child: DefaultTabController(
-                length: 3,
+                length: 4,
                 child: Scaffold(
                     backgroundColor: Colors.white,
                     appBar: AppBar(
                         elevation: 0,
                         flexibleSpace: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TabBar(
                               // isScrollable: true,
                               indicatorColor: Colors.black,
                               labelColor: Colors.black,
                               unselectedLabelColor: Colors.grey[500],
-                              indicator: CircleTabIndicator(color: Colors.black, radius: 3),
-                              // indicator: CircleTabIndicator(color: Colors.green, radius: 4),
+                              indicator: CircleTabIndicator(
+                                  color: Colors.black, radius: 3),
+
                               tabs: <Widget>[
                                 Tab(
                                   // icon: Icon(Icons.cloud_outlined),
@@ -131,15 +147,19 @@ class _ViewPostScreenState extends State<Example08>
                                 ),
                                 Tab(
                                   // icon: Icon(Icons.beach_access_sharp),
-                                  child: Text("درخواست ها"),
+                                  child: Text("درخواست ها     "),
                                 ),
                                 Tab(
                                   // icon: Icon(Icons.beach_access_sharp),
-                                  child: Text("خدمات ها"),
+                                  child: Text("خدمات ها  "),
+                                ),
+                                 Tab(
+                                  // icon: Icon(Icons.beach_access_sharp),
+                                  child: Text("کاربر ها"),
                                 ),
                               ],
                             ),
-                          ],
+                          Padding(padding: EdgeInsets.only(bottom: 6))],
                         )),
                     body: TabBarView(children: [
                       Container(
@@ -149,7 +169,10 @@ class _ViewPostScreenState extends State<Example08>
                         child: Text('It\'s sunny here'),
                       ),
                       Center(
-                        child: Text('It\'s sunny here'),
+                        child: Text('در حال آپدیت'),
+                      ),
+                      Center(
+                        child: Text('در حال آپدیت'),
                       ),
                     ])))));
   }
@@ -164,21 +187,45 @@ class _ViewPostScreenState extends State<Example08>
               elevation: 0,
               title: Row(
                 textDirection: TextDirection.rtl,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                
                 children: [],
               ),
             ),
-            Text(
-              "explore",
-              style: TextStyle(fontSize: 20),
-            ),
+           loadingUser == false ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        "Hello , ${userInfo['first_name']} 👋",
+                        style: TextStyle(fontSize: 23),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text("explore in yours ",
+                          style: TextStyle(fontSize: 16)),
+                    )
+                  ],
+                ),
+                Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: CircleAvatar(backgroundImage: userInfo['image'] != null? NetworkImage("${userInfo['image']}"):null,
+                      backgroundColor: Colors.grey[300],
+                      radius: 25,
+                    ))
+              ],
+            ) : Text(""),
             Form(
               child: Row(
                 children: [
                   Expanded(
                       child: Container(
                     padding: EdgeInsets.only(
-                        top: 20, bottom: 20, left: 20, right: 20),
+                        top: 50, bottom: 10, left: 20, right: 20),
                     child: TextFormField(
                       decoration: new InputDecoration(
                           filled: true,

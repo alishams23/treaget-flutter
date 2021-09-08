@@ -42,8 +42,7 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+  
   static List<Widget> _widgetOptions = <Widget>[
     FeedScreen(),
     Example08(),

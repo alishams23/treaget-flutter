@@ -27,11 +27,11 @@ class DashboardWidget extends StatelessWidget {
                 isScrollable: true,
                 indicatorColor: Colors.black,
                 labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey[500],
+                unselectedLabelColor: Colors.grey[400],
                 indicator: MD2Indicator(
                   indicatorSize: MD2IndicatorSize.normal,
                   indicatorHeight: 3,
-                  indicatorColor: Colors.black,
+                  indicatorColor:  Colors.black,
                 ),
                 tabs: <Widget>[
                   Tab(

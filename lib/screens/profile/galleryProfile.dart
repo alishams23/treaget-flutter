@@ -89,31 +89,10 @@ class _Tile extends StatelessWidget {
                     placeholder: "assets/images/Ajax-Preloader.gif",
                   )),
             ),
-            // Positioned.fill(
-            //     child: Container(
-            //   child: Row(children: [Text("fvbd")]),
-            // )),
+
           ],
         ),
-        // Padding(
-        //   padding: const EdgeInsets.all(4),
-        //   child: Column(
-        //     children: <Widget>[
-        //       Text(
-        //         'Image number $index',
-        //         style: const TextStyle(fontWeight: FontWeight.bold),
-        //       ),
-        //       Text(
-        //         'Width: ${size.width}',
-        //         style: const TextStyle(color: Colors.grey),
-        //       ),
-        //       Text(
-        //         'Height: ${size.height}',
-        //         style: const TextStyle(color: Colors.grey),
-        //       ),
-        //     ],
-        //   ),
-        // )
+
       ],
     );
   }

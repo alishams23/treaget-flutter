@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/components/loading.dart';
@@ -11,8 +10,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
-import 'package:drop_shadow_image/drop_shadow_image.dart';
-import 'package:validators/validators.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -50,7 +47,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Widget pictureCard(int index, productsData) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10.0, 8.0, 10.0, 15.0),
+      padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 15.0),
       child: Container(
         // width: double.infinity,
         decoration: BoxDecoration(
@@ -58,9 +55,9 @@ class _FeedScreenState extends State<FeedScreen> {
             borderRadius: BorderRadius.circular(23.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.13),
-                spreadRadius: 2,
-                blurRadius: 9,
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius:20,
                 offset: Offset(0, 2),
               )
             ]),
@@ -88,7 +85,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   fit: StackFit.passthrough,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(23.0),
+                      borderRadius: BorderRadius.circular(15.0),
                       child: CachedNetworkImage(
                           imageUrl: "${productsData.image}",
                           fit: BoxFit.fitHeight,
@@ -116,7 +113,7 @@ class _FeedScreenState extends State<FeedScreen> {
                           child: Container(
                               child: Container(
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(13.0),
+                              borderRadius: BorderRadius.circular(19.0),
                               child: BackdropFilter(
                                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                                 child: Container(
@@ -208,7 +205,7 @@ class _FeedScreenState extends State<FeedScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -225,10 +222,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       "${productsData.author['image']}"),
                                   fit: BoxFit.cover,
                                 )
-                              : Image.asset(
-                                  "assets/images/avatar.png",
-                            
-                                ),
+                              : null,
                         ),
                       ),
                       Padding(
@@ -301,7 +295,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget drawerTop() {
     return Column(children: [
       ClipRRect(
-        borderRadius: BorderRadius.circular(33.0), //or 15.0
+        borderRadius: BorderRadius.circular(30.0), //or 15.0
         child: Container(
             height: 90.0,
             width: 90.0,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/profile/sampleProfile.dart';
 import 'package:treaget/screens/profile/services.dart';
@@ -105,6 +106,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       itemCount: 1,
       itemBuilder: (BuildContext context, int index) {
         return Container(
+            padding: EdgeInsets.only(top: 40),
             alignment: Alignment.center,
             child: Text('چیزی برای نمایش وجود ندارد'));
       },
@@ -122,24 +124,28 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
               appBar: AppBar(
                   elevation: 0,
                   flexibleSpace: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TabBar(
                         isScrollable: false,
+
                         indicatorColor: Colors.transparent,
                         indicatorSize: TabBarIndicatorSize.tab,
                         unselectedLabelColor: Colors.grey[400],
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.withOpacity(0.2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              blurRadius: 25,
-                              offset: Offset(0, 15),
-                            ),
-                          ],
-                        ),
+                        indicator:
+                            CircleTabIndicator(color: Colors.black, radius: 3),
+
+                        // indicator: BoxDecoration(
+                        //   borderRadius: BorderRadius.circular(10),
+                        //   color: Colors.grey.withOpacity(0.2),
+                        //   boxShadow: [
+                        //     BoxShadow(
+                        //       color: Colors.grey.withOpacity(0.2),
+                        //       blurRadius: 25,
+                        //       offset: Offset(0, 15),
+                        //     ),
+                        //   ],
+                        // ),
                         tabs: <Widget>[
                           Tab(
                             icon: Icon(Icons.dashboard_outlined),
@@ -152,6 +158,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           ),
                         ],
                       ),
+                      Padding(padding: EdgeInsets.only(bottom: 10))
                     ],
                   )),
               body: TabBarView(
@@ -162,6 +169,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                           ? RefreshIndicator(
                               onRefresh: _handleRefresh, child: listIsEmpty())
                           : Scaffold(
+                              backgroundColor: Colors.white,
                               floatingActionButton:
                                   FloatingActionButton.extended(
                                 onPressed: () {
@@ -172,25 +180,32 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 foregroundColor: Colors.black,
                                 backgroundColor: Colors.grey[200],
                               ),
-                              body: Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10, top: 4),
-                                child: RefreshIndicator(
-                                    onRefresh: _handleRefresh,
+                              body: RefreshIndicator(
+                                  onRefresh: _handleRefresh,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 5, left: 10, right: 10),
                                     child: StaggeredGridView.countBuilder(
                                       crossAxisCount: 4,
                                       mainAxisSpacing: 4,
                                       crossAxisSpacing: 4,
                                       itemCount: _products.length,
                                       itemBuilder: (context, index) {
-                                        return SampleProfile(
-                                            index, _products[index]);
+                                        return (index == 0 || index == 1)
+                                            ? Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 10),
+                                                child: SampleProfile(
+                                                    index, _products[index]),
+                                              )
+                                            : SampleProfile(
+                                                index, _products[index]);
                                       },
                                       staggeredTileBuilder: (index) =>
                                           const StaggeredTile.fit(2),
-                                    )),
-                              )),
+                                    ),
+                                  )),
+                            ),
                   RefreshIndicator(
                       onRefresh: _handleRefreshResume,
                       child: resume.length == 0 && _isLoading
@@ -392,7 +407,7 @@ Widget topPage(Map info) {
             child: Text(
               info.length != 0 ? info['bio'] : ' ',
               textDirection: TextDirection.rtl,
-              style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
           ),
           Padding(
@@ -404,7 +419,7 @@ Widget topPage(Map info) {
                   children: [
                     Text(
                       info.length != 0 ? '${info["followers"].length}' : '0',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Text(
                       "دنبال کننده",
@@ -424,7 +439,7 @@ Widget topPage(Map info) {
                   children: [
                     Text(
                       info.length != 0 ? '${info["following"].length}' : '0',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Text(
                       "دنبال شونده",
