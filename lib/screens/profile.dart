@@ -1,11 +1,8 @@
-// import 'dart:html';
-import 'dart:math';
+
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/profile/sampleProfile.dart';
@@ -14,6 +11,9 @@ import 'package:treaget/screens/profile/timeLine.dart';
 import 'package:treaget/services/profile_service.dart';
 
 class Profile extends StatefulWidget {
+  String username;
+  Profile({Key key,this.username : "" }) : super(key: key);
+
   @override
   ProfileState createState() => ProfileState();
 }
@@ -47,7 +47,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await PostPictureProfileService.getPosts();
+    
+    var response = await PostPictureProfileService.getPosts(username: widget.username != "" ?widget.username:"" );
     setState(() {
       if (refresh) _products.clear();
       _products.addAll(response['products']);
@@ -60,7 +61,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await InformationProfileService.getInfo();
+    var response = await InformationProfileService.getInfo(username: widget.username != "" ?widget.username:"");
     setState(() {
       info.clear();
       info.addAll(response);
@@ -72,7 +73,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await ServiceProfileService.getService();
+    var response = await ServiceProfileService.getService(username: widget.username != "" ?widget.username:"");
     setState(() {
       service.clear();
       service.addAll(response['data']);
@@ -84,7 +85,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await TimelineProfileService.getResume();
+    var response = await TimelineProfileService.getResume(username: widget.username != "" ?widget.username:"");
     setState(() {
       resume.clear();
       resume.addAll(response['data']);
@@ -122,6 +123,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                   elevation: 0,
                   flexibleSpace: Column(
                     mainAxisAlignment: MainAxisAlignment.end,

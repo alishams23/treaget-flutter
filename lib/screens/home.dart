@@ -11,6 +11,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 
+import 'PostPicture.dart';
+
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
   @override
@@ -57,14 +59,14 @@ class _FeedScreenState extends State<FeedScreen> {
               BoxShadow(
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 0,
-                blurRadius:20,
+                blurRadius: 20,
                 offset: Offset(0, 2),
               )
             ]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            InkWell(
+            GestureDetector(
               onDoubleTap: () async {
                 var likeTest = await LikePost.likePost(productsData.id);
 
@@ -75,9 +77,11 @@ class _FeedScreenState extends State<FeedScreen> {
                     : ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
               onTap: () {
-                setState(() {
-                  productsData.visiblity();
-                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostPicture(),
+                    ));
               },
               child: Container(
                 width: double.infinity,
@@ -193,17 +197,19 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 12, right: 20),
-              child: Text(
-                productsData.alt,
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontSize: 17),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                softWrap: false,
-              ),
-            ),
+            productsData.alt != null
+                ? Container(
+                    padding: EdgeInsets.only(top: 12, right: 20),
+                    child: Text(
+                      productsData.alt,
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(fontSize: 17),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                  )
+                : Text(""),
             Container(
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
               child: Row(
@@ -217,7 +223,6 @@ class _FeedScreenState extends State<FeedScreen> {
                         child: ClipOval(
                           child: productsData.author["image"] != null
                               ? Image(
-                             
                                   image: NetworkImage(
                                       "${productsData.author['image']}"),
                                   fit: BoxFit.cover,

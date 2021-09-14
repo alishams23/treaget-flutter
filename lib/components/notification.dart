@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:treaget/screens/profile.dart';
 
 class NotificationComponent extends StatelessWidget {
+  var data;
+  NotificationComponent(this.data);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -8,18 +11,17 @@ class NotificationComponent extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 7, horizontal: 15),
       padding: EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: Colors.white,
-        border: Border.all(color: Colors.black.withOpacity(0.02)),
-        boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.13),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: Offset(0, 9),
-                              )
-                            ]
-      ),
+          borderRadius: BorderRadius.circular(20.0),
+          color: Colors.white,
+          border: Border.all(color: Colors.black.withOpacity(0.04)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            )
+          ]),
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Row(
@@ -27,12 +29,27 @@ class NotificationComponent extends StatelessWidget {
             Expanded(
                 flex: 3,
                 child: Container(
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        radius: 25,
-                      )),
+                  child: data["user"] != null
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            onTap: ()=> Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                      body: Profile(
+                                          username: data["user"]['username']),
+                                      backgroundColor: Colors.white,
+                                    ))),
+                            child: CircleAvatar(
+                              backgroundImage: data["user"]["image"] != null
+                                  ? NetworkImage(data["user"]["image"])
+                                  : AssetImage(("assets/images/avatar.png")),
+                              backgroundColor: Colors.grey[300],
+                              radius: 25,
+                            ),
+                          ))
+                      : Text(""),
                 )),
             Expanded(
               child: Column(
@@ -53,13 +70,23 @@ class NotificationComponent extends StatelessWidget {
                         width: 3,
                       ),
                       Padding(padding: EdgeInsets.only(right: 5)),
-                      Text(
-                        "ali shams",
-                        style: TextStyle(fontSize: 15),
+                      GestureDetector(
+                        child: Text(
+                          data["user"]["full_name"],
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                      body: Profile(
+                                          username: data["user"]['username']),
+                                      backgroundColor: Colors.white,
+                                    ))),
                       ),
                       Padding(padding: EdgeInsets.only(right: 5)),
                       Text(
-                        "alishams23",
+                        data["user"]['username'],
                         style: TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
@@ -67,7 +94,7 @@ class NotificationComponent extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 8, right: 10),
                     child: Text(
-                      "شما را دنبال می کند",
+                      data["title"],
                       style: TextStyle(fontSize: 14, color: Colors.grey[800]),
                     ),
                   ),

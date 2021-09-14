@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/components/indicator_tab.dart';
+import 'package:treaget/screens/dashboard/disputes.dart';
 
 import 'dashboard/mainDashboard.dart';
 import 'dashboard/notification.dart';
+import 'dashboard/orders.dart';
+import 'dashboard/safePayment.dart';
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({Key key}) : super(key: key);
@@ -25,7 +28,7 @@ class DashboardWidget extends StatelessWidget {
             children: [
               TabBar(
                 isScrollable: true,
-                indicatorColor: Colors.black,
+                // indicatorColor: Colors.black,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey[400],
                 indicator: MD2Indicator(
@@ -63,15 +66,9 @@ class DashboardWidget extends StatelessWidget {
           children: <Widget>[
             DashboardMain(),
             NotificationApp(),
-            Center(
-              child: Text('It\'s sunny here'),
-            ),
-            Center(
-              child: Text('It\'s sunny here'),
-            ),
-            Center(
-              child: Text('It\'s sunny here'),
-            ),
+            Orders(),
+            SafePayment(),
+            Disputes(),
           ],
         ),
       ),
