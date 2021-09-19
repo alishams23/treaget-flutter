@@ -8,6 +8,7 @@ import 'package:treaget/components/loading.dart';
 // import 'package:treaget/screens/view_post_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 
@@ -80,7 +81,9 @@ class _FeedScreenState extends State<FeedScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PostPicture(),
+                      builder: (context) => PostPicture(
+                        data: productsData,
+                      ),
                     ));
               },
               child: Container(
@@ -297,6 +300,93 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
+  Widget requestCard(int index, data) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+      padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(23.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 0,
+              blurRadius: 20,
+              offset: Offset(0, 2),
+            )
+          ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 21,
+                backgroundColor: Colors.grey[300],
+                child: ClipOval(
+                  child: data.author["image"] != null
+                      ? Image(
+                          image: NetworkImage("${data.author['image']}"),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+              ),
+              Column(
+                children: [
+                  Text(
+                    data.author["username"],
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      "قیمت : ${data.price}",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Text(
+            data.title,
+            style: TextStyle(fontSize: 18),
+            textDirection: TextDirection.rtl,
+          ),
+          Text(data.body),
+          Padding(padding: EdgeInsets.only(top: 10),child: ElevatedButton(
+            
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(13.0),
+                
+              )),
+              
+              shadowColor: MaterialStateProperty.all(Colors.grey),
+              
+              backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
+              padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+            ),
+            onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                      body: Profile(
+                                          username: data.author['username']),
+                                      backgroundColor: Colors.white,
+                                    ))),
+            child: Container(padding:EdgeInsets.symmetric(horizontal: 20),child: Text("سفارش",style: TextStyle(color: Colors.black),),),
+          ),)
+        ],
+      ),
+    );
+  }
+
   Widget drawerTop() {
     return Column(children: [
       ClipRRect(
@@ -347,7 +437,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _buildPost(int index, productsData) {
     print(productsData.item);
     return productsData.item == "request"
-        ? Text("data")
+        ? requestCard(index, productsData)
         : pictureCard(index, productsData);
   }
 

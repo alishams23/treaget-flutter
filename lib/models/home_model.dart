@@ -52,4 +52,6 @@ class Post {
       likeCount += 1;
     }
   }
+
+  blur({int sigmaX, int sigmaY}) {}
 }

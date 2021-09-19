@@ -96,8 +96,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _getPost();
     _getInformaion();
+    _getPost();
     _getResume();
     getService();
   }
@@ -127,7 +127,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                   elevation: 0,
                   flexibleSpace: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
+                    children:info.length != 0 ?[
                       TabBar(
                         isScrollable: false,
 
@@ -161,7 +161,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ],
                       ),
                       Padding(padding: EdgeInsets.only(bottom: 10))
-                    ],
+                    ]: [],
                   )),
               body: TabBarView(
                 children: [
