@@ -8,6 +8,8 @@ import 'package:treaget/components/loading.dart';
 // import 'package:treaget/screens/view_post_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:treaget/components/popupMenu/postPicturePopup.dart';
+import 'package:treaget/components/popupMenu/postRequestPopup.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
@@ -182,10 +184,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: Container(
                                 padding: EdgeInsets.all(4),
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  color: Colors.black,
-                                ),
+                                child: PopupMenuButtonPostPicture(),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: Colors.white.withOpacity(0.1)),
@@ -220,7 +219,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
+                       GestureDetector(child: CircleAvatar(
                         radius: 21,
                         backgroundColor: Colors.grey[300],
                         child: ClipOval(
@@ -232,7 +231,14 @@ class _FeedScreenState extends State<FeedScreen> {
                                 )
                               : null,
                         ),
-                      ),
+                      ),onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                      body: Profile(
+                                          username: productsData.author['username']),
+                                      backgroundColor: Colors.white,
+                                    )))),
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                       ),
@@ -319,8 +325,9 @@ class _FeedScreenState extends State<FeedScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
+              Row(children: [CircleAvatar(
                 radius: 21,
                 backgroundColor: Colors.grey[300],
                 child: ClipOval(
@@ -349,14 +356,31 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                   ),
                 ],
-              ),
+              )],),Row(children: [Container(
+                        padding: EdgeInsets.only(top: 10, left: 10),
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                            child: Container(
+                          child: Container(
+                                padding: EdgeInsets.all(4),
+                                child: PopupMenuButtonPostRequest(),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black.withOpacity(0.07)),
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  color: Colors.black.withOpacity(.03),
+                                ),
+                              
+                            ),
+                          ),
+                        ))],)
             ],
           ),
-          Text(
+          Padding(padding: EdgeInsets.only(top: 20),child: Text(
             data.title,
             style: TextStyle(fontSize: 18),
             textDirection: TextDirection.rtl,
-          ),
+          ),),
           Text(data.body),
           Padding(padding: EdgeInsets.only(top: 10),child: ElevatedButton(
             

@@ -1,10 +1,10 @@
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
+import 'package:treaget/components/popupMenu/profilePopUp.dart';
 import 'package:treaget/components/profile/sampleProfile.dart';
 import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
@@ -12,7 +12,7 @@ import 'package:treaget/services/profile_service.dart';
 
 class Profile extends StatefulWidget {
   String username;
-  Profile({Key key,this.username : "" }) : super(key: key);
+  Profile({Key key, this.username: ""}) : super(key: key);
 
   @override
   ProfileState createState() => ProfileState();
@@ -47,8 +47,9 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    
-    var response = await PostPictureProfileService.getPosts(username: widget.username != "" ?widget.username:"" );
+
+    var response = await PostPictureProfileService.getPosts(
+        username: widget.username != "" ? widget.username : "");
     setState(() {
       if (refresh) _products.clear();
       _products.addAll(response['products']);
@@ -61,7 +62,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await InformationProfileService.getInfo(username: widget.username != "" ?widget.username:"");
+    var response = await InformationProfileService.getInfo(
+        username: widget.username != "" ? widget.username : "");
     setState(() {
       info.clear();
       info.addAll(response);
@@ -73,7 +75,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await ServiceProfileService.getService(username: widget.username != "" ?widget.username:"");
+    var response = await ServiceProfileService.getService(
+        username: widget.username != "" ? widget.username : "");
     setState(() {
       service.clear();
       service.addAll(response['data']);
@@ -85,7 +88,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    var response = await TimelineProfileService.getResume(username: widget.username != "" ?widget.username:"");
+    var response = await TimelineProfileService.getResume(
+        username: widget.username != "" ? widget.username : "");
     setState(() {
       resume.clear();
       resume.addAll(response['data']);
@@ -123,124 +127,131 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
-                automaticallyImplyLeading: false,
+                  automaticallyImplyLeading: false,
                   elevation: 0,
                   flexibleSpace: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children:info.length != 0 ?[
-                      TabBar(
-                        isScrollable: false,
+                    children: info.length != 0
+                        ? [
+                            TabBar(
+                              isScrollable: false,
 
-                        indicatorColor: Colors.transparent,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        unselectedLabelColor: Colors.grey[400],
-                        indicator:
-                            CircleTabIndicator(color: Colors.black, radius: 3),
+                              indicatorColor: Colors.transparent,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              unselectedLabelColor: Colors.grey[400],
+                              indicator: CircleTabIndicator(
+                                  color: Colors.black, radius: 3),
 
-                        // indicator: BoxDecoration(
-                        //   borderRadius: BorderRadius.circular(10),
-                        //   color: Colors.grey.withOpacity(0.2),
-                        //   boxShadow: [
-                        //     BoxShadow(
-                        //       color: Colors.grey.withOpacity(0.2),
-                        //       blurRadius: 25,
-                        //       offset: Offset(0, 15),
-                        //     ),
-                        //   ],
-                        // ),
-                        tabs: <Widget>[
-                          Tab(
-                            icon: Icon(Icons.dashboard_outlined),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.assignment_ind_outlined),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.store_outlined),
-                          ),
-                        ],
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: 10))
-                    ]: [],
+                              // indicator: BoxDecoration(
+                              //   borderRadius: BorderRadius.circular(10),
+                              //   color: Colors.grey.withOpacity(0.2),
+                              //   boxShadow: [
+                              //     BoxShadow(
+                              //       color: Colors.grey.withOpacity(0.2),
+                              //       blurRadius: 25,
+                              //       offset: Offset(0, 15),
+                              //     ),
+                              //   ],
+                              // ),
+                              tabs: <Widget>[
+                                Tab(
+                                  icon: Icon(Icons.dashboard_outlined),
+                                ),
+                                Tab(
+                                  icon: Icon(Icons.assignment_ind_outlined),
+                                ),
+                                Tab(
+                                  icon: Icon(Icons.store_outlined),
+                                ),
+                              ],
+                            ),
+                            Padding(padding: EdgeInsets.only(bottom: 10))
+                          ]
+                        : [],
                   )),
               body: TabBarView(
-                children: [
-                  _products.length == 0 && _isLoading
-                      ? loadingView()
-                      : _products.length == 0
-                          ? RefreshIndicator(
-                              onRefresh: _handleRefresh, child: listIsEmpty())
-                          : Scaffold(
-                              backgroundColor: Colors.white,
-                              floatingActionButton:
-                                  FloatingActionButton.extended(
-                                onPressed: () {
-                                  // Add your onPressed code here!
-                                },
-                                label: Text("سفارش"),
-                                icon: Icon(Icons.shopping_bag_outlined),
-                                foregroundColor: Colors.black,
-                                backgroundColor: Colors.grey[200],
-                              ),
-                              body: RefreshIndicator(
-                                  onRefresh: _handleRefresh,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 5, left: 10, right: 10),
-                                    child: StaggeredGridView.countBuilder(
-                                      crossAxisCount: 4,
-                                      mainAxisSpacing: 4,
-                                      crossAxisSpacing: 4,
-                                      itemCount: _products.length,
-                                      itemBuilder: (context, index) {
-                                        return (index == 0 || index == 1)
-                                            ? Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 10),
-                                                child: SampleProfile(
-                                                    index, _products[index]),
-                                              )
-                                            : SampleProfile(
-                                                index, _products[index]);
+                children: (info.length != 0 && info["ServiceProvider"] == true)
+                    ? [
+                        _products.length == 0 && _isLoading
+                            ? loadingView()
+                            : _products.length == 0
+                                ? RefreshIndicator(
+                                    onRefresh: _handleRefresh,
+                                    child: listIsEmpty())
+                                : Scaffold(
+                                    backgroundColor: Colors.white,
+                                    floatingActionButton:
+                                        FloatingActionButton.extended(
+                                      onPressed: () {
+                                        // Add your onPressed code here!
                                       },
-                                      staggeredTileBuilder: (index) =>
-                                          const StaggeredTile.fit(2),
+                                      label: Text("سفارش"),
+                                      icon: Icon(Icons.shopping_bag_outlined),
+                                      foregroundColor: Colors.black,
+                                      backgroundColor: Colors.grey[200],
                                     ),
-                                  )),
-                            ),
-                  RefreshIndicator(
-                      onRefresh: _handleRefreshResume,
-                      child: resume.length == 0 && _isLoading
-                          ? loadingView()
-                          : resume.length == 0
-                              ? listIsEmpty()
-                              : ListView.builder(
-                                  itemCount: resume.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return TimeLineProfile(
-                                        index: index, data: resume[index]);
-                                  },
-                                )),
-                  RefreshIndicator(
-                      onRefresh: _handleRefreshService,
-                      child: service.length == 0 && _isLoading
-                          ? loadingView()
-                          : service.length == 0
-                              ? listIsEmpty()
-                              : Padding(
-                                  padding: EdgeInsets.only(top: 20),
-                                  child: ListView.builder(
-                                    itemCount: service.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Services(
-                                        data: service[index],
-                                      );
-                                    },
+                                    body: RefreshIndicator(
+                                        onRefresh: _handleRefresh,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 5, left: 10, right: 10),
+                                          child: StaggeredGridView.countBuilder(
+                                            crossAxisCount: 4,
+                                            mainAxisSpacing: 4,
+                                            crossAxisSpacing: 4,
+                                            itemCount: _products.length,
+                                            itemBuilder: (context, index) {
+                                              return (index == 0 || index == 1)
+                                                  ? Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 10),
+                                                      child: SampleProfile(
+                                                          index,
+                                                          _products[index]),
+                                                    )
+                                                  : SampleProfile(
+                                                      index, _products[index]);
+                                            },
+                                            staggeredTileBuilder: (index) =>
+                                                const StaggeredTile.fit(2),
+                                          ),
+                                        )),
                                   ),
-                                ))
-                ],
+                        RefreshIndicator(
+                            onRefresh: _handleRefreshResume,
+                            child: resume.length == 0 && _isLoading
+                                ? loadingView()
+                                : resume.length == 0
+                                    ? listIsEmpty()
+                                    : ListView.builder(
+                                        itemCount: resume.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TimeLineProfile(
+                                              index: index,
+                                              data: resume[index]);
+                                        },
+                                      )),
+                        RefreshIndicator(
+                            onRefresh: _handleRefreshService,
+                            child: service.length == 0 && _isLoading
+                                ? loadingView()
+                                : service.length == 0
+                                    ? listIsEmpty()
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 20),
+                                        child: ListView.builder(
+                                          itemCount: service.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Services(
+                                              data: service[index],
+                                            );
+                                          },
+                                        ),
+                                      ))
+                      ]
+                    : [loadingView(), loadingView(), loadingView()],
               ),
             ),
           ),
@@ -281,11 +292,7 @@ Widget topPage(Map info) {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  info.length != 0
-                                      ? info['first_name'] +
-                                          ' ' +
-                                          info['last_name']
-                                      : '',
+                                  info.length != 0 ? info['get_full_name'] : '',
                                   style: TextStyle(fontSize: 20),
                                 ),
                                 Text(
@@ -407,7 +414,7 @@ Widget topPage(Map info) {
           Container(
             padding: EdgeInsets.only(left: 40, right: 40, top: 20),
             child: Text(
-              info.length != 0 ? info['bio'] : ' ',
+              (info.length != 0 && info['bio'] != null) ? info['bio'] : ' ',
               textDirection: TextDirection.rtl,
               style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
@@ -458,77 +465,3 @@ Widget topPage(Map info) {
   );
 }
 
-class PopupMenuButtonProfile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      elevation: 100,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: TextButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-            )),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.grey.withOpacity(0.2)),
-          ),
-          child: Icon(
-            LineIcons.horizontalEllipsis,
-            color: Colors.black,
-          )),
-      itemBuilder: (context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
-          child: ListTile(
-            leading: const Icon(
-              Icons.chat_bubble_outline,
-              color: Colors.black,
-            ),
-            title: Text(
-              "ارسال پیام",
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-        ),
-        PopupMenuItem<String>(
-          child: ListTile(
-            leading: const Icon(
-              Icons.payment,
-              color: Colors.black,
-            ),
-            title: Text(
-              "پرداخت امن",
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-        ),
-        PopupMenuItem<String>(
-          child: ListTile(
-            leading: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Colors.black,
-            ),
-            title: Text(
-              'ثبت سفارش',
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-        ),
-        const PopupMenuDivider(),
-        PopupMenuItem<String>(
-          child: ListTile(
-            leading: const Icon(
-              Icons.share,
-              color: Colors.blue,
-            ),
-            title: Text(
-              "اشتراک گذاری پروفایل",
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
