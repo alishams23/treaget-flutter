@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:treaget/components/indicator_tab.dart';
 import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/popupMenu/profilePopUp.dart';
@@ -126,21 +127,24 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             length: 3,
             child: Scaffold(
               backgroundColor: Colors.white,
-              appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                  flexibleSpace: Column(
+              appBar: PreferredSize(
+                      
+                      preferredSize: Size.fromHeight(50.0),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: info.length != 0
                         ? [
                             TabBar(
                               isScrollable: false,
 
-                              indicatorColor: Colors.transparent,
-                              indicatorSize: TabBarIndicatorSize.tab,
+                              // indicatorColor: Colors.transparent,
+                              // indicatorSize: TabBarIndicatorSize.tab,
                               unselectedLabelColor: Colors.grey[400],
-                              indicator: CircleTabIndicator(
-                                  color: Colors.black, radius: 3),
+                              indicator: MD2Indicator(
+                                indicatorSize: MD2IndicatorSize.normal,
+                                indicatorHeight: 3,
+                                indicatorColor: Colors.black,
+                              ),
 
                               // indicator: BoxDecoration(
                               //   borderRadius: BorderRadius.circular(10),
@@ -165,7 +169,10 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ),
                               ],
                             ),
-                            Padding(padding: EdgeInsets.only(bottom: 10))
+                           Divider(
+                                height:0,           
+                              color: Colors.grey[400]
+                            )
                           ]
                         : [],
                   )),
@@ -194,7 +201,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                         onRefresh: _handleRefresh,
                                         child: Padding(
                                           padding: EdgeInsets.only(
-                                              top: 5, left: 10, right: 10),
+                                              top: 0, left: 10, right: 10),
                                           child: StaggeredGridView.countBuilder(
                                             crossAxisCount: 4,
                                             mainAxisSpacing: 4,
@@ -204,7 +211,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                               return (index == 0 || index == 1)
                                                   ? Padding(
                                                       padding: EdgeInsets.only(
-                                                          top: 10),
+                                                          top: 15),
                                                       child: SampleProfile(
                                                           index,
                                                           _products[index]),
@@ -464,4 +471,3 @@ Widget topPage(Map info) {
     ),
   );
 }
-

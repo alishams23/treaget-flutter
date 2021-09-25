@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,8 +14,10 @@ import 'package:treaget/components/popupMenu/postRequestPopup.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
+import 'package:validators/validators.dart';
 
 import 'PostPicture.dart';
+import 'add/addPicture.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -82,7 +85,7 @@ class _FeedScreenState extends State<FeedScreen> {
               onTap: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                       builder: (context) => PostPicture(
                         data: productsData,
                       ),
@@ -219,26 +222,29 @@ class _FeedScreenState extends State<FeedScreen> {
                 children: [
                   Row(
                     children: [
-                       GestureDetector(child: CircleAvatar(
-                        radius: 21,
-                        backgroundColor: Colors.grey[300],
-                        child: ClipOval(
-                          child: productsData.author["image"] != null
-                              ? Image(
-                                  image: NetworkImage(
-                                      "${productsData.author['image']}"),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
-                        ),
-                      ),onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                      body: Profile(
-                                          username: productsData.author['username']),
-                                      backgroundColor: Colors.white,
-                                    )))),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            radius: 21,
+                            backgroundColor: Colors.grey[300],
+                            child: ClipOval(
+                              child: productsData.author["image"] != null
+                                  ? Image(
+                                      image: NetworkImage(
+                                          "${productsData.author['image']}"),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          onTap: () => Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => Scaffold(
+                                        body: Profile(
+                                            username: productsData
+                                                .author['username']),
+                                        backgroundColor: Colors.white,
+                                      )))),
                       Padding(
                         padding: EdgeInsets.only(right: 10),
                       ),
@@ -261,17 +267,35 @@ class _FeedScreenState extends State<FeedScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 17, vertical: 7),
                     child: Row(
                       children: [
+                        productsData.likeUser.length >=3 ?
                         Stack(
                           children: [
                             Positioned(
                                 right: 7,
                                 child: CircleAvatar(
+                                  backgroundImage: productsData
+                                              .likeUser.length >=
+                                          3
+                                      ? productsData.likeUser[2]["image"] !=
+                                              null
+                                          ? NetworkImage(
+                                              productsData.likeUser[2]["image"])
+                                          : null
+                                      : null,
                                   radius: 14,
                                   backgroundColor: Colors.grey[200],
                                 )),
                             Positioned(
                                 right: 21,
                                 child: CircleAvatar(
+                                  backgroundImage: productsData
+                                              .likeUser.length >=2
+                                      ? productsData.likeUser[1]["image"] !=
+                                              null
+                                          ? NetworkImage(
+                                              productsData.likeUser[1]["image"])
+                                          : null
+                                      : null,
                                   radius: 14,
                                   backgroundColor: Colors.orange[200],
                                 )),
@@ -279,15 +303,21 @@ class _FeedScreenState extends State<FeedScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 32)),
                             Positioned(
                                 child: CircleAvatar(
+                              backgroundImage: productsData.likeUser.length >= 1
+                                  ? productsData.likeUser[0]["image"] != null
+                                      ? NetworkImage(
+                                          productsData.likeUser[0]["image"])
+                                      : null
+                                  : null,
                               radius: 14,
                               backgroundColor: Colors.deepOrange[400],
                             ))
                           ],
-                        ),
+                        ):Container(),
                         Padding(padding: EdgeInsets.only(right: 1)),
                         CircleAvatar(
                           child: Text(
-                            "20",
+                            "${productsData.likeUser.length}",
                             style: TextStyle(fontSize: 13),
                           ),
                           radius: 14,
@@ -327,85 +357,88 @@ class _FeedScreenState extends State<FeedScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: [CircleAvatar(
-                radius: 21,
-                backgroundColor: Colors.grey[300],
-                child: ClipOval(
-                  child: data.author["image"] != null
-                      ? Image(
-                          image: NetworkImage("${data.author['image']}"),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-              ),
-              Column(
+              Row(
                 children: [
-                  Text(
-                    data.author["username"],
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text(
-                      "قیمت : ${data.price}",
-                      style: TextStyle(color: Colors.black),
+                  GestureDetector(onTap: () => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => Scaffold(
+                            body: Profile(username: data.author['username']),
+                            backgroundColor: Colors.white,
+                          ))),child: CircleAvatar(
+                    radius: 21,
+                    backgroundColor: Colors.grey[300],
+                    child: ClipOval(
+                      child: data.author["image"] != null
+                          ? Image(
+                              image: NetworkImage("${data.author['image']}"),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
                     ),
+                  ),),
+                  
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
                   ),
+                  Column(
+                    children: [
+                      Text(
+                        data.author["username"],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(
+                          "قیمت : ${data.price}",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )],),Row(children: [Container(
-                        padding: EdgeInsets.only(top: 10, left: 10),
-                        alignment: Alignment.topLeft,
-                        child: Container(
-                            child: Container(
-                          child: Container(
-                                padding: EdgeInsets.all(4),
-                                child: PopupMenuButtonPostRequest(),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black.withOpacity(0.07)),
-                                  borderRadius: BorderRadius.circular(13.0),
-                                  color: Colors.black.withOpacity(.03),
-                                ),
-                              
-                            ),
-                          ),
-                        ))],)
+              ),
+              PopupMenuButtonPostRequest()
             ],
           ),
-          Padding(padding: EdgeInsets.only(top: 20),child: Text(
-            data.title,
-            style: TextStyle(fontSize: 18),
-            textDirection: TextDirection.rtl,
-          ),),
-          Text(data.body),
-          Padding(padding: EdgeInsets.only(top: 10),child: ElevatedButton(
-            
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(13.0),
-                
-              )),
-              
-              shadowColor: MaterialStateProperty.all(Colors.grey),
-              
-              backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
-              padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+          Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text(
+              data.title,
+              style: TextStyle(fontSize: 18),
+              textDirection: TextDirection.rtl,
             ),
-            onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Scaffold(
-                                      body: Profile(
-                                          username: data.author['username']),
-                                      backgroundColor: Colors.white,
-                                    ))),
-            child: Container(padding:EdgeInsets.symmetric(horizontal: 20),child: Text("سفارش",style: TextStyle(color: Colors.black),),),
-          ),)
+          ),
+          Text(data.body),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13.0),
+                )),
+                shadowColor: MaterialStateProperty.all(Colors.grey),
+                backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
+                padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+              ),
+              onPressed: () => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => Scaffold(
+                            body: Profile(username: data.author['username']),
+                            backgroundColor: Colors.white,
+                          ))),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "سفارش",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -578,7 +611,7 @@ class _FeedScreenState extends State<FeedScreen> {
         ],
       )),
       appBar: AppBar(
-        elevation: 0,
+        elevation: 1,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Padding(
@@ -661,7 +694,7 @@ class _FeedScreenState extends State<FeedScreen> {
         children: [
           SpeedDialChild(
             child: Icon(
-              Icons.accessibility,
+              Icons.store_outlined,
               color: Colors.deepOrange,
             ),
             // backgroundColor: Colors.grey.shade700.withOpacity(0.5),
@@ -672,7 +705,7 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
           SpeedDialChild(
             child: Icon(
-              Icons.brush,
+              Icons.assignment_ind_outlined,
               color: Colors.deepOrange,
             ),
             // backgroundColor: Colors.white,
@@ -683,13 +716,17 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
           SpeedDialChild(
             child: Icon(
-              Icons.keyboard_voice,
+              Icons.dashboard_outlined,
               color: Colors.deepOrange,
             ),
             // backgroundColor: ,
             label: '  افزودن نمونه کار',
             // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('THIRD CHILD'),
+            onTap: ()  => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => AddPicture())),
+                      
             onLongPress: () => print('THIRD CHILD LONG PRESS'),
           ),
         ],

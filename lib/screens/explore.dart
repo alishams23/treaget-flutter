@@ -127,39 +127,49 @@ class _ViewPostScreenState extends State<Example08>
                 length: 4,
                 child: Scaffold(
                     backgroundColor: Colors.white,
-                    appBar: AppBar(
-                        elevation: 0,
-                        flexibleSpace: Column(
+                    appBar: PreferredSize(
+                      
+                      preferredSize: Size.fromHeight(50.0),
+                        // elevation: 0.5,
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TabBar(
-                              // isScrollable: true,
+                              
+                              isScrollable: true,
                               indicatorColor: Colors.black,
                               labelColor: Colors.black,
                               unselectedLabelColor: Colors.grey[500],
-                              indicator: CircleTabIndicator(
-                                  color: Colors.black, radius: 3),
+                              indicator: MD2Indicator(
+                  indicatorSize: MD2IndicatorSize.normal,
+                  indicatorHeight: 3,
+                  indicatorColor:  Colors.black,
+                ),
 
                               tabs: <Widget>[
                                 Tab(
                                   // icon: Icon(Icons.cloud_outlined),
-                                  child: Text("نمونه کار"),
+                                  child: Text("  نمونه کار"),
                                 ),
                                 Tab(
                                   // icon: Icon(Icons.beach_access_sharp),
-                                  child: Text("درخواست ها     "),
+                                  child: Text("درخواست ها   "),
                                 ),
                                 Tab(
                                   // icon: Icon(Icons.beach_access_sharp),
-                                  child: Text("خدمات ها  "),
+                                  child: Text("خدمات ها   "),
                                 ),
                                  Tab(
                                   // icon: Icon(Icons.beach_access_sharp),
                                   child: Text("کاربر ها"),
                                 ),
                               ],
-                            ),
-                          Padding(padding: EdgeInsets.only(bottom: 6))],
+                            ),Divider(
+                                height:0,           
+                              color: Colors.grey[600]
+                            )
+                          // Padding(padding: EdgeInsets.only(bottom: 6))
+                          ],
                         )),
                     body: TabBarView(children: [
                       Container(
@@ -225,7 +235,7 @@ class _ViewPostScreenState extends State<Example08>
                   Expanded(
                       child: Container(
                     padding: EdgeInsets.only(
-                        top: 50, bottom: 10, left: 20, right: 20),
+                        top: 50, bottom: 0, left: 20, right: 20),
                     child: TextFormField(
                       decoration: new InputDecoration(
                           filled: true,
