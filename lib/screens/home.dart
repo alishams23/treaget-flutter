@@ -18,6 +18,8 @@ import 'package:validators/validators.dart';
 
 import 'PostPicture.dart';
 import 'add/addPicture.dart';
+import 'add/addResume.dart';
+import 'add/addService.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -700,7 +702,10 @@ class _FeedScreenState extends State<FeedScreen> {
             // backgroundColor: Colors.grey.shade700.withOpacity(0.5),
             label: '  افزودن خدمات     ',
             // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('FIRST CHILD'),
+            onTap: () =>  Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => AddService())),
             onLongPress: () => print('FIRST CHILD LONG PRESS'),
           ),
           SpeedDialChild(
@@ -711,8 +716,11 @@ class _FeedScreenState extends State<FeedScreen> {
             // backgroundColor: Colors.white,
             label: '  افزودن رزومه   ',
             // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('SECOND CHILD'),
-            onLongPress: () => print('SECOND CHILD LONG PRESS'),
+            onTap: () =>  Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => AddResume())),
+            
           ),
           SpeedDialChild(
             child: Icon(

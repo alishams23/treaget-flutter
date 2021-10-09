@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:treaget/models/explore_model.dart';
+import 'package:treaget/models/home_model.dart';
 import 'package:treaget/global.dart';
 
 class PostExploreService {
@@ -23,7 +23,7 @@ class PostExploreService {
 
       List<Post> post = [];
       responseBody.forEach((item) {
-        post.add(Post.fromJson(item));
+        post.add(Post.fromJson({"item":"picture","data":item}));
       });
       return {"current_page": page, "products": post};
     }

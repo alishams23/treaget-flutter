@@ -23,7 +23,7 @@ class StatePostPicture extends State<PostPicture> {
   @override
   Widget build(BuildContext context) {
     
-    return Scaffold(backgroundColor: Colors.white,body: Column(
+    return Scaffold(backgroundColor: Colors.white,body: SingleChildScrollView(child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             AppBar(),
@@ -253,7 +253,7 @@ class StatePostPicture extends State<PostPicture> {
               ),
             )
           ],
-        ),
+        ),)
 );
   }
   

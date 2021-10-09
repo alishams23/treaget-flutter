@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/explore/samplesExplore.dart';
 import 'package:treaget/services/explore_service.dart';
 import 'package:treaget/services/global_service.dart';
+
+import 'PostPicture.dart';
 
 // ignore: must_be_immutable
 class Example08 extends StatefulWidget {
@@ -58,7 +61,16 @@ class _ViewPostScreenState extends State<Example08>
                         // controller: widget._controller,
                         // controller: _scrollController,
                         itemBuilder: (context, index) {
-                          return samplesExplore(index, _products[index]);
+                          return GestureDetector(onTap: () {
+                            print(_products[index]);
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => PostPicture(
+                        data: _products[index],
+                      ),
+                    ));
+              },child: samplesExplore(index, _products[index]),);
                         },
                         staggeredTileBuilder: (index) =>
                             const StaggeredTile.fit(2),
@@ -135,16 +147,15 @@ class _ViewPostScreenState extends State<Example08>
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TabBar(
-                              
                               isScrollable: true,
                               indicatorColor: Colors.black,
                               labelColor: Colors.black,
                               unselectedLabelColor: Colors.grey[500],
                               indicator: MD2Indicator(
-                  indicatorSize: MD2IndicatorSize.normal,
-                  indicatorHeight: 3,
-                  indicatorColor:  Colors.black,
-                ),
+                                  indicatorSize: MD2IndicatorSize.normal,
+                                  indicatorHeight: 3,
+                                  indicatorColor:  Colors.black,
+                                ),
 
                               tabs: <Widget>[
                                 Tab(

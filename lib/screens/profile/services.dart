@@ -77,7 +77,7 @@ class StateServices extends State<Services> {
                       Padding(
                         padding: EdgeInsets.all(7),
                         child: Text(
-                          widget.data["specialName"],
+                          widget.data["specialName"] != "" ?widget.data["specialName"] :widget.data["nameProduct"]["title"],
                           textDirection: TextDirection.rtl,
                         ),
                       ),

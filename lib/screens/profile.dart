@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -10,6 +11,8 @@ import 'package:treaget/components/profile/sampleProfile.dart';
 import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
 import 'package:treaget/services/profile_service.dart';
+
+import 'PostPicture.dart';
 
 class Profile extends StatefulWidget {
   String username;
@@ -128,8 +131,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: PreferredSize(
-                      
-                      preferredSize: Size.fromHeight(50.0),
+                  preferredSize: Size.fromHeight(50.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: info.length != 0
@@ -169,10 +171,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ),
                               ],
                             ),
-                           Divider(
-                                height:0,           
-                              color: Colors.grey[400]
-                            )
+                            Divider(height: 0, color: Colors.grey[400])
                           ]
                         : [],
                   )),
@@ -208,16 +207,31 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                             crossAxisSpacing: 4,
                                             itemCount: _products.length,
                                             itemBuilder: (context, index) {
-                                              return (index == 0 || index == 1)
-                                                  ? Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 15),
-                                                      child: SampleProfile(
-                                                          index,
-                                                          _products[index]),
-                                                    )
-                                                  : SampleProfile(
-                                                      index, _products[index]);
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            PostPicture(
+                                                          data:
+                                                              _products[index],
+                                                        ),
+                                                      ));
+                                                },
+                                                child: (index == 0 ||
+                                                        index == 1)
+                                                    ? Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 15),
+                                                        child: SampleProfile(
+                                                            index,
+                                                            _products[index]),
+                                                      )
+                                                    : SampleProfile(index,
+                                                        _products[index]),
+                                              );
                                             },
                                             staggeredTileBuilder: (index) =>
                                                 const StaggeredTile.fit(2),
