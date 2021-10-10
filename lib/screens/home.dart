@@ -1,8 +1,10 @@
+ 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/components/loading.dart';
@@ -31,6 +33,7 @@ class _FeedScreenState extends State<FeedScreen> {
   final snackBar = SnackBar(content: Text('متاسفانه این پست لایک نشد'));
   List _products = [];
   int _currentPage = 1;
+    final ImagePicker _picker = ImagePicker();
   // bool _viewStream = true;
   bool _isLoadingInfo = true;
   Map userInfo;
@@ -422,7 +425,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   borderRadius: BorderRadius.circular(13.0),
                 )),
                 shadowColor: MaterialStateProperty.all(Colors.grey),
-                backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
+                backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
                 padding: MaterialStateProperty.all(EdgeInsets.all(0)),
               ),
               onPressed: () => Navigator.push(
@@ -433,7 +436,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             backgroundColor: Colors.white,
                           ))),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 33),
                 child: Text(
                   "سفارش",
                   style: TextStyle(color: Colors.black),
@@ -730,10 +733,13 @@ class _FeedScreenState extends State<FeedScreen> {
             // backgroundColor: ,
             label: '  افزودن نمونه کار',
             // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: ()  => Navigator.push(
+            onTap: () async{ var imageAdd =await _picker.pickImage(source: ImageSource.gallery);
+           
+            imageAdd != null ? await Navigator.push(
                   context,
                   CupertinoPageRoute(
-                      builder: (context) => AddPicture())),
+                      builder: (context) => AddPicture(imageFile:imageAdd))):print("");
+                      },
                       
             onLongPress: () => print('THIRD CHILD LONG PRESS'),
           ),

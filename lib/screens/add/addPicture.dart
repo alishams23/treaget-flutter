@@ -1,36 +1,33 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:treaget/services/Picture_service.dart';
 
 class AddPicture extends StatefulWidget {
+  var imageFile;
+
+  AddPicture({Key key, this.imageFile}) : super(key: key);
   @override
   State<StatefulWidget> createState() => AddPictureState();
 }
 
-class AddPictureState extends State {
-  var image;
-  final ImagePicker _picker = ImagePicker();
-  // bool _isLoading;
-  // ScrollController _listScrollController = new ScrollController();
-  // List orders = [];
-  // int _currentPage = 1;
+class AddPictureState extends State<AddPicture> {
+  final formKey = GlobalKey<FormState>();
+  var alt;
+  var result;
 
-  // _getPost({int page: 1, bool refresh: false}) async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   var response = await OrdersService.getOrders(page);
-  //   setState(() {
-  //     if (refresh) orders.clear();
-  //     if (response['results'] != null) {
-  //       orders.addAll(response['results']);
-  //       _currentPage = page;
-  //     }
-  //     _isLoading = false;
-  //   });
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.imageFile);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,109 +36,93 @@ class AddPictureState extends State {
       appBar: AppBar(
         elevation: 0.9,
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Directionality(
-                textDirection: TextDirection.rtl,
-                child: TextFormField(
-                  // obscureText: true,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[50],
-                    labelText: 'توضیحات نمونه کار',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.grey[300]),
-                      borderRadius: new BorderRadius.circular(10),
-                    ),
-                    // hintTextDirection: TextDirection.rtl
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (formKey.currentState.validate()) {
+            formKey.currentState.save();
+            result = PictureApi.addPicture(image: widget.imageFile, alt: alt);
+          }
+        },
+        label: Text("پست کردن"),
+        icon: Icon(Icons.send_rounded),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black,
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+            key: formKey,
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  widget.imageFile != null
+                      ? Container(
+                          child: Image.file(
+                          File(widget.imageFile.path),
+                          fit: BoxFit.fitWidth,
+                          width: double.infinity,
+                        ))
+                      : Container(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 60),
+                    child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: TextFormField(
+                          // obscureText: true,
+                          textAlign: TextAlign.right,
+                          
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            labelText: 'توضیحات نمونه کار',
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  new BorderSide(color: Colors.grey[400]),
+                              borderRadius: new BorderRadius.circular(0),
+                            ),
+                          ),
+                        )),
                   ),
-                )),
-            Padding(padding: EdgeInsets.only(top: 20)),
-            // Directionality(
-            //     textDirection: TextDirection.rtl,
-            //     child: TypeAheadField(
-            //       textFieldConfiguration: TextFieldConfiguration(
-            //         autofocus: true,
-            //         // style: DefaultTextStyle.of(context).style.copyWith(
 
-            //         // ),
-            //         decoration: InputDecoration(
-            //           filled: true,
-            //           fillColor: Colors.grey[100],
+                  // Directionality(
+                  //     textDirection: TextDirection.rtl,
+                  //     child: TypeAheadField(
+                  //       textFieldConfiguration: TextFieldConfiguration(
+                  //         autofocus: true,
+                  //         // style: DefaultTextStyle.of(context).style.copyWith(
 
-            //           labelText: 'دسته بندی',
-            //           enabledBorder: UnderlineInputBorder(
-            //             borderSide: new BorderSide(color: Colors.grey),
-            //             borderRadius: new BorderRadius.circular(10),
-            //           ),
+                  //         // ),
+                  //         decoration: InputDecoration(
+                  //           filled: true,
+                  //           fillColor: Colors.grey[100],
 
-            //         ),
-            //       ),
-            //       suggestionsCallback: (pattern) async {
-            //         // return await BackendService.getSuggestions(pattern);
-            //       },
-            //       itemBuilder: (context, suggestion) {
-            //         return ListTile(
-            //           leading: Icon(Icons.shopping_cart),
-            //           title: Text(suggestion['name']),
-            //           subtitle: Text('\$${suggestion['price']}'),
-            //         );
-            //       },
-            //       onSuggestionSelected: (suggestion) {
-            //         // Navigator.of(context).push(MaterialPageRoute(
-            //         //   builder: (context) => ProductPage(product: suggestion)
-            //         // ));
-            //       },
-            //     ))
+                  //           labelText: 'دسته بندی',
+                  //           enabledBorder: UnderlineInputBorder(
+                  //             borderSide: new BorderSide(color: Colors.grey),
+                  //             borderRadius: new BorderRadius.circular(10),
+                  //           ),
 
-           Column(children: [ ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13.0),
-                )),
-                shadowColor: MaterialStateProperty.all(Colors.grey),
-                backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
-                padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+                  //         ),
+                  //       ),
+                  //       suggestionsCallback: (pattern) async {
+                  //         // return await BackendService.getSuggestions(pattern);
+                  //       },
+                  //       itemBuilder: (context, suggestion) {
+                  //         return ListTile(
+                  //           leading: Icon(Icons.shopping_cart),
+                  //           title: Text(suggestion['name']),
+                  //           subtitle: Text('\$${suggestion['price']}'),
+                  //         );
+                  //       },
+                  //       onSuggestionSelected: (suggestion) {
+                  //         // Navigator.of(context).push(MaterialPageRoute(
+                  //         //   builder: (context) => ProductPage(product: suggestion)
+                  //         // ));
+                  //       },
+                  //     ))
+                ],
               ),
-              onPressed: () async {
-                image = await _picker.pickImage(source: ImageSource.gallery);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 100),
-                child: Text(
-                  "انتخاب عکس",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13.0),
-                )),
-                shadowColor: MaterialStateProperty.all(Colors.grey),
-                backgroundColor: MaterialStateProperty.all(Colors.black),
-                padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-              ),
-              onPressed: ()  {
-                
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 100),
-                child: Text(
-                  "پست کردن",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),],)
-          ],
-        ),
+            )),
       ),
     );
   }
