@@ -177,7 +177,7 @@ class _ViewPostScreenState extends State<Example08>
                               ],
                             ),Divider(
                                 height:0,           
-                              color: Colors.grey[600]
+                              color: Colors.grey[300]
                             )
                           // Padding(padding: EdgeInsets.only(bottom: 6))
                           ],

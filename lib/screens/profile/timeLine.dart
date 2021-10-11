@@ -27,11 +27,12 @@ class TimeLineProfile extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
+                      border:Border.all(color: Colors.grey[100]),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          offset: Offset(0.0, 7.0),
-                          blurRadius: 13.0,
+                          color: Colors.black.withOpacity(0.06),
+                          offset: Offset(0.0, 3.0),
+                          blurRadius: 2.0,
                         ),
                       ],
                     ),

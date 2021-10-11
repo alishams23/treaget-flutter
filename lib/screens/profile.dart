@@ -171,7 +171,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ),
                               ],
                             ),
-                            Divider(height: 0, color: Colors.grey[400])
+                            Divider(height: 0, color: Colors.grey[300])
                           ]
                         : [],
                   )),
@@ -244,7 +244,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ? loadingView()
                                 : resume.length == 0
                                     ? listIsEmpty()
-                                    : ListView.builder(
+                                    : Padding(padding: EdgeInsets.only(top: 15),child:ListView.builder(
                                         itemCount: resume.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
@@ -252,7 +252,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                               index: index,
                                               data: resume[index]);
                                         },
-                                      )),
+                                      ))),
                         RefreshIndicator(
                             onRefresh: _handleRefreshService,
                             child: service.length == 0 && _isLoading

@@ -51,7 +51,7 @@ class StateServices extends State<Services> {
                     ],
                     gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
-                        colors: [Color(0xffee4c0f), Color(0xffef726e)]),
+                        colors: [Color(0xffEA4C5F), Color(0xffE9511E)]),
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
@@ -63,11 +63,16 @@ class StateServices extends State<Services> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
+                    // border: Border(left:  BorderSide(width: 1.0, color: Colors.lightBlue.shade600),),
+                    gradient:  LinearGradient(
+                      end: Alignment.topCenter,
+                      begin: Alignment.bottomCenter,
+                      colors: [Colors.white,Colors.white,Colors.grey[50]]),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        offset: Offset(0.0, -7.0),
-                        blurRadius: 13.0,
+                        color: Colors.black.withOpacity(0.04),
+                        offset: Offset(0.0, -4.0),
+                        blurRadius: 4.0,
                       ),
                     ],
                   ),
@@ -83,6 +88,7 @@ class StateServices extends State<Services> {
                       ),
                       ExpansionPanelList(
                         elevation: 0,
+                        
                         expansionCallback: (int index, bool isExpanded) {
                           setState(() {
                             isExpandedState = !isExpandedState;
@@ -90,6 +96,7 @@ class StateServices extends State<Services> {
                         },
                         children: [
                           ExpansionPanel(
+                            backgroundColor: Colors.transparent,
                             headerBuilder:
                                 (BuildContext context, bool isExpanded) {
                               return Row(
