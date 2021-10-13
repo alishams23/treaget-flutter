@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:treaget/services/add_service.dart';
+import 'package:treaget/services/service_service.dart';
 
 class AddService extends StatefulWidget {
   @override
@@ -92,12 +92,11 @@ class AddServiceState extends State {
                 backgroundColor: MaterialStateProperty.all(Colors.black),
                 padding: MaterialStateProperty.all(EdgeInsets.all(0)),
               ),
-              onPressed: ()  {
+              onPressed: () async {
                 if(formKey.currentState.validate()){
                   formKey.currentState.save();
-                  print(nameService);
-                  result = AddServiceApi.addService(nameService:nameService,priceService:priceService );
-                  print(result);
+                  result = await AddServiceApi.addService(nameService:nameService,priceService:priceService );
+                  if(result["result"])Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
                 }
               },
               child: Container(

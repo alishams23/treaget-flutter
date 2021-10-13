@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:treaget/services/request_service.dart';
 import 'package:treaget/services/timeline_service.dart';
 
-class AddResume extends StatefulWidget {
+class AddRequest extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => AddResumeState();
+  State<StatefulWidget> createState() => AddRequestState();
 }
 
-class AddResumeState extends State {
+class AddRequestState extends State {
   final formKey = GlobalKey<FormState>();
-  var data;
+  var title;
+  var body = "";
+  var price;
   var result;
 
 String validateForm(String value) {
@@ -30,30 +33,68 @@ String validateForm(String value) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Directionality(
+            Column(children: [Directionality(
                 textDirection: TextDirection.rtl,
                 child: TextFormField(
-                  // obscureText: true,
                   validator: validateForm,
                   textAlign: TextAlign.right,
                   onSaved: (var value) {
                     setState(() {
-                      data = value;
+                      title = value;
                     });
                   },
-                   
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[50],
-
-                    labelText: 'توضیحات رزومه',
+                    labelText: ' *موضوع',
                     enabledBorder: OutlineInputBorder(
                       borderSide: new BorderSide(color: Colors.grey[300]),
                       borderRadius: new BorderRadius.circular(10),
                     ),
                     // hintTextDirection: TextDirection.rtl
                   ),
-                )),
+                )),Padding(padding: EdgeInsets.only(top: 20)),Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextFormField(
+                  validator: validateForm,
+                  textAlign: TextAlign.right,
+                  onSaved: (var value) {
+                    setState(() {
+                      body = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[50],
+                    labelText: 'توضیحات ',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.grey[300]),
+                      borderRadius: new BorderRadius.circular(10),
+                    ),
+          
+                  ),
+                )),Padding(padding: EdgeInsets.only(top: 20)),
+            Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextFormField(
+                  validator: validateForm,
+                  textAlign: TextAlign.right,
+                  onSaved: (var value) {
+                    setState(() {
+                      price = value;
+                    });
+                  },
+                   keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[50],
+                    labelText: '*قیمت',
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.grey[300]),
+                      borderRadius: new BorderRadius.circular(10),
+                    ),
+                  ),
+                ))],),
             Padding(padding: EdgeInsets.only(top: 20)),
             Column(
               children: [
@@ -70,14 +111,14 @@ String validateForm(String value) {
                   onPressed: () async{
                     if (formKey.currentState.validate()) {
                       formKey.currentState.save();
-                      result = await TimelineApi.addTimeline(data: data);
+                      result = await RequestApi.addRequest();
                       if(result["result"])Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
                     }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 100),
                     child: Text(
-                      "پست کردن",
+                      "ذخیره",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
         return Directionality(textDirection: TextDirection.ltr, child: child);
       },
       title: 'treaget',
-      theme: ThemeData(primaryColor: Colors.white, fontFamily: "Vazir"),
+      theme: ThemeData(primaryColor: Colors.white, fontFamily: "Vazir",appBarTheme: AppBarTheme(
+     backgroundColor: Colors.white,foregroundColor: Colors.black
+  ),),
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {

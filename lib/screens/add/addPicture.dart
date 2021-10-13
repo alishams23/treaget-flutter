@@ -19,7 +19,7 @@ class AddPicture extends StatefulWidget {
 
 class AddPictureState extends State<AddPicture> {
   final formKey = GlobalKey<FormState>();
-  var alt;
+  var alt ;
   var result;
 
   @override
@@ -37,10 +37,11 @@ class AddPictureState extends State<AddPicture> {
         elevation: 0.9,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async{
           if (formKey.currentState.validate()) {
             formKey.currentState.save();
-            result = PictureApi.addPicture(image: widget.imageFile, alt: alt);
+            result = await PictureApi.addPicture(image: widget.imageFile, alt: alt);
+            if(result["result"])Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
           }
         },
         label: Text("پست کردن"),
@@ -70,7 +71,12 @@ class AddPictureState extends State<AddPicture> {
                         child: TextFormField(
                           // obscureText: true,
                           textAlign: TextAlign.right,
-                          
+                          onSaved: (var value){
+                            setState(() {
+                              alt = value;
+                            });
+                            
+                          },
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey[100],

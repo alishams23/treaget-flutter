@@ -18,7 +18,7 @@ class NotificationComponent extends StatelessWidget {
             BoxShadow(
               color: Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
-              blurRadius: 6,
+              blurRadius: 2,
               offset: Offset(0, 3),
             )
           ]),

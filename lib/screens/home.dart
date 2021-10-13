@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/components/popupMenu/postPicturePopup.dart';
 import 'package:treaget/components/popupMenu/postRequestPopup.dart';
+import 'package:treaget/screens/add/addRequest.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
@@ -452,7 +453,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget drawerTop() {
     return Column(children: [
       ClipRRect(
-        borderRadius: BorderRadius.circular(30.0), //or 15.0
+        borderRadius: BorderRadius.circular(40.0), //or 15.0
         child: Container(
             height: 90.0,
             width: 90.0,
@@ -465,7 +466,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 : Image.asset("assets/images/avatar.png")),
       ),
       Padding(
-          padding: EdgeInsets.only(bottom: 9, top: 50, left: 10, right: 10),
+          padding: EdgeInsets.only(bottom: 0, top: 50, left: 10, right: 10),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Column(
@@ -564,13 +565,15 @@ class _FeedScreenState extends State<FeedScreen> {
       // extendBodyBehindAppBar: true,
 
       drawer: Drawer(
+        elevation: 80,
           child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
               color: Colors.white,
-              height: 300,
+              height: 250,
               child: DrawerHeader(
+             
                   child: Column(
                 children: [
                   _isLoadingInfo != false ? loadingView() : drawerTop()
@@ -696,7 +699,7 @@ class _FeedScreenState extends State<FeedScreen> {
         // orientation: SpeedDialOrientation.Up,
         // childMarginBottom: 2,
         childMarginTop: 2,
-        children: [
+        children: userInfo != null ? userInfo["ServiceProvider"] == true ? [
           SpeedDialChild(
             child: Icon(
               Icons.store_outlined,
@@ -743,7 +746,22 @@ class _FeedScreenState extends State<FeedScreen> {
                       
             onLongPress: () => print('THIRD CHILD LONG PRESS'),
           ),
-        ],
+        ]:[ SpeedDialChild(
+            child: Icon(
+              Icons.shopping_bag_outlined,
+              color: Colors.deepOrange,
+            ),
+            // backgroundColor: ,
+            label: 'افزودن درخواست     ',
+            // labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () { 
+           
+           Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => AddRequest()));
+                      },
+          ),]:[],
       ),
     );
   }
