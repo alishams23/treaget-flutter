@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:flutter/services.dart';
+import 'package:treaget/models/home_model.dart';
+import 'package:treaget/services/Picture_service.dart';
 
-class PopupMenuButtonPostPicture extends StatelessWidget {
+
+
+// ignore: must_be_immutable
+class PopupMenuButtonPostPicture extends StatefulWidget {
+  Post data;
+  var userInfo;
+  PopupMenuButtonPostPicture(this.data,this.userInfo);
+
   @override
+  State<StatefulWidget> createState() {
+    
+    return PopupMenuButtonPostPictureState();
+  }
+ 
+}
+
+
+class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>{
+  final snackBar = SnackBar(content: Text('کپی شد'));
+  var result;
+ @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
       elevation: 20,
@@ -24,8 +46,14 @@ class PopupMenuButtonPostPicture extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
           ),
+          onTap: (){
+            Clipboard.setData(ClipboardData(text: "treaget.com/account/post/${widget.data.id}/"));
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          },
         ),
         const PopupMenuDivider(),
+        widget.userInfo["username"] == widget.data.author["username"] ?
         PopupMenuItem<String>(
           child: ListTile(
             leading: const Icon(
@@ -38,7 +66,11 @@ class PopupMenuButtonPostPicture extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
           ),
-        ),
+          onTap: () async{
+            result = await PictureApi.removePicture(id:widget.data.id );
+            if(result["result"] == true)Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+          },
+        ):null,
       ],
     );
   }

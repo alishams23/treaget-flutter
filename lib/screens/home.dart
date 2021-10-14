@@ -165,7 +165,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                       IconButton(
                                         icon: Icon(LineIcons.bookmark),
                                         iconSize: 27.0,
-                                        onPressed: () => print('Save post'),
+                                        onPressed: () => print(productsData.id ),
                                       ),
                                     ],
                                   ),
@@ -193,7 +193,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: Container(
                                 padding: EdgeInsets.all(4),
-                                child: PopupMenuButtonPostPicture(),
+                                child:  userInfo != null  ? PopupMenuButtonPostPicture(productsData,userInfo ) :Text(""),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: Colors.white.withOpacity(0.1)),
@@ -345,7 +345,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget requestCard(int index, data) {
     return Container(
       margin: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
-      padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+      padding: EdgeInsets.fromLTRB(15.0, 8.0, 19.0, 8.0),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(23.0),
@@ -387,7 +387,13 @@ class _FeedScreenState extends State<FeedScreen> {
                   Padding(
                     padding: EdgeInsets.only(right: 10),
                   ),
-                  Column(
+                  GestureDetector(onTap:  () => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => Scaffold(
+                            body: Profile(username: data.author['username']),
+                            backgroundColor: Colors.white,
+                          ))),child: Column(
                     children: [
                       Text(
                         data.author["username"],
@@ -402,10 +408,10 @@ class _FeedScreenState extends State<FeedScreen> {
                         ),
                       ),
                     ],
-                  )
+                  ),)
                 ],
-              ),
-              PopupMenuButtonPostRequest()
+              ),userInfo != null  ?
+              PopupMenuButtonPostRequest(data,userInfo):Container()
             ],
           ),
           Padding(
@@ -417,6 +423,7 @@ class _FeedScreenState extends State<FeedScreen> {
             ),
           ),
           Text(data.body),
+          (userInfo != null && userInfo["username"] != data.author["username"] && userInfo["ServiceProvider"] == true) ?
           Padding(
             padding: EdgeInsets.only(top: 10),
             child: ElevatedButton(
@@ -439,12 +446,12 @@ class _FeedScreenState extends State<FeedScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 33),
                 child: Text(
-                  "سفارش",
+                  "قبول درخواست",
                   style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
-          )
+          ):Padding(padding: EdgeInsets.only(bottom: 10),)
         ],
       ),
     );
@@ -565,7 +572,7 @@ class _FeedScreenState extends State<FeedScreen> {
       // extendBodyBehindAppBar: true,
 
       drawer: Drawer(
-        elevation: 80,
+        // elevation: 80,
           child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -619,7 +626,7 @@ class _FeedScreenState extends State<FeedScreen> {
         ],
       )),
       appBar: AppBar(
-        elevation: 1,
+        elevation: 0.5,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Padding(

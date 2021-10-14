@@ -77,7 +77,7 @@ String validateForm(String value) {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 100),
                     child: Text(
-                      "پست کردن",
+                      "ذخیره کردن",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

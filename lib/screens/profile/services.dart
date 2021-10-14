@@ -19,10 +19,7 @@ class StateServices extends State<Services> {
           borderRadius: new BorderRadius.circular(13)),
       textStyle: TextStyle(fontSize: 13, fontFamily: "Vazir"));
   @override
-  void initState() {
-    super.initState();
-    print(widget.data);
-  }
+
 
   @override
   Widget build(BuildContext context) {

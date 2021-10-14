@@ -10,7 +10,9 @@ import 'package:treaget/components/popupMenu/profilePopUp.dart';
 import 'package:treaget/components/profile/sampleProfile.dart';
 import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
+import 'package:treaget/services/Picture_service.dart';
 import 'package:treaget/services/profile_service.dart';
+import 'package:treaget/services/request_service.dart';
 
 import 'PostPicture.dart';
 
@@ -24,8 +26,10 @@ class Profile extends StatefulWidget {
 
 class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List _products = [];
+  List favorite = [];
   List resume = [];
   List service = [];
+  List request = [];
   Map info = {};
   int _currentPage = 1;
   bool _isLoading = true;
@@ -34,6 +38,11 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
 
   Future<Null> _handleRefresh() async {
     await _getPost(refresh: true);
+    return null;
+  }
+
+  Future<Null> _handleRefreshFavorite() async {
+    await getFavorite(refresh: true);
     return null;
   }
 
@@ -52,7 +61,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       _isLoading = true;
     });
 
-    var response = await PostPictureProfileService.getPosts(
+    var response = await PictureApi.getListPosts(
         username: widget.username != "" ? widget.username : "");
     setState(() {
       if (refresh) _products.clear();
@@ -73,6 +82,14 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       info.addAll(response);
       _isLoading = false;
     });
+    if (info["ServiceProvider"] == true) {
+      _getPost();
+      _getResume();
+      getService();
+    } else {
+      getFavorite();
+      getRequest();
+    }
   }
 
   getService({bool refresh: false}) async {
@@ -84,6 +101,35 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       service.clear();
       service.addAll(response['data']);
+      _isLoading = false;
+    });
+  }
+
+  getRequest({bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response = await RequestApi.getListRequest(
+        username: widget.username != "" ? widget.username : "");
+    setState(() {
+      request.clear();
+      request.addAll(response['data']);
+      _isLoading = false;
+    });
+    print(request);
+  }
+
+  getFavorite({bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    var response = await PictureApi.getListFavorite(
+        username: widget.username != "" ? widget.username : "");
+
+    setState(() {
+      favorite.clear();
+      favorite.addAll(response['picture']);
       _isLoading = false;
     });
   }
@@ -105,9 +151,6 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _getInformaion();
-    _getPost();
-    _getResume();
-    getService();
   }
 
   Widget listIsEmpty() {
@@ -127,7 +170,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     return NestedScrollView(
         body: Container(
           child: DefaultTabController(
-            length: 3,
+            length:
+                (info.length != 0 && info["ServiceProvider"] == true) ? 3 : 2,
             child: Scaffold(
               backgroundColor: Colors.white,
               appBar: PreferredSize(
@@ -138,42 +182,41 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ? [
                             TabBar(
                               isScrollable: false,
-
-                              // indicatorColor: Colors.transparent,
-                              // indicatorSize: TabBarIndicatorSize.tab,
                               unselectedLabelColor: Colors.grey[400],
                               indicator: MD2Indicator(
                                 indicatorSize: MD2IndicatorSize.normal,
                                 indicatorHeight: 3,
                                 indicatorColor: Colors.black,
                               ),
-
-                              // indicator: BoxDecoration(
-                              //   borderRadius: BorderRadius.circular(10),
-                              //   color: Colors.grey.withOpacity(0.2),
-                              //   boxShadow: [
-                              //     BoxShadow(
-                              //       color: Colors.grey.withOpacity(0.2),
-                              //       blurRadius: 25,
-                              //       offset: Offset(0, 15),
-                              //     ),
-                              //   ],
-                              // ),
-                              tabs: <Widget>[
-                                Tab(
-                                  icon: Icon(Icons.dashboard_outlined),
-                                ),
-                                Tab(
-                                  icon: Icon(Icons.assignment_ind_outlined),
-                                ),
-                                Tab(
-                                  icon: Icon(Icons.store_outlined),
-                                ),
-                              ],
+                              tabs: (info.length != 0 &&
+                                      info["ServiceProvider"] == true)
+                                  ? [
+                                      Tab(
+                                        icon: Icon(Icons.dashboard_outlined),
+                                      ),
+                                      Tab(
+                                        icon:
+                                            Icon(Icons.assignment_ind_outlined),
+                                      ),
+                                      Tab(
+                                        icon: Icon(Icons.store_outlined),
+                                      ),
+                                    ]
+                                  : [
+                                      
+                                      Tab(
+                                        icon:
+                                            Icon(Icons.shopping_bag),
+                                      ),
+                                      Tab(
+                                        icon: Icon(LineIcons.heartAlt),
+                                      ),
+                                    ],
                             ),
                             Divider(height: 0, color: Colors.grey[300])
                           ]
-                        : [],
+                        : [
+                    ],
                   )),
               body: TabBarView(
                 children: (info.length != 0 && info["ServiceProvider"] == true)
@@ -244,15 +287,17 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                 ? loadingView()
                                 : resume.length == 0
                                     ? listIsEmpty()
-                                    : Padding(padding: EdgeInsets.only(top: 15),child:ListView.builder(
-                                        itemCount: resume.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return TimeLineProfile(
-                                              index: index,
-                                              data: resume[index]);
-                                        },
-                                      ))),
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 15),
+                                        child: ListView.builder(
+                                          itemCount: resume.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return TimeLineProfile(
+                                                index: index,
+                                                data: resume[index]);
+                                          },
+                                        ))),
                         RefreshIndicator(
                             onRefresh: _handleRefreshService,
                             child: service.length == 0 && _isLoading
@@ -271,8 +316,57 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           },
                                         ),
                                       ))
-                      ]
-                    : [loadingView(), loadingView(), loadingView()],
+                      ] : [favorite.length == 0 && _isLoading
+                            ? loadingView()
+                            : favorite.length == 0
+                                ? RefreshIndicator( 
+                                    onRefresh: _handleRefreshFavorite,
+                                    child: listIsEmpty())
+                                : Scaffold(
+                                    backgroundColor: Colors.white,
+                                    
+                                    body: RefreshIndicator(
+                                        onRefresh: _handleRefreshFavorite,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 0, left: 10, right: 10),
+                                          child: StaggeredGridView.countBuilder(
+                                            crossAxisCount: 4,
+                                            mainAxisSpacing: 4,
+                                            crossAxisSpacing: 4,
+                                            itemCount: favorite.length,
+                                            itemBuilder: (context, index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            PostPicture(
+                                                          data:
+                                                              favorite[index],
+                                                        ),
+                                                      ));
+                                                },
+                                                child: (index == 0 ||
+                                                        index == 1)
+                                                    ? Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 15),
+                                                        child: SampleProfile(
+                                                            index,
+                                                            favorite[index]),
+                                                      )
+                                                    : SampleProfile(index,
+                                                        favorite[index]),
+                                              );
+                                            },
+                                            staggeredTileBuilder: (index) =>
+                                                const StaggeredTile.fit(2),
+                                          ),
+                                        )),
+                                  ), loadingView()],
               ),
             ),
           ),
