@@ -8,6 +8,7 @@ import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/popupMenu/profilePopUp.dart';
 import 'package:treaget/components/profile/sampleProfile.dart';
+import 'package:treaget/components/request.dart';
 import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
 import 'package:treaget/services/Picture_service.dart';
@@ -45,6 +46,13 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     await getFavorite(refresh: true);
     return null;
   }
+
+
+  Future<Null> _handleRefreshRequest() async {
+    await getRequest(refresh: true);
+    return null;
+  }
+
 
   Future<Null> _handleRefreshService() async {
     await getService();
@@ -116,7 +124,6 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       request.addAll(response['data']);
       _isLoading = false;
     });
-    print(request);
   }
 
   getFavorite({bool refresh: false}) async {
@@ -316,7 +323,22 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           },
                                         ),
                                       ))
-                      ] : [favorite.length == 0 && _isLoading
+                      ] : [RefreshIndicator(
+                            onRefresh: _handleRefreshRequest,
+                            child: request.length == 0 && _isLoading
+                                ? loadingView()
+                                : request.length == 0
+                                    ? listIsEmpty()
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 15),
+                                        child: ListView.builder(
+                                          itemCount: request.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return RequestCardComponent(
+                                                request[index],info);
+                                          },
+                                        ))),favorite.length == 0 && _isLoading
                             ? loadingView()
                             : favorite.length == 0
                                 ? RefreshIndicator( 
@@ -366,7 +388,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                 const StaggeredTile.fit(2),
                                           ),
                                         )),
-                                  ), loadingView()],
+                                  )],
               ),
             ),
           ),

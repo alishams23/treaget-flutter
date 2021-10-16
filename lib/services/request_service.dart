@@ -24,7 +24,22 @@ class RequestApi {
       return {"result":false};
     }
   }
-
+  static Future<Map> acceptRequest({var day,var pk}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$website/api/AddAcceptRequestApi/$pk/');
+    String token = prefs.getString('user.api_token');
+    var response = await http.post(url, headers: {
+      // 'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Token $token"
+    },body: {  'time': day });
+    if (response.statusCode == 201) {
+      return {"result":true};
+    }
+    else{
+      return {"result":false};
+    }
+  }
   static Future<Map> remove({var id}) async {
     var url = Uri.parse('$website/api/DestroyRequestApi/$id/');
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -64,7 +79,8 @@ class RequestApi {
       responseBody.forEach((item) {
        post.add(Post.fromJson({"item":"request","data":item}));
       });
-      return {"current_page": page, "products": post};
+     
+      return {"current_page": page, "data": post};
     }
   }
 }

@@ -13,6 +13,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/components/popupMenu/postPicturePopup.dart';
 import 'package:treaget/components/popupMenu/postRequestPopup.dart';
+import 'package:treaget/components/request.dart';
 import 'package:treaget/screens/add/addRequest.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
@@ -67,12 +68,13 @@ class _FeedScreenState extends State<FeedScreen> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(23.0),
-            boxShadow: [
+            border: Border.all(color: Colors.grey[200]),
+         boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: Offset(0, 2),
+                color: Colors.grey.withOpacity(0.05),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3),
               )
             ]),
         child: Column(
@@ -342,120 +344,7 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget requestCard(int index, data) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
-      padding: EdgeInsets.fromLTRB(15.0, 8.0, 19.0, 8.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(23.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 0,
-              blurRadius: 20,
-              offset: Offset(0, 2),
-            )
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  GestureDetector(onTap: () => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => Scaffold(
-                            body: Profile(username: data.author['username']),
-                            backgroundColor: Colors.white,
-                          ))),child: CircleAvatar(
-                    radius: 21,
-                    backgroundColor: Colors.grey[300],
-                    child: ClipOval(
-                      child: data.author["image"] != null
-                          ? Image(
-                              image: NetworkImage("${data.author['image']}"),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                  ),),
-                  
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                  ),
-                  GestureDetector(onTap:  () => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => Scaffold(
-                            body: Profile(username: data.author['username']),
-                            backgroundColor: Colors.white,
-                          ))),child: Column(
-                    children: [
-                      Text(
-                        data.author["username"],
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5),
-                        child: Text(
-                          "قیمت : ${data.price}",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),)
-                ],
-              ),userInfo != null  ?
-              PopupMenuButtonPostRequest(data,userInfo):Container()
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Text(
-              data.title,
-              style: TextStyle(fontSize: 18),
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-          Text(data.body),
-          (userInfo != null && userInfo["username"] != data.author["username"] && userInfo["ServiceProvider"] == true) ?
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13.0),
-                )),
-                shadowColor: MaterialStateProperty.all(Colors.grey),
-                backgroundColor: MaterialStateProperty.all(Colors.grey[200]),
-                padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-              ),
-              onPressed: () => Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => Scaffold(
-                            body: Profile(username: data.author['username']),
-                            backgroundColor: Colors.white,
-                          ))),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 33),
-                child: Text(
-                  "قبول درخواست",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ):Padding(padding: EdgeInsets.only(bottom: 10),)
-        ],
-      ),
-    );
-  }
+
 
   Widget drawerTop() {
     return Column(children: [
@@ -507,7 +396,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _buildPost(int index, productsData) {
     print(productsData.item);
     return productsData.item == "request"
-        ? requestCard(index, productsData)
+        ? RequestCardComponent(productsData,userInfo)
         : pictureCard(index, productsData);
   }
 
@@ -568,7 +457,7 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xffF9F9F9),
       // extendBodyBehindAppBar: true,
 
       drawer: Drawer(

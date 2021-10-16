@@ -6,7 +6,65 @@ import 'package:line_icons/line_icons.dart';
 Color darkBlue = Colors.deepOrange[600];
 Color lightBlue = Colors.deepOrange[700];
 
+
 class DashboardMain extends StatelessWidget {
+
+  Widget cardDesk(var icon, Map data){return Expanded(
+                      flex: 4,
+                      child: Container(
+                        height: 150,
+                        // width: 150,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(19.0),
+                              child: Container(
+                                  height: 48.0,
+                                  width: 48.0,
+                                  // color: Colors.grey[100],
+                                  decoration: BoxDecoration(boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 19,
+                                      offset: Offset(0, 9),
+                                    )
+                                  ]),
+                                  child: Icon(icon,
+                                    
+                                    color: Colors.grey[800],
+                                  )),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 10)),
+                            Text(
+                              data["number"],
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              data["text"],
+
+                              style: TextStyle(color: Colors.grey[500]),
+                            ),
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(19.0),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.04)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.05),
+                                spreadRadius: 0,
+                                blurRadius: 4,
+                                offset: Offset(0,4),
+                              )
+                            ]),
+                      ));}
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -208,172 +266,12 @@ class DashboardMain extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 150,
-                        // width: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(19.0),
-                              child: Container(
-                                  height: 48.0,
-                                  width: 48.0,
-                                  // color: Colors.grey[100],
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 19,
-                                      offset: Offset(0, 9),
-                                    )
-                                  ]),
-                                  child: Icon(
-                                    LineIcons.dollarSign,
-                                    color: Colors.grey[800],
-                                  )),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Text(
-                              "100",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              "پرداخت امن",
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(19.0),
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.04)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.13),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: Offset(0, 9),
-                              )
-                            ]),
-                      )),
+                  cardDesk(LineIcons.dollarSign,{"text":"پرداخت امن","number":"100"}),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 150,
-                        // width: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(19.0),
-                              child: Container(
-                                  height: 48.0,
-                                  width: 48.0,
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 19,
-                                      offset: Offset(0, 9),
-                                    )
-                                  ]),
-                                  child: Icon(
-                                    LineIcons.shoppingBag,
-                                    color: Colors.grey[800],
-                                  )),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Text(
-                              "100",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              "سفارشات",
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(19.0),
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.04)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.13),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: Offset(0, 9),
-                              )
-                            ]),
-                      )),
+                  cardDesk(LineIcons.shoppingBag,{"text":"سفارشات","number":"100"}),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 150,
-                        // width: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(19.0),
-                              child: Container(
-                                  height: 48.0,
-                                  width: 48.0,
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 19,
-                                      offset: Offset(0, 9),
-                                    )
-                                  ]),
-                                  child: Icon(
-                                    LineIcons.handshake,
-                                    color: Colors.grey[800],
-                                  )),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Text(
-                              "100",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              "درخواست",
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(19.0),
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.04)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.13),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset: Offset(0, 9),
-                              )
-                            ]),
-                      )),
-                ],
+                  cardDesk(LineIcons.handshake,{"text":"درخواست","number":"100"}),
+                                  ],
               )
             ],
           ),
