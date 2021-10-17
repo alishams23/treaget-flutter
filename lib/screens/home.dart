@@ -1,6 +1,5 @@
  
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -19,7 +18,6 @@ import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 import 'package:validators/validators.dart';
-
 import 'PostPicture.dart';
 import 'add/addPicture.dart';
 import 'add/addResume.dart';

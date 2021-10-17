@@ -1,12 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:treaget/components/popupMenu/postRequestPopup.dart';
+import 'package:treaget/screens/add/acceptRequest.dart';
 import 'package:treaget/screens/profile.dart';
 
-class RequestCardComponent extends StatelessWidget {
+class RequestCardComponent extends StatefulWidget {
   var data;
   var userInfo;
   RequestCardComponent(this.data, this.userInfo);
+
+  @override
+  State<StatefulWidget> createState() => RequestCardComponentState();
+}
+
+class RequestCardComponentState extends State<RequestCardComponent> {
+  bool isExpandedState = false;
+  final ButtonStyle style = ElevatedButton.styleFrom(
+      primary: Colors.grey.withOpacity(0.2),
+      shadowColor: Colors.transparent,
+      shape: new RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(13)),
+      textStyle: TextStyle(fontSize: 13, fontFamily: "Vazir"));
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,16 +52,17 @@ class RequestCardComponent extends StatelessWidget {
                         CupertinoPageRoute(
                             builder: (context) => Scaffold(
                                   body: Profile(
-                                      username: data.author['username']),
+                                      username: widget.data.author['username']),
                                   backgroundColor: Colors.white,
                                 ))),
                     child: CircleAvatar(
                       radius: 21,
                       backgroundColor: Colors.grey[300],
                       child: ClipOval(
-                        child: data.author["image"] != null
+                        child: widget.data.author["image"] != null
                             ? Image(
-                                image: NetworkImage("${data.author['image']}"),
+                                image: NetworkImage(
+                                    "${widget.data.author['image']}"),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -63,20 +78,20 @@ class RequestCardComponent extends StatelessWidget {
                         CupertinoPageRoute(
                             builder: (context) => Scaffold(
                                   body: Profile(
-                                      username: data.author['username']),
+                                      username: widget.data.author['username']),
                                   backgroundColor: Colors.white,
                                 ))),
                     child: Column(
                       children: [
                         Text(
-                          data.author["username"],
+                          widget.data.author["username"],
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            "قیمت : ${data.price}",
+                            "قیمت : ${widget.data.price}",
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -85,70 +100,100 @@ class RequestCardComponent extends StatelessWidget {
                   )
                 ],
               ),
-              userInfo != null
-                  ? PopupMenuButtonPostRequest(data, userInfo)
+              widget.userInfo != null
+                  ? PopupMenuButtonPostRequest(widget.data, widget.userInfo)
                   : Container()
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 20),
+            padding: EdgeInsets.only(top: 20, bottom: 5),
             child: Text(
-              data.title,
+              widget.data.title,
               style: TextStyle(fontSize: 18),
               textDirection: TextDirection.rtl,
             ),
           ),
-          Text(data.body),
-          Padding(
-            padding: EdgeInsets.only(top: 10,bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin:EdgeInsets.only(right: 13),
-                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 13),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.grey[200])
+          Text(widget.data.body),
+          Padding(padding: EdgeInsets.only(bottom: 10)),
+          ExpansionPanelList(
+            elevation: 0,
+            expansionCallback: (int index, bool isExpanded) {
+              setState(() {
+                isExpandedState = !isExpandedState;
+              });
+            },
+            children: [
+              ExpansionPanel(
+                backgroundColor: Colors.transparent,
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return Row(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 13),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: Colors.grey[200])),
+                        child: Text(
+                          "  پیشنهاد ${widget.data.subcategories.length}",
+                        ),
                       ),
-                  child: Text("  پیشنهاد ${data.subcategories.length}",),
-                ),
-                (userInfo != null &&
-                        userInfo["username"] != data.author["username"] &&
-                        userInfo["ServiceProvider"] == true)
-                    ? ElevatedButton(
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13.0),
-                          )),
-                          shadowColor: MaterialStateProperty.all(Colors.grey),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.grey[200]),
-                          padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-                        ),
-                        onPressed: () => Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => Scaffold(
-                                      body: Profile(
-                                          username: data.author['username']),
-                                      backgroundColor: Colors.white,
-                                    ))),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 33),
-                          child: Text(
-                            "قبول درخواست",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      )
-                    : Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                      )
-              ],
-            ),
+                      (widget.userInfo != null &&
+                              widget.userInfo["username"] !=
+                                  widget.data.author["username"] &&
+                              widget.userInfo["ServiceProvider"] == true)
+                          ? ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(13.0),
+                                )),
+                                shadowColor:
+                                    MaterialStateProperty.all(Colors.grey[50]),
+                                backgroundColor:
+                                    MaterialStateProperty.all(Colors.grey[100]),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(0)),
+                              ),
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        AddAcceptRequest(widget.data),
+                                  )),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  "قبول درخواست  ",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                            )
+                    ],
+                  );
+                },
+                body: widget.data.subcategories.length != 0 ? Container(height: 300,child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: widget.data.subcategories.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text('${widget.data.subcategories[index]["time"]}'),
+                      subtitle: Text('${widget.data.subcategories[index]["author"]["username"]}'),
+                    );
+                  },
+                ),):ListTile(
+                      title: Text('Item 2 child'),
+                      subtitle: Text('Details goes here'),
+                    ),
+                isExpanded: isExpandedState,
+              ),
+            ],
           )
         ],
       ),

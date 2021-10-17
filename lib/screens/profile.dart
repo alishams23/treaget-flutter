@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/components/indicator_tab.dart';
 import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
@@ -32,6 +33,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List service = [];
   List request = [];
   Map info = {};
+  var currentUser;
   int _currentPage = 1;
   bool _isLoading = true;
 
@@ -90,6 +92,10 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       info.addAll(response);
       _isLoading = false;
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    currentUser = prefs.getString('user.username');
+    currentUser = await InformationProfileService.getInfo(
+        username: currentUser);
     if (info["ServiceProvider"] == true) {
       _getPost();
       _getResume();
@@ -336,7 +342,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return RequestCardComponent(
-                                                request[index],info);
+                                                request[index],currentUser);
                                           },
                                         ))),favorite.length == 0 && _isLoading
                             ? loadingView()

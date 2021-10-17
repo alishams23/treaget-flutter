@@ -2,16 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:treaget/services/request_service.dart';
 
-class AddRequest extends StatefulWidget {
+class AddAcceptRequest extends StatefulWidget {
+  var data;
+  AddAcceptRequest(this.data);
   @override
-  State<StatefulWidget> createState() => AddRequestState();
+  State<StatefulWidget> createState() => AddAcceptRequestState();
 }
 
-class AddRequestState extends State {
+class AddAcceptRequestState extends State<AddAcceptRequest> {
   final formKey = GlobalKey<FormState>();
-  var title;
-  var body = "";
-  var price;
+  var time;
+
   var result;
 
   String validateForm(String value) {
@@ -37,6 +38,7 @@ class AddRequestState extends State {
               children: [
                 Column(
                   children: [
+                   
                     Directionality(
                         textDirection: TextDirection.rtl,
                         child: TextFormField(
@@ -44,59 +46,14 @@ class AddRequestState extends State {
                           textAlign: TextAlign.right,
                           onSaved: (var value) {
                             setState(() {
-                              title = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                            labelText: ' موضوع',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: Colors.grey[300]),
-                              borderRadius: new BorderRadius.circular(10),
-                            ),
-                            // hintTextDirection: TextDirection.rtl
-                          ),
-                        )),
-                    Padding(padding: EdgeInsets.only(top: 20)),
-                    Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: TextFormField(
-                          validator: validateForm,
-                          textAlign: TextAlign.right,
-                          onSaved: (var value) {
-                            setState(() {
-                              body = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                            labelText: 'توضیحات ',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  new BorderSide(color: Colors.grey[300]),
-                              borderRadius: new BorderRadius.circular(10),
-                            ),
-                          ),
-                        )),
-                    Padding(padding: EdgeInsets.only(top: 20)),
-                    Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: TextFormField(
-                          validator: validateForm,
-                          textAlign: TextAlign.right,
-                          onSaved: (var value) {
-                            setState(() {
-                              price = value;
+                              time = value;
                             });
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.grey[50],
-                            labelText: 'قیمت',
+                            labelText: 'مدت زمان انجام کار',
                             enabledBorder: OutlineInputBorder(
                               borderSide:
                                   new BorderSide(color: Colors.grey[300]),
@@ -124,8 +81,7 @@ class AddRequestState extends State {
                       onPressed: () async {
                         if (formKey.currentState.validate()) {
                           formKey.currentState.save();
-                          result = await RequestApi.addRequest(
-                              title: title, body: body, price: price);
+                          result = await RequestApi.acceptRequest(day: time,pk: widget.data.id);
                           if (result["result"])
                             Navigator.pushNamedAndRemoveUntil(
                                 context, '/home', (_) => false);
