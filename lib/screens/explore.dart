@@ -6,14 +6,18 @@ import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timelines/timelines.dart';
 import 'package:treaget/components/indicator_tab.dart';
 import 'package:treaget/components/indicator_tab_circle.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/explore/samplesExplore.dart';
+import 'package:treaget/components/request.dart';
 import 'package:treaget/services/explore_service.dart';
 import 'package:treaget/services/global_service.dart';
+import 'package:treaget/services/profile_service.dart';
+import 'package:treaget/services/request_service.dart';
 
 import 'PostPicture.dart';
 
@@ -26,6 +30,8 @@ class Example08 extends StatefulWidget {
 class _ViewPostScreenState extends State<Example08>
     with AutomaticKeepAliveClientMixin<Example08> {
   List _products = [];
+  List request = [];
+  var currentUser;
   ScrollController _scrollController = new ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -43,7 +49,10 @@ class _ViewPostScreenState extends State<Example08>
     await _getPost(refresh: true);
     return null;
   }
-
+Future<Null> _handleRefreshRequest() async {
+    await _getRequest(refresh: true);
+    return null;
+  }
   Widget streamListView() {
     return _products.length == 0 && _isLoading
         ? loadingView()
@@ -96,6 +105,7 @@ class _ViewPostScreenState extends State<Example08>
     super.initState();
     _getPost();
     _getCurrentUserInfo();
+    _getRequest();
     _scrollController.addListener(_scrollListener);
   }
 
@@ -122,6 +132,25 @@ class _ViewPostScreenState extends State<Example08>
     setState(() {
       if (refresh) _products.clear();
       _products.addAll(response['products']);
+      _currentPage +=1;
+      _isLoading = false;
+    });
+  }
+
+  _getRequest({int page: 1, bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    var response = await RequestApi.explore(page:page);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    currentUser = prefs.getString('user.username');
+    currentUser = await InformationProfileService.getInfo(
+        username: currentUser);
+    setState(() {
+      if (refresh) request.clear();
+      if(response['data']!= false)request.addAll(response['data']);
       _currentPage +=1;
       _isLoading = false;
     });
@@ -186,9 +215,22 @@ class _ViewPostScreenState extends State<Example08>
                       Container(
                         child: streamListView(),
                       ),
-                      Center(
-                        child: Text('It\'s sunny here'),
-                      ),
+                      RefreshIndicator(
+                            onRefresh: _handleRefreshRequest,
+                            child: request.length == 0 && _isLoading
+                                ? loadingView()
+                                : request.length == 0
+                                    ? listIsEmpty()
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 15),
+                                        child: ListView.builder(
+                                          itemCount: request.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return RequestCardComponent(
+                                                request[index],currentUser);
+                                          },
+                                        ))),
                       Center(
                         child: Text('در حال آپدیت'),
                       ),
@@ -214,30 +256,30 @@ class _ViewPostScreenState extends State<Example08>
             ),
            loadingUser == false ? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: [Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: CircleAvatar(backgroundImage: userInfo['image'] != null? NetworkImage("${userInfo['image']}"):null,
+                      backgroundColor: Colors.grey[300],
+                      radius: 24,
+                    )),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: EdgeInsets.only(right: 20),
                       child: Text(
-                        "Hello , ${userInfo['first_name']} 👋",
-                        style: TextStyle(fontSize: 23),
+                        "👋عزیز  ${userInfo['first_name']} سلام",
+                        style: TextStyle(fontSize: 20),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text("explore in yours ",
-                          style: TextStyle(fontSize: 16)),
+                      padding: EdgeInsets.only(right: 20),
+                      child: Text("   به تریگت خوش آمدی",
+                          style: TextStyle(fontSize: 14)),
                     )
                   ],
                 ),
-                Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: CircleAvatar(backgroundImage: userInfo['image'] != null? NetworkImage("${userInfo['image']}"):null,
-                      backgroundColor: Colors.grey[300],
-                      radius: 25,
-                    ))
+                
               ],
             ) : Text(""),
             Form(
@@ -258,7 +300,7 @@ class _ViewPostScreenState extends State<Example08>
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(17)),
                             child: Icon(
-                              LineIcons.horizontalSliders,
+                              LineIcons.search,
                               color: Colors.white,
                             ),
                           ),

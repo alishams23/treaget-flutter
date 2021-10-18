@@ -59,6 +59,32 @@ class RequestApi {
     }
    }
 
+  static Future<Map> explore({var page=1}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$website/api/ExploreProjectApiView/?page=$page');
+    String token = prefs.getString('user.api_token');
+    var response = await http.get(url, headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Token $token"
+    });
+    
+    if (response.statusCode == 200) {
+      
+      String source = Utf8Decoder().convert(response.bodyBytes);
+      var responseBody = json.decode(source);
+
+      List<Post> post = [];
+      responseBody["results"].forEach((item) {
+       post.add(Post.fromJson({"item":"request","data":item}));
+      });
+     
+      return {"current_page": page, "data": post};
+    } if  (response.statusCode == 404)  {
+      return {"current_page": page, "data": false};
+    }
+    
+   }
 
     static Future<Map> getListRequest({String username = '', int page = 1}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

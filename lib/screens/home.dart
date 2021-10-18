@@ -444,6 +444,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         padding: const EdgeInsets.only(top: 0),
                         itemCount: _products.length,
                         itemBuilder: (BuildContext context, int index) {
+                          if (index == _products.length -1)return Padding(padding: EdgeInsets.only(bottom: 60),child: _buildPost(index, _products[index]),);
                           return _buildPost(index, _products[index]);
                         }),
                     onRefresh: _handleRefresh),
@@ -465,7 +466,7 @@ class _FeedScreenState extends State<FeedScreen> {
         children: <Widget>[
           Container(
               color: Colors.white,
-              height: 250,
+              height: 300,
               child: DrawerHeader(
              
                   child: Column(

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Services extends StatefulWidget {
   final Map data;
-  Services({Key key, this.data}) : super(key: key);
+  var currentUser;
+  Services(this.data,this.currentUser);
   @override
   // ignore: non_constant_identifier_names
   State<StatefulWidget> createState() => StateServices();
@@ -18,7 +19,7 @@ class StateServices extends State<Services> {
       shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(13)),
       textStyle: TextStyle(fontSize: 13, fontFamily: "Vazir"));
-  @override
+
 
 
   @override
@@ -27,7 +28,7 @@ class StateServices extends State<Services> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Stack(
           children: [
-            if (widget.data["price"] != null)
+            if (widget.data["price"] != null || widget.data["price"] != "")
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -79,7 +80,7 @@ class StateServices extends State<Services> {
                       Padding(
                         padding: EdgeInsets.all(7),
                         child: Text(
-                          widget.data["specialName"] != "" ?widget.data["specialName"] :widget.data["nameProduct"]["title"],
+                          (widget.data["specialName"] != "" && widget.data["specialName"] != null) ?widget.data["specialName"] :widget.data["nameProduct"]["title"] != widget.data["specialName"] ?widget.data["nameProduct"]["title"]:"",
                           textDirection: TextDirection.rtl,
                         ),
                       ),
@@ -113,7 +114,7 @@ class StateServices extends State<Services> {
                                     ),
                                   ),
                                   Padding(padding: EdgeInsets.only(right: 10)),
-                                  ElevatedButton(
+                                  widget.currentUser["ServiceProvider"]? ElevatedButton(
                                     style: style,
                                     onPressed: () {},
                                     child: Row(
@@ -136,7 +137,7 @@ class StateServices extends State<Services> {
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ):Container(),
                                 ],
                               );
                             },

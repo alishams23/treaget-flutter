@@ -7,6 +7,7 @@ import 'package:treaget/screens/profile.dart';
 class RequestCardComponent extends StatefulWidget {
   var data;
   var userInfo;
+
   RequestCardComponent(this.data, this.userInfo);
 
   @override
@@ -15,6 +16,19 @@ class RequestCardComponent extends StatefulWidget {
 
 class RequestCardComponentState extends State<RequestCardComponent> {
   bool isExpandedState = false;
+
+  var username;
+  var n;
+
+  bool checkAcceptRequestBool() {
+    for (n in widget.data.subcategories) {
+      if (n["author"]["username"] == widget.userInfo["username"]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   final ButtonStyle style = ElevatedButton.styleFrom(
       primary: Colors.grey.withOpacity(0.2),
       shadowColor: Colors.transparent,
@@ -143,7 +157,8 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                       (widget.userInfo != null &&
                               widget.userInfo["username"] !=
                                   widget.data.author["username"] &&
-                              widget.userInfo["ServiceProvider"] == true)
+                              widget.userInfo["ServiceProvider"] == true &&
+                              checkAcceptRequestBool() == true)
                           ? ElevatedButton(
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
@@ -178,19 +193,39 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                     ],
                   );
                 },
-                body: widget.data.subcategories.length != 0 ? Container(height: 300,child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.data.subcategories.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text('${widget.data.subcategories[index]["time"]}'),
-                      subtitle: Text('${widget.data.subcategories[index]["author"]["username"]}'),
-                    );
-                  },
-                ),):ListTile(
-                      title: Text('Item 2 child'),
-                      subtitle: Text('Details goes here'),
-                    ),
+                body: widget.data.subcategories.length != 0
+                    ? Container(
+                        height: 300,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: widget.data.subcategories.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(
+                                  '${widget.data.subcategories[index]["time"]}'),
+                              subtitle: Text(
+                                  '${widget.data.subcategories[index]["author"]["username"]}'),
+                              leading: CircleAvatar(
+                                radius: 21,
+                                backgroundColor: Colors.grey[300],
+                                child: ClipOval(
+                                  child: widget.data.subcategories[index]
+                                              ["author"]["image"] !=
+                                          null
+                                      ? Image.network(
+                                          "${widget.data.subcategories[index]["author"]['image']}",
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
+                        child: Text("پیشنهادی ثبت نشده"),
+                      ),
                 isExpanded: isExpandedState,
               ),
             ],

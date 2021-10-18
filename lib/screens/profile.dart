@@ -324,7 +324,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return Services(
-                                              data: service[index],
+                                               service[index],
+                                              currentUser
                                             );
                                           },
                                         ),
