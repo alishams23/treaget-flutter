@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // var website = Uri.parse("https://treaget.com");
@@ -8,3 +9,6 @@ checkLogin() async {
   String apiToken = prefs.getString('user.api_token');
   return apiToken;
 }
+
+  final snackBarUpdate = SnackBar(content: Text('این قسمت در حال آپدیت است. میتوانید برای مشاهده این قسمت به سایت تریگت مراجعه کرده یا منتظر آپدیت جدید باشید.',textDirection: TextDirection.rtl,));
+  final snackBarCopy = SnackBar(content: Text('کپی شد.',textDirection: TextDirection.rtl,));

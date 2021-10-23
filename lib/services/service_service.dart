@@ -23,5 +23,24 @@ class AddServiceApi {
       return {"result":false};
     }
   }
+static Future<Map> remove({var id}) async {
+    var url = Uri.parse('$website/api/DestroyServiceApi/$id/');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('user.api_token');
+    // var token = checkLogin();
+    var response = await http.delete(url, headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Token $token"
+    });
+    print(response.body);
+
+    if (response.statusCode == 204) {
+      return {"result": true};
+    } else {
+      return {"result":false};
+    }
+   }
+
 }
 

@@ -57,12 +57,13 @@ class SplashScreenState extends State<SplashScreen> {
               ],
             ),
             new Padding(
-              padding: const EdgeInsets.only(bottom: 30),
+              padding: const EdgeInsets.only(bottom: 100),
               child: new Align(
                 alignment: Alignment.bottomCenter,
-                child: new LinearProgressIndicator(
+                child: CircularProgressIndicator(
+                  // minHeight: 2.0,
                   color: Colors.deepOrange,
-                  backgroundColor: Colors.deepOrange[100],
+                  backgroundColor: Colors.grey[100],
                 ),
               ),
             )

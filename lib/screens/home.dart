@@ -13,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:treaget/components/popupMenu/postPicturePopup.dart';
 import 'package:treaget/components/popupMenu/postRequestPopup.dart';
 import 'package:treaget/components/request.dart';
+import 'package:treaget/global.dart';
 import 'package:treaget/screens/add/addRequest.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/global_service.dart';
@@ -456,7 +457,7 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffF9F9F9),
+      // backgroundColor: Color(0xffF9F9F9),
       // extendBodyBehindAppBar: true,
 
       drawer: Drawer(
@@ -545,7 +546,8 @@ class _FeedScreenState extends State<FeedScreen> {
                 size: 25,
               ),
               onPressed: () {
-                print("press");
+                             ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+
               },
             ),
           ),

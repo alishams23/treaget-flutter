@@ -10,7 +10,7 @@ class SafePayment extends StatefulWidget{
 class StateSafePayment extends State{
   @override
   Widget build(BuildContext context) {
-    return Text("safePayment");
+    return Center(child: Text("در حال آپدیت"),);
   }
   
 }

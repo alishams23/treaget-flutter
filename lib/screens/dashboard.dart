@@ -2,18 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/components/indicator_tab.dart';
 import 'package:treaget/screens/dashboard/disputes.dart';
+import 'package:treaget/services/profile_service.dart';
+import 'package:treaget/components/loading.dart';
 
 import 'dashboard/mainDashboard.dart';
 import 'dashboard/notification.dart';
 import 'dashboard/orders.dart';
 import 'dashboard/safePayment.dart';
 
-class DashboardWidget extends StatelessWidget {
+class DashboardWidget extends StatefulWidget {
   const DashboardWidget({Key key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => DashboardWidgetState();
+}
+
+class DashboardWidgetState extends State {
+  Map info = {};
+  bool _isLoading = true;
+
+_getInformaion({bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response = await InformationProfileService.getInfo(
+        username: "");
+    setState(() {
+      info.clear();
+      info.addAll(response);
+      _isLoading = false;
+    });
+    
+  }
+  @override
+  void initState() {_getInformaion();}
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return info!= {}? DefaultTabController(
       initialIndex: 0,
       length: 5,
       child: Scaffold(
@@ -34,7 +59,7 @@ class DashboardWidget extends StatelessWidget {
                 indicator: MD2Indicator(
                   indicatorSize: MD2IndicatorSize.normal,
                   indicatorHeight: 3,
-                  indicatorColor:  Colors.black,
+                  indicatorColor: Colors.black,
                 ),
                 tabs: <Widget>[
                   Tab(
@@ -66,12 +91,12 @@ class DashboardWidget extends StatelessWidget {
           children: <Widget>[
             DashboardMain(),
             NotificationApp(),
-            Orders(),
+            Orders(info),
             SafePayment(),
             Disputes(),
           ],
         ),
       ),
-    );
+    ):loadingViewCenter();
   }
 }

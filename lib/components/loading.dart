@@ -10,3 +10,14 @@ Widget loadingView() {
     ),
   );
 }
+
+Widget loadingViewCenter() {
+  return Center(
+    // alignment: Alignment.topCenter,
+    child: new CircularProgressIndicator(
+      // minHeight: 2.0,
+      color: Colors.deepOrange,
+      backgroundColor: Colors.grey[100],
+    ),
+  );
+}

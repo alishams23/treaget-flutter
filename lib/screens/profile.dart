@@ -325,7 +325,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                               int index) {
                                             return Services(
                                                service[index],
-                                              currentUser
+                                              currentUser,_handleRefreshService
                                             );
                                           },
                                         ),
@@ -402,12 +402,12 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         ),
         controller: _scrollController,
         headerSliverBuilder: (context, value) {
-          return [topPage(info)];
+          return [topPage(info,currentUser)];
         });
   }
 }
 
-Widget topPage(Map info) {
+Widget topPage(Map info,currentUser) {
   return SliverToBoxAdapter(
     child: Container(
       child: Column(
@@ -452,7 +452,7 @@ Widget topPage(Map info) {
                                           flex: 2,
                                           child: Padding(
                                               padding: EdgeInsets.only(left: 0),
-                                              child: PopupMenuButtonProfile())),
+                                              child: PopupMenuButtonProfile(info,currentUser))),
                                       Padding(
                                           padding: EdgeInsets.only(right: 6)),
                                       Expanded(

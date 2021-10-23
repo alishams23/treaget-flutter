@@ -10,7 +10,7 @@ class Disputes extends StatefulWidget{
 class StateDisputes extends State{
   @override
   Widget build(BuildContext context) {
-    return Text("Disputes");
+    return Center(child: Text("در حال آپدیت"),);
   }
   
 }

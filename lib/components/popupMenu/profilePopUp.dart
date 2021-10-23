@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:treaget/global.dart';
 
 class PopupMenuButtonProfile extends StatelessWidget {
+  var currentUser;
+  var userInfo;
+  PopupMenuButtonProfile(userInfo,currentUser);
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
@@ -17,13 +22,15 @@ class PopupMenuButtonProfile extends StatelessWidget {
             backgroundColor:
                 MaterialStateProperty.all<Color>(Colors.grey.withOpacity(0.2)),
           ),
-          
           child: Icon(
             LineIcons.horizontalEllipsis,
             color: Colors.black,
           )),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
+           onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+          },
           child: ListTile(
             leading: const Icon(
               Icons.chat_bubble_outline,
@@ -36,6 +43,9 @@ class PopupMenuButtonProfile extends StatelessWidget {
           ),
         ),
         PopupMenuItem<String>(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+          },
           child: ListTile(
             leading: const Icon(
               Icons.payment,
@@ -61,6 +71,12 @@ class PopupMenuButtonProfile extends StatelessWidget {
         ),
         const PopupMenuDivider(),
         PopupMenuItem<String>(
+          onTap: (){
+            print(currentUser);
+            // Clipboard.setData(ClipboardData(text: "treaget.com/account/post/${userInfo['username']}/"));
+            //  ScaffoldMessenger.of(context).showSnackBar(snackBarCopy);
+
+          },
           child: ListTile(
             leading: const Icon(
               Icons.share,
