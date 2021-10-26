@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +15,9 @@ import 'package:treaget/components/profile/sampleProfile.dart';
 import 'package:treaget/components/request.dart';
 import 'package:treaget/screens/profile/services.dart';
 import 'package:treaget/screens/profile/timeLine.dart';
+import 'package:treaget/screens/setting.dart';
 import 'package:treaget/services/Picture_service.dart';
+import 'package:treaget/services/auth_services.dart';
 import 'package:treaget/services/profile_service.dart';
 import 'package:treaget/services/request_service.dart';
 
@@ -33,7 +38,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List service = [];
   List request = [];
   Map info = {};
-  var currentUser;
+  Map currentUser = {};
   int _currentPage = 1;
   bool _isLoading = true;
 
@@ -49,12 +54,10 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     return null;
   }
 
-
   Future<Null> _handleRefreshRequest() async {
     await getRequest(refresh: true);
     return null;
   }
-
 
   Future<Null> _handleRefreshService() async {
     await getService();
@@ -93,16 +96,16 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
       _isLoading = false;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    currentUser = prefs.getString('user.username');
-    currentUser = await InformationProfileService.getInfo(
-        username: currentUser);
+    var currentUserUsername = prefs.getString('user.username');
+    currentUser =
+        await InformationProfileService.getInfo(username: currentUserUsername);
     if (info["ServiceProvider"] == true) {
-      _getPost();
-      _getResume();
-      getService();
+      _getPost(refresh:refresh);
+      _getResume(refresh:refresh);
+      getService(refresh:refresh);
     } else {
-      getFavorite();
-      getRequest();
+      getFavorite(refresh:refresh);
+      getRequest(refresh:refresh);
     }
   }
 
@@ -216,10 +219,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                       ),
                                     ]
                                   : [
-                                      
                                       Tab(
-                                        icon:
-                                            Icon(Icons.shopping_bag),
+                                        icon: Icon(Icons.shopping_bag),
                                       ),
                                       Tab(
                                         icon: Icon(LineIcons.heartAlt),
@@ -228,8 +229,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                             ),
                             Divider(height: 0, color: Colors.grey[300])
                           ]
-                        : [
-                    ],
+                        : [],
                   )),
               body: TabBarView(
                 children: (info.length != 0 && info["ServiceProvider"] == true)
@@ -324,13 +324,15 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return Services(
-                                               service[index],
-                                              currentUser,_handleRefreshService
-                                            );
+                                                service[index],
+                                                currentUser,
+                                                _handleRefreshService);
                                           },
                                         ),
                                       ))
-                      ] : [RefreshIndicator(
+                      ]
+                    : [
+                        RefreshIndicator(
                             onRefresh: _handleRefreshRequest,
                             child: request.length == 0 && _isLoading
                                 ? loadingView()
@@ -343,17 +345,17 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return RequestCardComponent(
-                                                request[index],currentUser);
+                                                request[index], currentUser);
                                           },
-                                        ))),favorite.length == 0 && _isLoading
+                                        ))),
+                        favorite.length == 0 && _isLoading
                             ? loadingView()
                             : favorite.length == 0
-                                ? RefreshIndicator( 
+                                ? RefreshIndicator(
                                     onRefresh: _handleRefreshFavorite,
                                     child: listIsEmpty())
                                 : Scaffold(
                                     backgroundColor: Colors.white,
-                                    
                                     body: RefreshIndicator(
                                         onRefresh: _handleRefreshFavorite,
                                         child: Padding(
@@ -372,8 +374,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                       CupertinoPageRoute(
                                                         builder: (context) =>
                                                             PostPicture(
-                                                          data:
-                                                              favorite[index],
+                                                          data: favorite[index],
                                                         ),
                                                       ));
                                                 },
@@ -387,27 +388,28 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                             index,
                                                             favorite[index]),
                                                       )
-                                                    : SampleProfile(index,
-                                                        favorite[index]),
+                                                    : SampleProfile(
+                                                        index, favorite[index]),
                                               );
                                             },
                                             staggeredTileBuilder: (index) =>
                                                 const StaggeredTile.fit(2),
                                           ),
                                         )),
-                                  )],
+                                  )
+                      ],
               ),
             ),
           ),
         ),
         controller: _scrollController,
         headerSliverBuilder: (context, value) {
-          return [topPage(info,currentUser)];
+          return [topPage(info, currentUser, context,_getInformaion)];
         });
   }
 }
 
-Widget topPage(Map info,currentUser) {
+Widget topPage(Map info, currentUser, context,_getInformaion) {
   return SliverToBoxAdapter(
     child: Container(
       child: Column(
@@ -444,70 +446,127 @@ Widget topPage(Map info,currentUser) {
                                   style: TextStyle(
                                       fontSize: 14, color: Colors.grey),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 50),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Padding(
-                                              padding: EdgeInsets.only(left: 0),
-                                              child: PopupMenuButtonProfile(info,currentUser))),
-                                      Padding(
-                                          padding: EdgeInsets.only(right: 6)),
-                                      Expanded(
-                                          flex: 7,
-                                          child: Container(
-                                            child: ElevatedButton(
-                                              onPressed: () {},
-                                              style: ButtonStyle(
-                                                shadowColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.transparent),
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.transparent),
+                                info.length != 0
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 50),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                flex: 2,
+                                                child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 0),
+                                                    child:
+                                                        PopupMenuButtonProfile(
+                                                            info,
+                                                            currentUser))),
+                                            Padding(
                                                 padding:
-                                                    MaterialStateProperty.all(
-                                                        EdgeInsets.all(0)),
-                                              ),
-                                              child: Container(
-                                                width: 300,
-                                                decoration: new BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      Color(0xff004e92),
-                                                      Color(0xff0664bb)
-                                                    ],
+                                                    EdgeInsets.only(right: 6)),
+                                            Expanded(
+                                                flex: 7,
+                                                child: Container(
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      if (currentUser.length !=
+                                                              0 &&
+                                                          info["username"] ==
+                                                              currentUser[
+                                                                  "username"]) {
+                                                        Navigator.push(
+                                                            context,
+                                                            CupertinoPageRoute(
+                                                                builder: (context) => Directionality(
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                    child:
+                                                                        Setting())));
+                                                      } else {
+                                                        var resultFollow =
+                                                            await ProfileService
+                                                                .follow(username:info["username"]);
+                                                        if (resultFollow["data"] == true) _getInformaion(refresh:true);
+                                                      }
+                                                    },
+                                                    style: ButtonStyle(
+                                                      shadowColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .transparent),
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors
+                                                                  .transparent),
+                                                      padding:
+                                                          MaterialStateProperty
+                                                              .all(EdgeInsets
+                                                                  .all(0)),
+                                                    ),
+                                                    child: Container(
+                                                      width: 300,
+                                                      decoration:
+                                                          new BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors:
+                                                              info["is_followed"] ==
+                                                                      true
+                                                                  ? [
+                                                                      Colors
+                                                                          .black,
+                                                                      Colors.grey[
+                                                                          800]
+                                                                    ]
+                                                                  : [
+                                                                      Color(
+                                                                          0xff004e92),
+                                                                      Color(
+                                                                          0xff0664bb)
+                                                                    ],
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.0),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.2),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 19,
+                                                            offset:
+                                                                Offset(0, 9),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10.0),
+                                                      child: Text(
+                                                        (currentUser.length !=
+                                                                    0 &&
+                                                                info["username"] ==
+                                                                    currentUser[
+                                                                        "username"])
+                                                            ? "تنظیمات"
+                                                            : info["is_followed"] ==
+                                                                    true
+                                                                ? "لغو دنبال کردن"
+                                                                : "دنبال کردن",
+                                                        style: TextStyle(
+                                                            fontSize: 13),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.2),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 19,
-                                                      offset: Offset(0, 9),
-                                                    )
-                                                  ],
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: Text(
-                                                  "دنبال کردن",
-                                                  style:
-                                                      TextStyle(fontSize: 13),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ))
-                                    ],
-                                  ),
-                                )
+                                                ))
+                                          ],
+                                        ),
+                                      )
+                                    : Container()
                               ],
                             ),
                             textDirection: TextDirection.ltr,
@@ -516,41 +575,70 @@ Widget topPage(Map info,currentUser) {
                 Expanded(
                   flex: 4,
                   child: Padding(
-                    padding: EdgeInsets.only(right: 30),
-                    child: Container(
-                        child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(43.0),
-                              child: Container(
-                                decoration: BoxDecoration(boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    spreadRadius: 1,
-                                    blurRadius: 19,
-                                    offset: Offset(0, 9),
-                                  )
-                                ]),
-                                child: info.length != 0
-                                    ? info['image'] != null
-                                        ? Image.network(
-                                            info['image'],
-                                            fit: BoxFit.cover,
-                                          )
+                      padding: EdgeInsets.only(right: 30),
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (info["username"] == currentUser["username"]) {
+                            final picker = ImagePicker();
+                            var pickedFile = await picker.pickImage(
+                                source: ImageSource.gallery);
+                            File croppedFile = await ImageCropper.cropImage(
+                                sourcePath: pickedFile.path,
+                                aspectRatioPresets: [
+                                  CropAspectRatioPreset.square,
+                                ],
+                                androidUiSettings: AndroidUiSettings(
+                                    toolbarTitle: 'Cropper',
+                                    toolbarColor: Colors.white,
+                                    toolbarWidgetColor: Colors.black,
+                                    initAspectRatio:
+                                        CropAspectRatioPreset.original,
+                                    lockAspectRatio: false),
+                                iosUiSettings: IOSUiSettings(
+                                  title: 'Cropper',
+                                ));
+                            var resultUpload =
+                                await AuthService.addPictureProfile(
+                                    image: croppedFile);
+                            if (resultUpload["result"] == true)
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "/profile", (_) => false);
+                          }
+                        },
+                        child: Container(
+                            child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(43.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        spreadRadius: 1,
+                                        blurRadius: 19,
+                                        offset: Offset(0, 9),
+                                      )
+                                    ]),
+                                    child: info.length != 0
+                                        ? info['image'] != null
+                                            ? Image.network(
+                                                info['image'],
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.asset(
+                                                "assets/images/avatar.png",
+                                                fit: BoxFit.cover,
+                                              )
                                         : Image.asset(
                                             "assets/images/avatar.png",
                                             fit: BoxFit.cover,
-                                          )
-                                    : Image.asset(
-                                        "assets/images/avatar.png",
-                                        fit: BoxFit.cover,
-                                      ),
-                              ))),
-                    )),
-                  ),
+                                          ),
+                                  ))),
+                        )),
+                      )),
                 ),
               ],
             ),

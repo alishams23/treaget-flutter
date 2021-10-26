@@ -6,6 +6,7 @@ import 'package:treaget/screens/explore.dart';
 import 'package:treaget/screens/home.dart';
 import 'package:treaget/screens/login.dart';
 import 'package:treaget/screens/profile.dart';
+import 'package:treaget/screens/register.dart';
 import 'package:treaget/screens/splash.dart';
 // import 'package:badges/badges.dart';
 
@@ -28,8 +29,11 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => new SplashScreen(),
         "/home": (context) => Example(),
+        "/profile": (context) => Example(selectedIndex: 3,),
         "/login": (context) => new Directionality(
             textDirection: TextDirection.rtl, child: new LoginScreen()),
+            "/register":(context) => Directionality(
+            textDirection: TextDirection.rtl, child: Register() )
         // "/setting" : (context) => new SettingScreen(),
         // "/new_chat" : (context) => new CreateChatScreen()
       },
@@ -38,19 +42,22 @@ class MyApp extends StatelessWidget {
 }
 
 class Example extends StatefulWidget {
+  int selectedIndex ;
+
+  Example({this.selectedIndex = 0});
   @override
   _ExampleState createState() => _ExampleState();
 }
 
 class _ExampleState extends State<Example> {
-  int _selectedIndex = 0;
-  
+
   static List<Widget> _widgetOptions = <Widget>[
     FeedScreen(),
     Example08(),
     DashboardWidget(),
     Profile(),
   ];
+@override
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +69,7 @@ class _ExampleState extends State<Example> {
           _widgetOptions.elementAt(1),
           _widgetOptions.elementAt(2),
           _widgetOptions.elementAt(3),
-        ], index: _selectedIndex),
+        ], index: widget.selectedIndex),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -105,10 +112,10 @@ class _ExampleState extends State<Example> {
                   text: 'پروفایل',
                 ),
               ],
-              selectedIndex: _selectedIndex,
+              selectedIndex: widget.selectedIndex,
               onTabChange: (index) {
                 setState(() {
-                  _selectedIndex = index;
+                  widget.selectedIndex = index;
                 });
               },
             ),

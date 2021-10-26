@@ -74,3 +74,22 @@ class ServiceProfileService {
     return {"data": "Null"};
   }
 }
+
+
+class ProfileService {
+  static Future<Map> follow({String username = ''}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url = Uri.parse('$website/api/FollowUnfollowApi/$username/');
+    String token = prefs.getString('user.api_token');
+    var response = await http.get(url, headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Token $token"
+    });
+    if (response.statusCode == 200) {
+
+      return {"data": true};
+    }
+    return {"data": false};
+  }
+}

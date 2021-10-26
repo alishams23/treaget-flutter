@@ -16,6 +16,7 @@ import 'package:treaget/components/request.dart';
 import 'package:treaget/global.dart';
 import 'package:treaget/screens/add/addRequest.dart';
 import 'package:treaget/screens/profile.dart';
+import 'package:treaget/screens/setting.dart';
 import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/home_services.dart';
 import 'package:validators/validators.dart';
@@ -485,14 +486,26 @@ class _FeedScreenState extends State<FeedScreen> {
                   ListTile(
                     leading: Icon(LineIcons.values["cog"]),
                     title: Text('تنظیمات'),
+                    onTap: (){
+                      Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => Directionality(textDirection: TextDirection.rtl, child: Setting())));
+                    },
                   ),
                   ListTile(
                     leading: Icon(LineIcons.values["userPlus"]),
                     title: Text('دعوت از دوستان'),
+                    onTap: (){
+                       ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                    },
                   ),
                   ListTile(
                     leading: Icon(LineIcons.values["questionCircle"]),
                     title: Text('درباره ی ما'),
+                    onTap: (){
+                       ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                    },
                   ),
                   Stack(
                     // mainAxisAlignment: MainAxisAlignment.start,

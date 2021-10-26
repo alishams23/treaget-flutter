@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _loginButtonController;
+  // AnimationController _loginButtonController;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _emailValue;
@@ -27,25 +27,19 @@ class LoginScreenState extends State<LoginScreen>
     _passwordValue = value;
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _loginButtonController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 3000));
-  }
+  
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _loginButtonController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   _loginButtonController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    timeDilation = .4;
+    // timeDilation = .4;
     var page = MediaQuery.of(context).size;
 
     return new Scaffold(
@@ -80,16 +74,26 @@ class LoginScreenState extends State<LoginScreen>
                         formKey: _formKey,
                         emailOnSaved: emailOnSaved,
                         passwordOnSaved: passwordOnSaved),
-                    new FlatButton(
-                        onPressed: null,
-                        child: new Text(
-                          "آیا هیچ اکانتی ندارید؟ عضویت",
+                    new Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                        children:  [Text(
+                          "آیا هیچ اکانتی ندارید؟ ",
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               letterSpacing: 0.5,
                               color: Colors.black,
                               fontSize: 14),
-                        ))
+                        ),GestureDetector(onTap: (){
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/register', (_) => false);
+                        },child: Text(
+                          "عضویت",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                              color: Colors.blue,
+                              fontSize: 14),
+                        ),)])
                   ],
                 ),
                 new GestureDetector(
@@ -99,9 +103,35 @@ class LoginScreenState extends State<LoginScreen>
                       sendDataForLogin();
                     }
                   },
-                  child: new SingInAnimation(
-                    controller: _loginButtonController.view,
-                  ),
+                  child: Padding(padding: EdgeInsets.only(bottom: 20),child: ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                )),
+                                shadowColor:
+                                    MaterialStateProperty.all(Colors.grey),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.deepOrange),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(0)),
+                              ),
+                              onPressed: () async{
+                                if (_formKey.currentState.validate()) {
+                                   _formKey.currentState.save();
+                                  await sendDataForLogin();
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 100, vertical: 10),
+                                child: Text(
+                                  "ورود",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),)
                 ),
               ],
             ),
@@ -110,20 +140,23 @@ class LoginScreenState extends State<LoginScreen>
   }
 
   sendDataForLogin() async {
-    await _loginButtonController.animateTo(0.150);
+    // await _loginButtonController.animateTo(0.150);
     Map response = await (new AuthService())
         .sendDataToLogin({"username": _emailValue, "password": _passwordValue});
     print(response);
-    print(response['token']);
-    if (response['token'] != null) {
+    print(response['data']['token']);
+    if (response['data']['token'] != null) {
       await storeUserData(response, _emailValue);
-      await _loginButtonController.forward();
+      // await _loginButtonController.forward();
+   
       Navigator.pushNamedAndRemoveUntil(context, "/home", (_) => false);
+   
+
     } else {
-      await _loginButtonController.reverse();
-      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      // await _loginButtonController.reverse();
+      ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
           content: new Text(
-        "مشکلی در لاگین به وجود آمد",
+        "مشکلی در لاگین به وجود آمد لطفا نام کاربری و رمز عبور درستی را وارد کنید",
         style: new TextStyle(fontFamily: 'Vazir'),
       )));
     }
@@ -131,7 +164,7 @@ class LoginScreenState extends State<LoginScreen>
 
   storeUserData(Map userData, username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user.api_token', userData['token']);
+    await prefs.setString('user.api_token', userData["data"]['token']);
     await prefs.setString('user.username', username);
   }
 }

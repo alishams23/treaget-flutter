@@ -2,69 +2,118 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:treaget/services/cash_service.dart';
+import 'package:treaget/services/desk_service.dart';
 
 Color darkBlue = Colors.deepOrange[600];
 Color lightBlue = Colors.deepOrange[700];
 
+class DashboardMain extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => DashboardMainState();
+}
 
-class DashboardMain extends StatelessWidget {
+class DashboardMainState extends State<DashboardMain> {
+bool _isLoading = false;
+var cash  = 0;
+var data;
 
-  Widget cardDesk(var icon, Map data){return Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 150,
-                        // width: 150,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(19.0),
-                              child: Container(
-                                  height: 48.0,
-                                  width: 48.0,
-                                  // color: Colors.grey[100],
-                                  decoration: BoxDecoration(boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 1,
-                                      blurRadius: 19,
-                                      offset: Offset(0, 9),
-                                    )
-                                  ]),
-                                  child: Icon(icon,
-                                    
-                                    color: Colors.grey[800],
-                                  )),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Text(
-                              data["number"],
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              data["text"],
 
-                              style: TextStyle(color: Colors.grey[500]),
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(19.0),
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.04)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.05),
-                                spreadRadius: 0,
-                                blurRadius: 4,
-                                offset: Offset(0,4),
-                              )
-                            ]),
-                      ));}
+ _getCountCash() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response = await CashApi.countCash();
+    setState(() {
+      
+      if (response['result'] != false) {
+        cash = response['result'];
+       
+      }
+      _isLoading = false;
+    });
+  }
+
+ _deskData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var response = await DeskApi.getData();
+    setState(() {
+      
+      if (response['result'] != false) {
+        data = response['result'];
+       
+      }
+      _isLoading = false;
+    });
+  }
+
+
+void initState() {
+    super.initState();
+    _getCountCash();
+    _deskData();
+    
+  }
+
+  Widget cardDesk(var icon, Map data) {
+    return Expanded(
+        flex: 4,
+        child: Container(
+          height: 150,
+          // width: 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(19.0),
+                child: Container(
+                    height: 48.0,
+                    width: 48.0,
+                    // color: Colors.grey[100],
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 19,
+                        offset: Offset(0, 9),
+                      )
+                    ]),
+                    child: Icon(
+                      icon,
+                      color: Colors.grey[800],
+                    )),
+              ),
+              Padding(padding: EdgeInsets.only(top: 10)),
+              Text(
+                data["number"],
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                data["text"],
+                style: TextStyle(color: Colors.grey[500]),
+              ),
+            ],
+          ),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(19.0),
+              border: Border.all(color: Colors.black.withOpacity(0.04)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.05),
+                  spreadRadius: 0,
+                  blurRadius: 4,
+                  offset: Offset(0, 4),
+                )
+              ]),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -104,13 +153,21 @@ class DashboardMain extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        CircleAvatar(
+                        Row(children: [CircleAvatar(
                           backgroundColor: Colors.white.withOpacity(0.2),
                           child: Icon(
                             LineIcons.wallet,
                             color: Colors.white,
                           ),
-                        )
+                        ),Padding(padding: EdgeInsets.only(right: 10),child: GestureDetector(onTap: (){
+                          _getCountCash();
+                        },child: CircleAvatar(
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          child: Icon(
+                            Icons.refresh,
+                            color: Colors.white,
+                          ),
+                        ),),)],)
                       ],
                     ),
                     SizedBox(
@@ -120,13 +177,14 @@ class DashboardMain extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "0000.00",
+                            text: "$cash",
                             style: Theme.of(context)
                                 .textTheme
                                 .headline4
                                 .apply(color: Colors.white, fontWeightDelta: 2),
                           ),
-                          TextSpan(text: "تومان")
+                          
+                          TextSpan(text: "  تومان")
                         ],
                       ),
                     ),
@@ -142,87 +200,46 @@ class DashboardMain extends StatelessWidget {
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          )),
+                                    borderRadius: BorderRadius.circular(13.0),
+                                  )),
                                   shadowColor: MaterialStateProperty.all(
-                                      Colors.transparent),
+                                      Colors.black.withOpacity(0.3)),
                                   backgroundColor: MaterialStateProperty.all(
-                                      Colors.transparent),
+                                      Colors.black.withOpacity(0.1)),
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
                                 onPressed: () {},
                                 child: Container(
-                                    child: Container(
-                                        child: Container(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(13.0),
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 5, sigmaY: 5),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 20),
-                                        child: Text(
-                                          "شارژ کیف پول",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.black
-                                                  .withOpacity(0.03)),
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          color: Colors.black.withOpacity(.1),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ))))),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 20),
+                                    child: Text(
+                                      "شارژ کیف پول",
+                                      style: TextStyle(color: Colors.white),
+                                    )))),
                         Flexible(
                             child: ElevatedButton(
-                                style: ButtonStyle(shape: MaterialStateProperty.all<
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          )),
+                                    borderRadius: BorderRadius.circular(13.0),
+                                  )),
                                   shadowColor: MaterialStateProperty.all(
-                                      Colors.transparent),
+                                      Colors.black.withOpacity(0.3)),
                                   backgroundColor: MaterialStateProperty.all(
-                                      Colors.transparent),
+                                      Colors.black.withOpacity(0.1)),
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
                                 onPressed: () {},
                                 child: Container(
-                                    child: Container(
-                                        child: Container(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(13.0),
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 5, sigmaY: 5),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 10),
-                                        child: Text(
+                                  padding: EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 20),
+                                    child: Text(
                                           "دریافت وجه",
                                           style: TextStyle(color: Colors.white),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.black
-                                                  .withOpacity(0.05)),
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          color: Colors.black.withOpacity(.1),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ))))),
+                                        ),))),
                       ],
                     )
                   ],
@@ -263,16 +280,20 @@ class DashboardMain extends StatelessWidget {
                   ),
                 ),
               ),
+              data != null ?
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  cardDesk(LineIcons.dollarSign,{"text":"پرداخت امن","number":"100"}),
+                  cardDesk(LineIcons.dollarSign,
+                      {"text": "پرداخت امن", "number": "${data['numberSafePayment']}"}),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  cardDesk(LineIcons.shoppingBag,{"text":"سفارشات","number":"100"}),
+                  cardDesk(LineIcons.shoppingBag,
+                      {"text": "سفارشات", "number":  "${data['numberOrders']}"}),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  cardDesk(LineIcons.handshake,{"text":"درخواست","number":"100"}),
-                                  ],
-              )
+                  cardDesk(LineIcons.handshake,
+                      {"text": "درخواست", "number":  "${data['numberRequest']}"}),
+                ],
+              ):Container()
             ],
           ),
         ));

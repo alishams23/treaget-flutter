@@ -6,9 +6,10 @@ class InputFieldArea extends StatelessWidget {
   final IconData icon;
   final validator;
   final onSaved;
+  var initialValue;
 
   InputFieldArea(
-      {this.hint, this.obscure, this.icon, this.validator, this.onSaved});
+      {this.hint, this.obscure, this.icon, this.validator, this.onSaved,this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,9 @@ class InputFieldArea extends StatelessWidget {
       child: new TextFormField(
         validator: validator,
         onSaved: onSaved,
+        initialValue: initialValue,
         obscureText: obscure,
+        
         // style: const TextStyle(
         //   color: Colors.white
         // ),
