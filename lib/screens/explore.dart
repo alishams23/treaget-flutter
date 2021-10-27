@@ -19,6 +19,7 @@ import 'package:treaget/services/global_service.dart';
 import 'package:treaget/services/profile_service.dart';
 import 'package:treaget/services/request_service.dart';
 
+import '../global.dart';
 import 'PostPicture.dart';
 
 // ignore: must_be_immutable
@@ -290,8 +291,14 @@ Future<Null> _handleRefreshRequest() async {
                     padding: EdgeInsets.only(
                         top: 50, bottom: 0, left: 20, right: 20),
                     child: TextFormField(
+                         textInputAction: TextInputAction.search,
+                      onFieldSubmitted: (var value){
+                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+
+                      },
                       decoration: new InputDecoration(
                           filled: true,
+                          
                           fillColor: Colors.grey[100],
                           icon: Container(
                             padding: EdgeInsets.symmetric(

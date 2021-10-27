@@ -22,6 +22,9 @@ import 'package:treaget/services/profile_service.dart';
 import 'package:treaget/services/request_service.dart';
 
 import 'PostPicture.dart';
+import 'add/addOrder.dart';
+import 'add/addOrderService.dart';
+import 'add/addPicture.dart';
 
 class Profile extends StatefulWidget {
   String username;
@@ -39,6 +42,8 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List request = [];
   Map info = {};
   Map currentUser = {};
+  final ImagePicker _picker = ImagePicker();
+
   int _currentPage = 1;
   bool _isLoading = true;
 
@@ -100,12 +105,12 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     currentUser =
         await InformationProfileService.getInfo(username: currentUserUsername);
     if (info["ServiceProvider"] == true) {
-      _getPost(refresh:refresh);
-      _getResume(refresh:refresh);
-      getService(refresh:refresh);
+      _getPost(refresh: refresh);
+      _getResume(refresh: refresh);
+      getService(refresh: refresh);
     } else {
-      getFavorite(refresh:refresh);
-      getRequest(refresh:refresh);
+      getFavorite(refresh: refresh);
+      getRequest(refresh: refresh);
     }
   }
 
@@ -242,16 +247,52 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                     child: listIsEmpty())
                                 : Scaffold(
                                     backgroundColor: Colors.white,
-                                    floatingActionButton:
-                                        FloatingActionButton.extended(
-                                      onPressed: () {
-                                        // Add your onPressed code here!
-                                      },
-                                      label: Text("سفارش"),
-                                      icon: Icon(Icons.shopping_bag_outlined),
-                                      foregroundColor: Colors.black,
-                                      backgroundColor: Colors.grey[200],
-                                    ),
+                                    floatingActionButton: currentUser[
+                                                "ServiceProvider"] ==
+                                            false
+                                        ? FloatingActionButton.extended(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          AddOrder(info[
+                                                              "username"])));
+                                            },
+                                            label: Text("سفارش"),
+                                            icon: Icon(
+                                                Icons.shopping_bag_outlined),
+                                            foregroundColor: Colors.black,
+                                            backgroundColor: Colors.grey[200],
+                                          )
+                                        : currentUser["username"] ==
+                                                info["username"]
+                                            ? FloatingActionButton.extended(
+                                                onPressed: () async {
+                                                  var imageAdd =
+                                                      await _picker.pickImage(
+                                                          source: ImageSource
+                                                              .gallery);
+
+                                                  imageAdd != null
+                                                      ? await Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                              builder: (context) =>
+                                                                  AddPicture(
+                                                                      imageFile:
+                                                                          imageAdd)))
+                                                      : print("");
+                                                },
+                                                label: Text("افزودن نمونه کار"),
+                                                icon: Icon(
+                                                  Icons.dashboard_outlined,
+                                                ),
+                                                foregroundColor: Colors.black,
+                                                backgroundColor:
+                                                    Colors.grey[200],
+                                              )
+                                            : Container(),
                                     body: RefreshIndicator(
                                         onRefresh: _handleRefresh,
                                         child: Padding(
@@ -404,12 +445,12 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
         ),
         controller: _scrollController,
         headerSliverBuilder: (context, value) {
-          return [topPage(info, currentUser, context,_getInformaion)];
+          return [topPage(info, currentUser, context, _getInformaion)];
         });
   }
 }
 
-Widget topPage(Map info, currentUser, context,_getInformaion) {
+Widget topPage(Map info, currentUser, context, _getInformaion) {
   return SliverToBoxAdapter(
     child: Container(
       child: Column(
@@ -485,8 +526,14 @@ Widget topPage(Map info, currentUser, context,_getInformaion) {
                                                       } else {
                                                         var resultFollow =
                                                             await ProfileService
-                                                                .follow(username:info["username"]);
-                                                        if (resultFollow["data"] == true) _getInformaion(refresh:true);
+                                                                .follow(
+                                                                    username: info[
+                                                                        "username"]);
+                                                        if (resultFollow[
+                                                                "data"] ==
+                                                            true)
+                                                          _getInformaion(
+                                                              refresh: true);
                                                       }
                                                     },
                                                     style: ButtonStyle(

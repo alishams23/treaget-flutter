@@ -32,6 +32,7 @@ _getInformaion({bool refresh: false}) async {
       info.addAll(response);
       _isLoading = false;
     });
+
     
   }
   @override
@@ -91,7 +92,7 @@ _getInformaion({bool refresh: false}) async {
           children: <Widget>[
             DashboardMain(),
             NotificationApp(),
-            Orders(info),
+            Orders(info:info),
             SafePayment(),
             Disputes(),
           ],

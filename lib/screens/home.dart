@@ -1,4 +1,3 @@
- 
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +34,7 @@ class _FeedScreenState extends State<FeedScreen> {
   final snackBar = SnackBar(content: Text('متاسفانه این پست لایک نشد'));
   List _products = [];
   int _currentPage = 1;
-    final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   // bool _viewStream = true;
   bool _isLoadingInfo = true;
   Map userInfo;
@@ -69,7 +68,7 @@ class _FeedScreenState extends State<FeedScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(23.0),
             border: Border.all(color: Colors.grey[200]),
-         boxShadow: [
+            boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.05),
                 spreadRadius: 1,
@@ -78,6 +77,7 @@ class _FeedScreenState extends State<FeedScreen> {
               )
             ]),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             GestureDetector(
@@ -95,7 +95,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     context,
                     CupertinoPageRoute(
                       builder: (context) => PostPicture(
-                        data: productsData,
+                        data: productsData,info: userInfo,
                       ),
                     ));
               },
@@ -167,7 +167,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                       IconButton(
                                         icon: Icon(LineIcons.bookmark),
                                         iconSize: 27.0,
-                                        onPressed: () => print(productsData.id ),
+                                        onPressed: () =>
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBarUpdate),
                                       ),
                                     ],
                                   ),
@@ -195,7 +197,10 @@ class _FeedScreenState extends State<FeedScreen> {
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: Container(
                                 padding: EdgeInsets.all(4),
-                                child:  userInfo != null  ? PopupMenuButtonPostPicture(productsData,userInfo ) :Text(""),
+                                child: userInfo != null
+                                    ? PopupMenuButtonPostPicture(
+                                        productsData, userInfo)
+                                    : Text(""),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: Colors.white.withOpacity(0.1)),
@@ -216,13 +221,47 @@ class _FeedScreenState extends State<FeedScreen> {
                     child: Text(
                       productsData.alt,
                       textDirection: TextDirection.rtl,
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(fontSize: 15),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       softWrap: false,
                     ),
                   )
                 : Text(""),
+            productsData.category.length != 0
+                ? Container(
+                    height: 60,
+                    // padding: EdgeInsets.only(ri: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productsData.category.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 16),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              side: BorderSide(width: 1, color: Colors.grey[300],),
+                                primary: Colors.white,
+                                shadowColor: Colors.transparent,
+                                
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(13)),
+                                textStyle: TextStyle(
+                                    fontSize: 12, fontFamily: "Vazir")),
+                            onPressed: () {},
+                            child: Text(
+                              "${productsData.category[index]["title"]}  ",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
             Container(
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
               child: Row(
@@ -275,53 +314,59 @@ class _FeedScreenState extends State<FeedScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 17, vertical: 7),
                     child: Row(
                       children: [
-                        productsData.likeUser.length >=3 ?
-                        Stack(
-                          children: [
-                            Positioned(
-                                right: 7,
-                                child: CircleAvatar(
-                                  backgroundImage: productsData
-                                              .likeUser.length >=
-                                          3
-                                      ? productsData.likeUser[2]["image"] !=
-                                              null
-                                          ? NetworkImage(
-                                              productsData.likeUser[2]["image"])
-                                          : null
-                                      : null,
-                                  radius: 14,
-                                  backgroundColor: Colors.grey[200],
-                                )),
-                            Positioned(
-                                right: 21,
-                                child: CircleAvatar(
-                                  backgroundImage: productsData
-                                              .likeUser.length >=2
-                                      ? productsData.likeUser[1]["image"] !=
-                                              null
-                                          ? NetworkImage(
-                                              productsData.likeUser[1]["image"])
-                                          : null
-                                      : null,
-                                  radius: 14,
-                                  backgroundColor: Colors.orange[200],
-                                )),
-                            Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 32)),
-                            Positioned(
-                                child: CircleAvatar(
-                              backgroundImage: productsData.likeUser.length >= 1
-                                  ? productsData.likeUser[0]["image"] != null
-                                      ? NetworkImage(
-                                          productsData.likeUser[0]["image"])
-                                      : null
-                                  : null,
-                              radius: 14,
-                              backgroundColor: Colors.deepOrange[400],
-                            ))
-                          ],
-                        ):Container(),
+                        productsData.likeUser.length >= 3
+                            ? Stack(
+                                children: [
+                                  Positioned(
+                                      right: 7,
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            productsData.likeUser.length >= 3
+                                                ? productsData.likeUser[2]
+                                                            ["image"] !=
+                                                        null
+                                                    ? NetworkImage(productsData
+                                                        .likeUser[2]["image"])
+                                                    : null
+                                                : null,
+                                        radius: 14,
+                                        backgroundColor: Colors.grey[200],
+                                      )),
+                                  Positioned(
+                                      right: 21,
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            productsData.likeUser.length >= 2
+                                                ? productsData.likeUser[1]
+                                                            ["image"] !=
+                                                        null
+                                                    ? NetworkImage(productsData
+                                                        .likeUser[1]["image"])
+                                                    : null
+                                                : null,
+                                        radius: 14,
+                                        backgroundColor: Colors.orange[200],
+                                      )),
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 32)),
+                                  Positioned(
+                                      child: CircleAvatar(
+                                    backgroundImage:
+                                        productsData.likeUser.length >= 1
+                                            ? productsData.likeUser[0]
+                                                        ["image"] !=
+                                                    null
+                                                ? NetworkImage(productsData
+                                                    .likeUser[0]["image"])
+                                                : null
+                                            : null,
+                                    radius: 14,
+                                    backgroundColor: Colors.deepOrange[400],
+                                  ))
+                                ],
+                              )
+                            : Container(),
                         Padding(padding: EdgeInsets.only(right: 1)),
                         CircleAvatar(
                           child: Text(
@@ -343,8 +388,6 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
     );
   }
-
-
 
   Widget drawerTop() {
     return Column(children: [
@@ -396,7 +439,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _buildPost(int index, productsData) {
     print(productsData.item);
     return productsData.item == "request"
-        ? RequestCardComponent(productsData,userInfo)
+        ? RequestCardComponent(productsData, userInfo)
         : pictureCard(index, productsData);
   }
 
@@ -446,7 +489,11 @@ class _FeedScreenState extends State<FeedScreen> {
                         padding: const EdgeInsets.only(top: 0),
                         itemCount: _products.length,
                         itemBuilder: (BuildContext context, int index) {
-                          if (index == _products.length -1)return Padding(padding: EdgeInsets.only(bottom: 60),child: _buildPost(index, _products[index]),);
+                          if (index == _products.length - 1)
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 60),
+                              child: _buildPost(index, _products[index]),
+                            );
                           return _buildPost(index, _products[index]);
                         }),
                     onRefresh: _handleRefresh),
@@ -462,7 +509,7 @@ class _FeedScreenState extends State<FeedScreen> {
       // extendBodyBehindAppBar: true,
 
       drawer: Drawer(
-        // elevation: 80,
+          // elevation: 80,
           child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -470,7 +517,6 @@ class _FeedScreenState extends State<FeedScreen> {
               color: Colors.white,
               height: 300,
               child: DrawerHeader(
-             
                   child: Column(
                 children: [
                   _isLoadingInfo != false ? loadingView() : drawerTop()
@@ -486,29 +532,18 @@ class _FeedScreenState extends State<FeedScreen> {
                   ListTile(
                     leading: Icon(LineIcons.values["cog"]),
                     title: Text('تنظیمات'),
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => Directionality(textDirection: TextDirection.rtl, child: Setting())));
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: Setting())));
                     },
                   ),
-                  ListTile(
-                    leading: Icon(LineIcons.values["userPlus"]),
-                    title: Text('دعوت از دوستان'),
-                    onTap: (){
-                       ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(LineIcons.values["questionCircle"]),
-                    title: Text('درباره ی ما'),
-                    onTap: (){
-                       ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
-                    },
-                  ),
+                  
                   Stack(
-                    // mainAxisAlignment: MainAxisAlignment.start,
+                
                     children: [
                       ListTile(
                         leading: Icon(LineIcons.fileExport),
@@ -559,8 +594,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 size: 25,
               ),
               onPressed: () {
-                             ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
-
+                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
               },
             ),
           ),
@@ -609,69 +643,78 @@ class _FeedScreenState extends State<FeedScreen> {
         // orientation: SpeedDialOrientation.Up,
         // childMarginBottom: 2,
         childMarginTop: 2,
-        children: userInfo != null ? userInfo["ServiceProvider"] == true ? [
-          SpeedDialChild(
-            child: Icon(
-              Icons.store_outlined,
-              color: Colors.deepOrange,
-            ),
-            // backgroundColor: Colors.grey.shade700.withOpacity(0.5),
-            label: '  افزودن خدمات     ',
-            // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () =>  Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => AddService())),
-            onLongPress: () => print('FIRST CHILD LONG PRESS'),
-          ),
-          SpeedDialChild(
-            child: Icon(
-              Icons.assignment_ind_outlined,
-              color: Colors.deepOrange,
-            ),
-            // backgroundColor: Colors.white,
-            label: '  افزودن رزومه   ',
-            // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () =>  Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => AddResume())),
-            
-          ),
-          SpeedDialChild(
-            child: Icon(
-              Icons.dashboard_outlined,
-              color: Colors.deepOrange,
-            ),
-            // backgroundColor: ,
-            label: '  افزودن نمونه کار',
-            // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () async{ var imageAdd =await _picker.pickImage(source: ImageSource.gallery);
-           
-            imageAdd != null ? await Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => AddPicture(imageFile:imageAdd))):print("");
+        children: userInfo != null
+            ? userInfo["ServiceProvider"] == true
+                ? [
+                    SpeedDialChild(
+                      child: Icon(
+                        Icons.store_outlined,
+                        color: Colors.deepOrange,
+                      ),
+                      // backgroundColor: Colors.grey.shade700.withOpacity(0.5),
+                      label: '  افزودن خدمات     ',
+                      // labelStyle: TextStyle(fontSize: 18.0),
+                      onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => AddService())),
+                      onLongPress: () => print('FIRST CHILD LONG PRESS'),
+                    ),
+                    SpeedDialChild(
+                      child: Icon(
+                        Icons.assignment_ind_outlined,
+                        color: Colors.deepOrange,
+                      ),
+                      // backgroundColor: Colors.white,
+                      label: '  افزودن رزومه   ',
+                      // labelStyle: TextStyle(fontSize: 18.0),
+                      onTap: () => Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => AddResume())),
+                    ),
+                    SpeedDialChild(
+                      child: Icon(
+                        Icons.dashboard_outlined,
+                        color: Colors.deepOrange,
+                      ),
+                      // backgroundColor: ,
+                      label: '  افزودن نمونه کار',
+                      // labelStyle: TextStyle(fontSize: 18.0),
+                      onTap: () async {
+                        var imageAdd = await _picker.pickImage(
+                            source: ImageSource.gallery);
+
+                        imageAdd != null
+                            ? await Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        AddPicture(imageFile: imageAdd)))
+                            : print("");
                       },
-                      
-            onLongPress: () => print('THIRD CHILD LONG PRESS'),
-          ),
-        ]:[ SpeedDialChild(
-            child: Icon(
-              Icons.shopping_bag_outlined,
-              color: Colors.deepOrange,
-            ),
-            // backgroundColor: ,
-            label: 'افزودن درخواست     ',
-            // labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () { 
-           
-           Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                      builder: (context) => AddRequest()));
+
+                      onLongPress: () => print('THIRD CHILD LONG PRESS'),
+                    ),
+                  ]
+                : [
+                    SpeedDialChild(
+                      child: Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.deepOrange,
+                      ),
+                      // backgroundColor: ,
+                      label: 'افزودن درخواست     ',
+                      // labelStyle: TextStyle(fontSize: 18.0),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => AddRequest()));
                       },
-          ),]:[],
+                    ),
+                  ]
+            : [],
       ),
     );
   }

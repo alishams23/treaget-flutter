@@ -5,6 +5,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:treaget/services/cash_service.dart';
 import 'package:treaget/services/desk_service.dart';
 
+import '../../global.dart';
+
 Color darkBlue = Colors.deepOrange[600];
 Color lightBlue = Colors.deepOrange[700];
 
@@ -14,47 +16,40 @@ class DashboardMain extends StatefulWidget {
 }
 
 class DashboardMainState extends State<DashboardMain> {
-bool _isLoading = false;
-var cash  = 0;
-var data;
+  bool _isLoading = false;
+  var cash = 0;
+  var data;
 
-
- _getCountCash() async {
+  _getCountCash() async {
     setState(() {
       _isLoading = true;
     });
     var response = await CashApi.countCash();
     setState(() {
-      
       if (response['result'] != false) {
         cash = response['result'];
-       
       }
       _isLoading = false;
     });
   }
 
- _deskData() async {
+  _deskData() async {
     setState(() {
       _isLoading = true;
     });
     var response = await DeskApi.getData();
     setState(() {
-      
       if (response['result'] != false) {
         data = response['result'];
-       
       }
       _isLoading = false;
     });
   }
 
-
-void initState() {
+  void initState() {
     super.initState();
     _getCountCash();
     _deskData();
-    
   }
 
   Widget cardDesk(var icon, Map data) {
@@ -153,21 +148,33 @@ void initState() {
                             color: Colors.white,
                           ),
                         ),
-                        Row(children: [CircleAvatar(
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          child: Icon(
-                            LineIcons.wallet,
-                            color: Colors.white,
-                          ),
-                        ),Padding(padding: EdgeInsets.only(right: 10),child: GestureDetector(onTap: (){
-                          _getCountCash();
-                        },child: CircleAvatar(
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          child: Icon(
-                            Icons.refresh,
-                            color: Colors.white,
-                          ),
-                        ),),)],)
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.white.withOpacity(0.2),
+                              child: Icon(
+                                LineIcons.wallet,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _getCountCash();
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.2),
+                                  child: Icon(
+                                    Icons.refresh,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
                       ],
                     ),
                     SizedBox(
@@ -183,7 +190,6 @@ void initState() {
                                 .headline4
                                 .apply(color: Colors.white, fontWeightDelta: 2),
                           ),
-                          
                           TextSpan(text: "  تومان")
                         ],
                       ),
@@ -209,7 +215,10 @@ void initState() {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBarUpdate);
+                                },
                                 child: Container(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 20),
@@ -232,14 +241,18 @@ void initState() {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBarUpdate);
+                                },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 20),
-                                    child: Text(
-                                          "دریافت وجه",
-                                          style: TextStyle(color: Colors.white),
-                                        ),))),
+                                      vertical: 8, horizontal: 20),
+                                  child: Text(
+                                    "دریافت وجه",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ))),
                       ],
                     )
                   ],
@@ -280,20 +293,27 @@ void initState() {
                   ),
                 ),
               ),
-              data != null ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  cardDesk(LineIcons.dollarSign,
-                      {"text": "پرداخت امن", "number": "${data['numberSafePayment']}"}),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  cardDesk(LineIcons.shoppingBag,
-                      {"text": "سفارشات", "number":  "${data['numberOrders']}"}),
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
-                  cardDesk(LineIcons.handshake,
-                      {"text": "درخواست", "number":  "${data['numberRequest']}"}),
-                ],
-              ):Container()
+              data != null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        cardDesk(LineIcons.dollarSign, {
+                          "text": "پرداخت امن",
+                          "number": "${data['numberSafePayment']}"
+                        }),
+                        Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
+                        cardDesk(LineIcons.shoppingBag, {
+                          "text": "سفارشات",
+                          "number": "${data['numberOrders']}"
+                        }),
+                        Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
+                        cardDesk(LineIcons.handshake, {
+                          "text": "درخواست",
+                          "number": "${data['numberRequest']}"
+                        }),
+                      ],
+                    )
+                  : Container()
             ],
           ),
         ));

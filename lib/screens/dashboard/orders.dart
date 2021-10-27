@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/orders_service.dart';
@@ -9,7 +10,7 @@ import 'package:treaget/global.dart';
 
 class Orders extends StatefulWidget {
   Map info = {};
-  Orders(info);
+  Orders({this.info});
   @override
   State<StatefulWidget> createState() => StateOrders();
 }
@@ -359,11 +360,10 @@ class StateOrders extends State<Orders> {
                                                   textStyle: TextStyle(
                                                       fontSize: 13,
                                                       fontFamily: "Vazir")),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) {}));
+                                              onPressed: () async{
+                                               
+                                                var resultOrder = await OrdersService.orderTrueApi(data["id"]);
+                                               if ( resultOrder == true) _handleRefresh();
                                               },
                                               child: Row(
                                                 mainAxisAlignment:
@@ -409,11 +409,10 @@ class StateOrders extends State<Orders> {
                                                   textStyle: TextStyle(
                                                       fontSize: 13,
                                                       fontFamily: "Vazir")),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) {}));
+                                              onPressed: () async{
+                                         
+                                                var resultOrder = await OrdersService.orderFalseApi(data["id"]);
+                                               if ( resultOrder == true) _handleRefresh();
                                               },
                                               child: Row(
                                                 mainAxisAlignment:
@@ -422,7 +421,7 @@ class StateOrders extends State<Orders> {
                                                   CircleAvatar(
                                                     radius: 14,
                                                     child: Icon(
-                                                      Icons.cancel,
+                                                      LineIcons.times,
                                                       color: Colors.white,
                                                       size: 18,
                                                     ),
@@ -440,7 +439,55 @@ class StateOrders extends State<Orders> {
                                                   ),
                                                 ],
                                               ),
-                                            )):Container(),
+                                            )):Container(),Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      primary: Colors.grey
+                                                          .withOpacity(0.2),
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      shape: new RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              new BorderRadius
+                                                                      .circular(
+                                                                  13)),
+                                                      textStyle: TextStyle(
+                                                          fontSize: 13,
+                                                          fontFamily: "Vazir")),
+                                                  onPressed: () {
+                                                                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 14,
+                                                        child: Icon(
+                                                          Icons.chat_bubble_outline,
+                                                          color: Colors.black,
+                                                          size: 18,
+                                                        ),
+                                                        backgroundColor:
+                                                            Colors.grey[100],
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 10)),
+                                                      Text(
+                                                        'چت کردن',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                       ],
                                     ))
                               ],

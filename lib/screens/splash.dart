@@ -32,43 +32,51 @@ class SplashScreenState extends State<SplashScreen> {
     return new Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        body: new Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Container(
-                  width: 125,
-                  height: 125,
-                  decoration: new BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 20,
-                          offset: Offset(0, 10),
-                        )
-                      ],
-                      image: new DecorationImage(
-                          image: new AssetImage("assets/images/logo.png"))),
-                ),
-              ],
-            ),
-            new Padding(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: new Align(
-                alignment: Alignment.bottomCenter,
-                child: CircularProgressIndicator(
-                  // minHeight: 2.0,
-                  color: Colors.deepOrange,
-                  backgroundColor: Colors.grey[100],
-                ),
+        body: new Stack(fit: StackFit.expand, children: <Widget>[
+          new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Container(
+                width: 125,
+                height: 125,
+                decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 20,
+                        offset: Offset(0, 10),
+                      )
+                    ],
+                    image: new DecorationImage(
+                        image: new AssetImage("assets/images/logo.png"))),
               ),
-            )
-          ],
-        ));
+            ],
+          ),
+          new Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: [
+                    
+                    ],
+                    image: new DecorationImage(
+                        image: new AssetImage("assets/images/treaget.png"))),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 60,top: 30),child:CircularProgressIndicator(
+                // minHeight: 2.0,
+                color: Colors.deepOrange,
+                backgroundColor: Colors.grey[100],
+              ) ,)
+            ],
+          )
+        ]));
   }
 
   checkLogin() async {
