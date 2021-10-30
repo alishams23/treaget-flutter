@@ -43,7 +43,7 @@ class RequestCardComponentState extends State<RequestCardComponent> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(23.0),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[50]),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.05),
@@ -123,11 +123,11 @@ class RequestCardComponentState extends State<RequestCardComponent> {
             padding: EdgeInsets.only(top: 20, bottom: 5),
             child: Text(
               widget.data.title,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 16),
               textDirection: TextDirection.rtl,
             ),
           ),
-          Text(widget.data.body),
+          Text(widget.data.body,style: TextStyle(fontSize: 14),),
           Padding(padding: EdgeInsets.only(bottom: 10)),
           ExpansionPanelList(
             elevation: 0,
@@ -138,7 +138,7 @@ class RequestCardComponentState extends State<RequestCardComponent> {
             },
             children: [
               ExpansionPanel(
-                backgroundColor: Colors.transparent,
+              
                 headerBuilder: (BuildContext context, bool isExpanded) {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.end,
@@ -146,12 +146,12 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                       Container(
                         margin: EdgeInsets.only(right: 13),
                         padding:
-                            EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: Colors.grey[200])),
                         child: Text(
-                          "  پیشنهاد ${widget.data.subcategories.length}",
+                          "  پیشنهاد ${widget.data.subcategories.length}",style: TextStyle(fontSize: 12),
                         ),
                       ),
                       (widget.userInfo != null &&
@@ -183,7 +183,7 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
                                   "قبول درخواست  ",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.black,fontSize: 11),
                                 ),
                               ),
                             )

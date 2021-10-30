@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/services/cash_service.dart';
 import 'package:treaget/services/desk_service.dart';
+import 'package:treaget/services/global_service.dart';
 
 import '../../global.dart';
 
@@ -308,8 +309,9 @@ class DashboardMainState extends State<DashboardMain> {
                         }),
                         Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
                         cardDesk(LineIcons.handshake, {
+                          
                           "text": "درخواست",
-                          "number": "${data['numberRequest']}"
+                          "number": data['numberRequest'] == null ? '0':data['numberRequest']
                         }),
                       ],
                     )

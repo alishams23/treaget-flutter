@@ -23,7 +23,7 @@ class StateServices extends State<Services> {
   bool isExpandedState = false;
   final ButtonStyle style = ElevatedButton.styleFrom(
       primary: Colors.grey.withOpacity(0.2),
-      shadowColor: Colors.transparent,
+      shadowColor: Colors.white.withOpacity(0),
       shape: new RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(13)),
       textStyle: TextStyle(fontSize: 13, fontFamily: "Vazir"));
@@ -83,15 +83,12 @@ class StateServices extends State<Services> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
-                    gradient: LinearGradient(
-                        end: Alignment.topCenter,
-                        begin: Alignment.bottomCenter,
-                        colors: [Colors.white, Colors.white, Colors.grey[50]]),
+                  
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withOpacity(0.03),
                         offset: Offset(0.0, -4.0),
-                        blurRadius: 4.0,
+                        blurRadius: 5.0,
                       ),
                     ],
                   ),
@@ -120,7 +117,7 @@ class StateServices extends State<Services> {
                         },
                         children: [
                           ExpansionPanel(
-                            backgroundColor: Colors.transparent,
+                            // backgroundColor: Colors.transparent,
                             headerBuilder:
                                 (BuildContext context, bool isExpanded) {
                               return Row(

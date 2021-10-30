@@ -268,10 +268,13 @@ Future<Null> _handleRefreshRequest() async {
                   children: [
                     Container(
                       padding: EdgeInsets.only(right: 20),
-                      child: Text(
-                        "👋عزیز  ${userInfo['first_name']} سلام",
+                      child: Row(children: [Text(
+                        "👋عزیز سلام ",
                         style: TextStyle(fontSize: 20),
-                      ),
+                      ),Text(
+                        "${userInfo['first_name']}",
+                        style: TextStyle(fontSize: 20),
+                      ),],)
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 20),

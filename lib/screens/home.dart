@@ -67,7 +67,7 @@ class _FeedScreenState extends State<FeedScreen> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(23.0),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[50]),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.05),
@@ -95,7 +95,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     context,
                     CupertinoPageRoute(
                       builder: (context) => PostPicture(
-                        data: productsData,info: userInfo,
+                        data: productsData,
+                        info: userInfo,
                       ),
                     ));
               },
@@ -177,7 +178,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     border: Border.all(
                                         color: Colors.white.withOpacity(0.2)),
                                     borderRadius: BorderRadius.circular(19.0),
-                                    color: Colors.white.withOpacity(.2),
+                                    color: Colors.white.withOpacity(.4),
                                   ),
                                 ),
                               ),
@@ -205,7 +206,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                   border: Border.all(
                                       color: Colors.white.withOpacity(0.1)),
                                   borderRadius: BorderRadius.circular(13.0),
-                                  color: Colors.white.withOpacity(.2),
+                                  color: Colors.white.withOpacity(.4),
                                 ),
                               ),
                             ),
@@ -242,10 +243,12 @@ class _FeedScreenState extends State<FeedScreen> {
                               EdgeInsets.symmetric(horizontal: 5, vertical: 16),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              side: BorderSide(width: 1, color: Colors.grey[300],),
+                                side: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey[300],
+                                ),
                                 primary: Colors.white,
                                 shadowColor: Colors.transparent,
-                                
                                 shape: new RoundedRectangleBorder(
                                     borderRadius:
                                         new BorderRadius.circular(13)),
@@ -253,7 +256,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                     fontSize: 12, fontFamily: "Vazir")),
                             onPressed: () {},
                             child: Text(
-                              "${productsData.category[index]["title"]}  ",
+                              "${productsData.category[index]["title"]}",
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -541,9 +544,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                   child: Setting())));
                     },
                   ),
-                  
                   Stack(
-                
                     children: [
                       ListTile(
                         leading: Icon(LineIcons.fileExport),
@@ -563,8 +564,7 @@ class _FeedScreenState extends State<FeedScreen> {
         ],
       )),
       appBar: AppBar(
-        elevation: 0.5,
-        backgroundColor: Colors.white,
+        elevation: 0.2,
         automaticallyImplyLeading: false,
         title: Padding(
           padding: EdgeInsets.only(right: 0),
@@ -573,14 +573,23 @@ class _FeedScreenState extends State<FeedScreen> {
                     children: [
                       GestureDetector(
                         child: Icon(
-                          LineIcons.bars,
+                          Icons.bar_chart,
                           size: 24,
                         ),
                         onTap: () => Scaffold.of(context).openDrawer(),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 20),
-                        child: Text("treaget"),
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: [],
+                              image: new DecorationImage(
+                                  image: new AssetImage(
+                                      "assets/images/treaget2.png"))),
+                        ),
                       )
                     ],
                   )),
@@ -634,7 +643,7 @@ class _FeedScreenState extends State<FeedScreen> {
         overlayOpacity: 0.9,
         onOpen: () => print('OPENING DIAL'),
         onClose: () => print('DIAL CLOSED'),
-        // tooltip: 'Speed Dial',
+        tooltip: 'منو',
         heroTag: 'speed-dial-hero-tag',
         backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black,

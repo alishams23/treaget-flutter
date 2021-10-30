@@ -122,7 +122,7 @@ class StatePostPicture extends State<PostPicture> {
                                       border: Border.all(
                                           color: Colors.white.withOpacity(0.2)),
                                       borderRadius: BorderRadius.circular(19.0),
-                                      color: Colors.white.withOpacity(.2),
+                                      color: Colors.white.withOpacity(.4),
                                     ),
                                   ),
                                 ),
@@ -150,7 +150,7 @@ class StatePostPicture extends State<PostPicture> {
                                     border: Border.all(
                                         color: Colors.white.withOpacity(0.1)),
                                     borderRadius: BorderRadius.circular(18.0),
-                                    color: Colors.white.withOpacity(.2),
+                                    color: Colors.white.withOpacity(.4),
                                   ),
                                 ),
                               ),
@@ -178,7 +178,7 @@ class StatePostPicture extends State<PostPicture> {
                                       border: Border.all(
                                           color: Colors.white.withOpacity(0.1)),
                                       borderRadius: BorderRadius.circular(18.0),
-                                      color: Colors.white.withOpacity(.2),
+                                      color: Colors.white.withOpacity(.4),
                                     ),
                                   ),
                                 ),
@@ -213,8 +213,12 @@ class StatePostPicture extends State<PostPicture> {
                                 horizontal: 5, vertical: 16),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.grey[100],
-                                  shadowColor: Colors.grey[50],
+                                 side: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey[300],
+                                ),
+                                primary: Colors.white,
+                                shadowColor: Colors.transparent,
                                   shape: new RoundedRectangleBorder(
                                       borderRadius:
                                           new BorderRadius.circular(13)),
@@ -222,7 +226,7 @@ class StatePostPicture extends State<PostPicture> {
                                       fontSize: 12, fontFamily: "Vazir")),
                               onPressed: () {},
                               child: Text(
-                                "${widget.data.category[index]["title"]}  ",
+                                "${widget.data.category[index]["title"]}",
                                 style: TextStyle(color: Colors.black),
                               ),
                             ),

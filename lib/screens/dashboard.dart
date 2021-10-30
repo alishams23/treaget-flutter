@@ -45,7 +45,7 @@ _getInformaion({bool refresh: false}) async {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 1,
+          elevation: 0.4,
           backgroundColor: Colors.white,
           // title: const Text('TabBar Widget'),
 
