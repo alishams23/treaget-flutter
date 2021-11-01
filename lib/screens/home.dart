@@ -14,6 +14,7 @@ import 'package:treaget/components/popupMenu/postRequestPopup.dart';
 import 'package:treaget/components/request.dart';
 import 'package:treaget/global.dart';
 import 'package:treaget/screens/add/addRequest.dart';
+import 'package:treaget/screens/chatUsers.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/screens/setting.dart';
 import 'package:treaget/services/global_service.dart';
@@ -603,7 +604,10 @@ class _FeedScreenState extends State<FeedScreen> {
                 size: 25,
               ),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                 Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => ChatPage() ));
               },
             ),
           ),

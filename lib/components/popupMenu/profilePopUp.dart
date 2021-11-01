@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/global.dart';
+import 'package:treaget/screens/add/addOrder.dart';
+import 'package:treaget/screens/message/chat.dart';
 
 class PopupMenuButtonProfile extends StatelessWidget {
   var currentUser;
   var userInfo;
-  PopupMenuButtonProfile(userInfo,currentUser);
+  PopupMenuButtonProfile({this.userInfo, this.currentUser});
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
@@ -27,22 +30,29 @@ class PopupMenuButtonProfile extends StatelessWidget {
             color: Colors.black,
           )),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
-           onTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
-          },
-          child: ListTile(
-            leading: const Icon(
-              Icons.chat_bubble_outline,
-              color: Colors.black,
-            ),
-            title: Text(
-              "ارسال پیام",
-              textDirection: TextDirection.rtl,
-            ),
-          ),
-        ),
-        PopupMenuItem<String>(
+        currentUser["username"] != userInfo["username"]
+            ? PopupMenuItem<String>(
+                onTap: () => Future(
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (_) => Messages(
+                              user: userInfo,
+                            )),
+                  ),
+                ),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.chat_bubble_outline,
+                    color: Colors.black,
+                  ),
+                  title: Text(
+                    "ارسال پیام",
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              )
+            : null,
+        currentUser["ServiceProvider"] ==false ?PopupMenuItem<String>(
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
           },
@@ -56,9 +66,16 @@ class PopupMenuButtonProfile extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
           ),
-        ),
-        PopupMenuItem<String>(
+        ):null,
+        currentUser["ServiceProvider"] ==false ?PopupMenuItem<String>(
           child: ListTile(
+            onTap: () => Future(
+              () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AddOrder(userInfo["username"]),
+                ),
+              ),
+            ),
             leading: const Icon(
               Icons.shopping_bag_outlined,
               color: Colors.black,
@@ -68,14 +85,13 @@ class PopupMenuButtonProfile extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
           ),
-        ),
-        const PopupMenuDivider(),
+        ):null,
+        // const PopupMenuDivider(),
         PopupMenuItem<String>(
-          onTap: (){
-            print(currentUser);
-            // Clipboard.setData(ClipboardData(text: "treaget.com/account/post/${userInfo['username']}/"));
-            //  ScaffoldMessenger.of(context).showSnackBar(snackBarCopy);
-
+          onTap: () {
+            Clipboard.setData(
+                ClipboardData(text: "treaget.com/p/${userInfo['username']}/"));
+            ScaffoldMessenger.of(context).showSnackBar(snackBarCopy);
           },
           child: ListTile(
             leading: const Icon(

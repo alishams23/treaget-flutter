@@ -25,6 +25,7 @@ import 'PostPicture.dart';
 import 'add/addOrder.dart';
 import 'add/addOrderService.dart';
 import 'add/addPicture.dart';
+import 'message/chat.dart';
 
 class Profile extends StatefulWidget {
   String username;
@@ -42,6 +43,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List request = [];
   Map info = {};
   Map currentUser = {};
+  
   final ImagePicker _picker = ImagePicker();
 
   int _currentPage = 1;
@@ -499,8 +501,9 @@ Widget topPage(Map info, currentUser, context, _getInformaion) {
                                                         left: 0),
                                                     child:
                                                         PopupMenuButtonProfile(
-                                                            info,
-                                                            currentUser))),
+                                                         
+                                                           userInfo: info,
+                                                           currentUser: currentUser))),
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 6)),
