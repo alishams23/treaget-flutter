@@ -100,7 +100,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       info.clear();
       info.addAll(response);
-      _isLoading = false;
+      
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var currentUserUsername = prefs.getString('user.username');

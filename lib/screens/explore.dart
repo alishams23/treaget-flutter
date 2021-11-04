@@ -274,7 +274,7 @@ Future<Null> _handleRefreshRequest() async {
                       ),Text(
                         "${userInfo['first_name']}",
                         style: TextStyle(fontSize: 20),
-                      ),],)
+                      ),SizedBox(width: 20,)],)
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 20),

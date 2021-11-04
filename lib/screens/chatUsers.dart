@@ -128,7 +128,7 @@ class _ChatPageState extends State<ChatPage> {
                     child: loadingViewCenter(),
                   )
                 : persons.length == 0
-                    ? listIsEmpty()
+                    ? Padding(padding: EdgeInsets.only(top: 100),child: listIsEmpty(),)
                     : Container(),
             ListView.builder(
               itemCount: persons.length,
@@ -191,6 +191,7 @@ class _ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
+                    backgroundColor: Colors.grey[100],
                     backgroundImage: widget.imageUrl != null
                         ? NetworkImage(widget.imageUrl)
                         : AssetImage(("assets/images/avatar.png")),

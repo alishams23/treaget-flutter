@@ -3,14 +3,18 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:treaget/components/empty.dart';
+import 'package:treaget/components/explore/samplesExplore.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/components/popupMenu/postPicturePopup.dart';
 import 'package:treaget/global.dart';
 
 import 'package:treaget/models/home_model.dart';
 import 'package:treaget/screens/profile.dart';
+import 'package:treaget/services/explore_service.dart';
 import 'package:treaget/services/home_services.dart';
 
 class PostPicture extends StatefulWidget {
@@ -23,7 +27,71 @@ class PostPicture extends StatefulWidget {
 }
 
 class StatePostPicture extends State<PostPicture> {
+  List _products = [];
+  int _currentPage = 1;
+
+  ScrollController _scrollController = new ScrollController();
   final snackBar = SnackBar(content: Text('متاسفانه این پست لایک نشد'));
+  bool _isLoading = true;
+  _getPost({int page: 1, bool refresh: false}) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    var response = await PostExploreService.getPosts(page);
+    setState(() {
+      if (refresh) _products.clear();
+      _products.addAll(response['products']);
+      _currentPage += 1;
+      _isLoading = false;
+    });
+  }
+
+  Future<Null> _handleRefresh() async {
+    await _getPost(refresh: true);
+    return null;
+  }
+
+  Widget streamListView() {
+    return _products.length == 0 && _isLoading
+        ? loadingView()
+        : _products.length == 0
+            ? listIsEmpty()
+            : Padding(
+                child: StaggeredGridView.countBuilder(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        print(_products[index]);
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => PostPicture(
+                                data: _products[index],
+                              ),
+                            ));
+                      },
+                      child: samplesExplore(index, _products[index]),
+                    );
+                  },
+                  staggeredTileBuilder: (index) => const StaggeredTile.fit(2),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10));
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _getPost();
+   
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,33 +197,38 @@ class StatePostPicture extends State<PostPicture> {
                               ),
                             ))),
                       ),
-                       widget.info != null?Container(
-                          padding: EdgeInsets.only(top: 80, left: 10),
-                          alignment: Alignment.topLeft,
-                          width: 100,
-                          height: 200,
-                          child:  Container(
+                      widget.info != null
+                          ? Container(
+                              padding: EdgeInsets.only(top: 80, left: 10),
+                              alignment: Alignment.topLeft,
+                              width: 100,
+                              height: 200,
                               child: Container(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(13.0),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: Container(
-                                  padding: EdgeInsets.all(9),
-                                  child: widget.info != null
-                                      ? PopupMenuButtonPostPicture(
-                                          widget.data, widget.info)
-                                      : Text(""),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.white.withOpacity(0.1)),
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    color: Colors.white.withOpacity(.4),
+                                  child: Container(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  child: BackdropFilter(
+                                    filter:
+                                        ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                    child: Container(
+                                      padding: EdgeInsets.all(9),
+                                      child: widget.info != null
+                                          ? PopupMenuButtonPostPicture(
+                                              widget.data, widget.info)
+                                          : Text(""),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Colors.white.withOpacity(0.1)),
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        color: Colors.white.withOpacity(.4),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ))):Container(),
+                              )))
+                          : Container(),
                       Container(
                           padding: EdgeInsets.only(top: 30, left: 10),
                           alignment: Alignment.topLeft,
@@ -213,12 +286,12 @@ class StatePostPicture extends State<PostPicture> {
                                 horizontal: 5, vertical: 16),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                 side: BorderSide(
-                                  width: 1,
-                                  color: Colors.grey[300],
-                                ),
-                                primary: Colors.white,
-                                shadowColor: Colors.transparent,
+                                  side: BorderSide(
+                                    width: 1,
+                                    color: Colors.grey[300],
+                                  ),
+                                  primary: Colors.white,
+                                  shadowColor: Colors.transparent,
                                   shape: new RoundedRectangleBorder(
                                       borderRadius:
                                           new BorderRadius.circular(13)),
@@ -356,7 +429,38 @@ class StatePostPicture extends State<PostPicture> {
                     )
                   ],
                 ),
-              )
+              ),
+             Container(child:  _products.length == 0 && _isLoading
+                  ? loadingView()
+                  : _products.length == 0
+                      ? listIsEmpty()
+                      : Padding(
+                          child: StaggeredGridView.countBuilder(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                             shrinkWrap: true,
+                             controller: _scrollController,
+                            itemCount: _products.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  print(_products[index]);
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) => PostPicture(
+                                          data: _products[index],
+                                        ),
+                                      ));
+                                },
+                                child: samplesExplore(index, _products[index]),
+                              );
+                            },
+                            staggeredTileBuilder: (index) =>
+                                const StaggeredTile.fit(2),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 10)),)
             ],
           ),
         ));

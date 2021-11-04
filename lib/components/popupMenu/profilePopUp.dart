@@ -34,7 +34,7 @@ class PopupMenuButtonProfile extends StatelessWidget {
             ? PopupMenuItem<String>(
                 onTap: () => Future(
                   () => Navigator.of(context).push(
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                         builder: (_) => Messages(
                               user: userInfo,
                             )),
@@ -71,7 +71,7 @@ class PopupMenuButtonProfile extends StatelessWidget {
           child: ListTile(
             onTap: () => Future(
               () => Navigator.of(context).push(
-                MaterialPageRoute(
+                CupertinoPageRoute(
                   builder: (_) => AddOrder(userInfo["username"]),
                 ),
               ),

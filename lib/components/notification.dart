@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:treaget/screens/profile.dart';
 
@@ -35,7 +36,7 @@ class NotificationComponent extends StatelessWidget {
                           child: GestureDetector(
                             onTap: ()=> Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                                 builder: (context) => Scaffold(
                                       body: Profile(
                                           username: data["user"]['username']),
@@ -77,7 +78,7 @@ class NotificationComponent extends StatelessWidget {
                         ),
                         onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                                 builder: (context) => Scaffold(
                                       body: Profile(
                                           username: data["user"]['username']),

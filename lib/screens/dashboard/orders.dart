@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:treaget/components/empty.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/orders_service.dart';
@@ -25,7 +26,7 @@ class StateOrders extends State<Orders> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getOrder();
+    // _getOrder();
   }
 
   _getOrder({int page: 1, bool refresh: false}) async {
@@ -33,7 +34,6 @@ class StateOrders extends State<Orders> {
       _isLoading = true;
     });
     var response = await OrdersService.getOrders(page);
-    print("ddddddddsssssssss");
     setState(() {
       if (refresh) orders.clear();
       if (response['results'] != null) {
@@ -53,6 +53,7 @@ class StateOrders extends State<Orders> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        
         orders != []
             ? RefreshIndicator(
                 onRefresh: _handleRefresh,
@@ -104,7 +105,7 @@ class StateOrders extends State<Orders> {
                                               child: GestureDetector(
                                                 onTap: () => Navigator.push(
                                                     context,
-                                                    MaterialPageRoute(
+                                                    CupertinoPageRoute(
                                                         builder: (context) =>
                                                             Scaffold(
                                                               body: Profile(
@@ -167,7 +168,7 @@ class StateOrders extends State<Orders> {
                                                 ),
                                                 onTap: () => Navigator.push(
                                                     context,
-                                                    MaterialPageRoute(
+                                                    CupertinoPageRoute(
                                                         builder: (context) =>
                                                             Scaffold(
                                                               body: Profile(
@@ -496,7 +497,7 @@ class StateOrders extends State<Orders> {
                     }),
               )
             : loadingView(),
-        _isLoading == true ? loadingView() : Container()
+        _isLoading == true ? loadingView() : Container(),orders.length == 0 ?listIsEmpty():Container(),
       ],
     );
   }

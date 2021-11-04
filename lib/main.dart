@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -21,19 +22,31 @@ class MyApp extends StatelessWidget {
         return Directionality(textDirection: TextDirection.ltr, child: child);
       },
       title: 'treaget',
-      theme: ThemeData(primaryColor: Colors.white, fontFamily: "Vazir",appBarTheme: AppBarTheme(
-     backgroundColor: Colors.white,foregroundColor: Colors.black
-  ),),
+      theme: ThemeData(
+        primaryColor: Colors.white,
+        fontFamily: "Vazir",
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white, foregroundColor: Colors.black),
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
+      onGenerateRoute: (RouteSettings settings) {
+        switch (settings.name) {
+          case '/home':
+            return CupertinoPageRoute(
+                builder: (_) => Example(), settings: settings);
+        }
+      },
       routes: {
         "/": (context) => new SplashScreen(),
-        "/home": (context) => Example(),
-        "/profile": (context) => Example(selectedIndex: 3,),
+        // "/home": (context) => Example(),
+        "/profile": (context) => Example(
+              selectedIndex: 3,
+            ),
         "/login": (context) => new Directionality(
             textDirection: TextDirection.rtl, child: new LoginScreen()),
-            "/register":(context) => Directionality(
-            textDirection: TextDirection.rtl, child: Register() )
+        "/register": (context) =>
+            Directionality(textDirection: TextDirection.rtl, child: Register())
         // "/setting" : (context) => new SettingScreen(),
         // "/new_chat" : (context) => new CreateChatScreen()
       },
@@ -42,23 +55,21 @@ class MyApp extends StatelessWidget {
 }
 
 class Example extends StatefulWidget {
-  int selectedIndex ;
+  int selectedIndex;
 
-  Example({this.selectedIndex = 0});
+  Example({this.selectedIndex = 1});
   @override
   _ExampleState createState() => _ExampleState();
 }
 
 class _ExampleState extends State<Example> {
-
   static List<Widget> _widgetOptions = <Widget>[
     FeedScreen(),
     Example08(),
     DashboardWidget(),
     Profile(),
   ];
-@override
-
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(

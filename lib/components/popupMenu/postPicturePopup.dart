@@ -52,7 +52,7 @@ class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>
 
           },
         ),
-        const PopupMenuDivider(),
+        // const PopupMenuDivider(),
         widget.userInfo["username"] == widget.data.author["username"] ?
         PopupMenuItem<String>(
           child: ListTile(

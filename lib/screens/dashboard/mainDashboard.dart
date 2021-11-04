@@ -207,7 +207,7 @@ class DashboardMainState extends State<DashboardMain> {
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13.0),
+                                    borderRadius: BorderRadius.circular(13.0),side: BorderSide(color: Colors.black.withOpacity(.06))
                                   )),
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.black.withOpacity(0.3)),
@@ -230,11 +230,14 @@ class DashboardMainState extends State<DashboardMain> {
                         Flexible(
                             child: ElevatedButton(
                                 style: ButtonStyle(
+                                  
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13.0),
+                                    borderRadius: BorderRadius.circular(13.0),side: BorderSide(color: Colors.black.withOpacity(.06))
+                                  
                                   )),
+                                  
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.black.withOpacity(0.3)),
                                   backgroundColor: MaterialStateProperty.all(

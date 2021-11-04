@@ -37,7 +37,7 @@ class PopupMenuButtonPostRequest extends StatelessWidget {
              ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
         ),
-        const PopupMenuDivider(),
+        // const PopupMenuDivider(),
         userInfo["username"] == data.author["username"]?
         PopupMenuItem<String>(
           child: ListTile(
