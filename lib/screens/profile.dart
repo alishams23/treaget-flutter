@@ -43,7 +43,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
   List request = [];
   Map info = {};
   Map currentUser = {};
-  
+
   final ImagePicker _picker = ImagePicker();
 
   int _currentPage = 1;
@@ -100,7 +100,6 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     setState(() {
       info.clear();
       info.addAll(response);
-      
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var currentUserUsername = prefs.getString('user.username');
@@ -205,11 +204,12 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                         ? [
                             TabBar(
                               isScrollable: false,
-                              unselectedLabelColor: Colors.grey[400],
+                              labelColor: Color(0xffE94A28),
+                              unselectedLabelColor: Colors.grey[700],
                               indicator: MD2Indicator(
                                 indicatorSize: MD2IndicatorSize.normal,
                                 indicatorHeight: 3,
-                                indicatorColor: Colors.black,
+                                indicatorColor: Color(0xffE94A28),
                               ),
                               tabs: (info.length != 0 &&
                                       info["ServiceProvider"] == true)
@@ -261,11 +261,16 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                           AddOrder(info[
                                                               "username"])));
                                             },
+                                            elevation: 0,
+                                                shape: RoundedRectangleBorder(side: BorderSide(color: Colors.grey[200]),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            17)),
                                             label: Text("سفارش"),
                                             icon: Icon(
                                                 Icons.shopping_bag_outlined),
-                                            foregroundColor: Colors.black,
-                                            backgroundColor: Colors.grey[200],
+                                            foregroundColor: Color(0xffE94A28),
+                                            backgroundColor: Colors.white,
                                           )
                                         : currentUser["username"] ==
                                                 info["username"]
@@ -289,10 +294,14 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                 label: Text("افزودن نمونه کار"),
                                                 icon: Icon(
                                                   Icons.dashboard_outlined,
-                                                ),
-                                                foregroundColor: Colors.black,
-                                                backgroundColor:
-                                                    Colors.grey[200],
+                                                ),elevation: 0,
+                                                shape: RoundedRectangleBorder(side: BorderSide(color: Colors.grey[200]),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            17)),
+                                                foregroundColor:
+                                                    Color(0xffE94A28),
+                                                backgroundColor: Colors.white,
                                               )
                                             : Container(),
                                     body: RefreshIndicator(
@@ -501,9 +510,9 @@ Widget topPage(Map info, currentUser, context, _getInformaion) {
                                                         left: 0),
                                                     child:
                                                         PopupMenuButtonProfile(
-                                                         
-                                                           userInfo: info,
-                                                           currentUser: currentUser))),
+                                                            userInfo: info,
+                                                            currentUser:
+                                                                currentUser))),
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(right: 6)),
@@ -570,9 +579,9 @@ Widget topPage(Map info, currentUser, context, _getInformaion) {
                                                                     ]
                                                                   : [
                                                                       Color(
-                                                                          0xff004e92),
+                                                                          0xffE94A28),
                                                                       Color(
-                                                                          0xff0664bb)
+                                                                          0xffE52C2C)
                                                                     ],
                                                         ),
                                                         borderRadius:

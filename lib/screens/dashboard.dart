@@ -53,14 +53,15 @@ _getInformaion({bool refresh: false}) async {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TabBar(
+                
                 isScrollable: true,
                 // indicatorColor: Colors.black,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey[400],
-                indicator: MD2Indicator(
-                  indicatorSize: MD2IndicatorSize.normal,
-                  indicatorHeight: 3,
-                  indicatorColor: Colors.black,
+                 labelColor: Color(0xffE94A28),
+                              unselectedLabelColor: Colors.grey[700],
+                              indicator: MD2Indicator(
+                                indicatorSize: MD2IndicatorSize.normal,
+                                indicatorHeight: 3,
+                                indicatorColor: Color(0xffE94A28),
                 ),
                 tabs: <Widget>[
                   Tab(

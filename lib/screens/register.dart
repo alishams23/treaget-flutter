@@ -142,7 +142,7 @@ storeUserData(Map userData, username) async {
                           ),
                           new InputFieldArea(
                             hint: "ایمیل",
-                            obscure: true,
+                            obscure: false,
                             icon: Icons.email_rounded,
                             onSaved: (var value){
                               setState(() {
@@ -157,7 +157,7 @@ storeUserData(Map userData, username) async {
                           ),
                           new InputFieldArea(
                             hint: "نام",
-                            obscure: true,
+                            obscure: false,
                             icon: Icons.person_outline,
                             onSaved: (var value){
                               setState(() {
@@ -172,7 +172,7 @@ storeUserData(Map userData, username) async {
                           ),
                           new InputFieldArea(
                             hint: "نام خانوادگی",
-                            obscure: true,
+                            obscure: false,
                             icon: Icons.person_outline,
                             onSaved: (var value){
                               lastName = value;

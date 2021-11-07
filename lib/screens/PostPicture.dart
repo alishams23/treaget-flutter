@@ -83,13 +83,10 @@ class StatePostPicture extends State<PostPicture> {
                 padding: EdgeInsets.symmetric(horizontal: 10));
   }
 
-
-
   @override
   void initState() {
     super.initState();
     _getPost();
-   
   }
 
   @override
@@ -116,155 +113,300 @@ class StatePostPicture extends State<PostPicture> {
                   child: Stack(
                     fit: StackFit.passthrough,
                     children: [
-                      ClipRRect(
-                        // borderRadius: BorderRadius.circular(15.0),
-                        child: CachedNetworkImage(
-                            imageUrl: "${widget.data.image}",
-                            fit: BoxFit.fitHeight,
-                            placeholder: (context, url) {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.grey[400],
-                                highlightColor: Colors.white,
-                                enabled: true,
-                                child: Container(
-                                  height: 200,
-                                  color: Colors.grey.withOpacity(0.2),
-                                  // width: 100,
-                                ),
-                              );
-                            }),
+                      Container(
+                        padding: EdgeInsets.only(bottom: 36),
+                        child: ClipRRect(
+                          // borderRadius: BorderRadius.circular(15.0),
+                          child: CachedNetworkImage(
+                              imageUrl: "${widget.data.image}",
+                              fit: BoxFit.fitHeight,
+                              placeholder: (context, url) {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey[400],
+                                  highlightColor: Colors.white,
+                                  enabled: true,
+                                  child: Container(
+                                    height: 200,
+                                    color: Colors.grey.withOpacity(0.2),
+                                    // width: 100,
+                                  ),
+                                );
+                              }),
+                        ),
                       ),
                       Positioned(
-                        right: 0,
                         bottom: 0,
+                        right: 0,
                         child: Container(
-                            padding: EdgeInsets.only(bottom: 10, right: 10),
-                            alignment: Alignment.topRight,
-                            width: 120,
-                            height: 60,
-                            child: Container(
-                                child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(19.0),
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                  child: Container(
-                                    width: 100,
-                                    padding: EdgeInsets.all(0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        IconButton(
-                                          icon: Icon(
-                                            widget.data.like == true
-                                                ? LineIcons.heartAlt
-                                                : LineIcons.heart,
-                                            color: widget.data.like == true
-                                                ? Colors.red
-                                                : Colors.black,
-                                          ),
-                                          iconSize: 24.0,
-                                          onPressed: () async {
-                                            var likeTest =
-                                                await LikePost.likePost(
-                                                    widget.data.id);
-                                            // ignore: unrelated_type_equality_checks
-                                            likeTest == true
-                                                ? setState(() {
-                                                    widget.data.likePost();
-                                                  })
-                                                : ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: Icon(LineIcons.bookmark),
-                                          iconSize: 27.0,
-                                          onPressed: () =>
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBarUpdate),
-                                        ),
-                                      ],
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white.withOpacity(0.2)),
-                                      borderRadius: BorderRadius.circular(19.0),
-                                      color: Colors.white.withOpacity(.4),
-                                    ),
-                                  ),
+                          padding: EdgeInsets.only(
+                              top: 2.5, bottom: 2.5, left: 2.5, right: 2.5),
+                          margin:
+                              EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  spreadRadius: 1,
+                                  offset: Offset(0, 2),
+                                  color: Colors.black.withOpacity(0.07),
+                                )
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(60)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 7),
+                                child: Row(
+                                  children: [
+                                    widget.data.likeUser.length >= 3
+                                        ? Stack(
+                                            children: [
+                                              Positioned(
+                                                  right: 7,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: widget
+                                                                .data
+                                                                .likeUser
+                                                                .length >=
+                                                            3
+                                                        ? widget.data.likeUser[
+                                                                        2]
+                                                                    ["image"] !=
+                                                                null
+                                                            ? NetworkImage(widget
+                                                                    .data
+                                                                    .likeUser[2]
+                                                                ["image"])
+                                                            : null
+                                                        : null,
+                                                    radius: 14,
+                                                    backgroundColor:
+                                                        Colors.grey[200],
+                                                  )),
+                                              Positioned(
+                                                  right: 21,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: widget
+                                                                .data
+                                                                .likeUser
+                                                                .length >=
+                                                            2
+                                                        ? widget.data.likeUser[
+                                                                        1]
+                                                                    ["image"] !=
+                                                                null
+                                                            ? NetworkImage(widget
+                                                                    .data
+                                                                    .likeUser[1]
+                                                                ["image"])
+                                                            : null
+                                                        : null,
+                                                    radius: 14,
+                                                    backgroundColor:
+                                                        Colors.orange[200],
+                                                  )),
+                                              Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 32)),
+                                              Positioned(
+                                                  child: CircleAvatar(
+                                                backgroundImage: widget.data
+                                                            .likeUser.length >=
+                                                        1
+                                                    ? widget.data.likeUser[0]
+                                                                ["image"] !=
+                                                            null
+                                                        ? NetworkImage(widget
+                                                                .data
+                                                                .likeUser[0]
+                                                            ["image"])
+                                                        : null
+                                                    : null,
+                                                radius: 14,
+                                                backgroundColor:
+                                                    Colors.deepOrange[400],
+                                              ))
+                                            ],
+                                          )
+                                        : Container(),
+                                    Padding(padding: EdgeInsets.only(right: 1)),
+                                    CircleAvatar(
+                                      child: Text(
+                                        "${widget.data.likeUser.length}",
+                                        style: TextStyle(fontSize: 13),
+                                      ),
+                                      radius: 14,
+                                      backgroundColor: Colors.orange[50],
+                                      foregroundColor: Colors.deepOrange,
+                                    )
+                                  ],
                                 ),
-                              ),
-                            ))),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                      widget.info != null
-                          ? Container(
-                              padding: EdgeInsets.only(top: 80, left: 10),
-                              alignment: Alignment.topLeft,
-                              width: 100,
-                              height: 200,
-                              child: Container(
-                                  child: Container(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(13.0),
-                                  child: BackdropFilter(
-                                    filter:
-                                        ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                    child: Container(
-                                      padding: EdgeInsets.all(9),
-                                      child: widget.info != null
-                                          ? PopupMenuButtonPostPicture(
-                                              widget.data, widget.info)
-                                          : Text(""),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color:
-                                                Colors.white.withOpacity(0.1)),
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                        color: Colors.white.withOpacity(.4),
+                      Positioned(
+                          bottom: 0,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                top: 5, bottom: 5, left: 5, right: 10),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
+                                    offset: Offset(0, 2),
+                                    color: Colors.black.withOpacity(0.07),
+                                  )
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(60)),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                    child: CircleAvatar(
+                                      radius: 18,
+                                      backgroundColor: Colors.grey[300],
+                                      child: ClipOval(
+                                        child:
+                                            widget.data.author["image"] != null
+                                                ? Image(
+                                                    image: NetworkImage(
+                                                        "${widget.data.author['image']}"),
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : null,
                                       ),
                                     ),
-                                  ),
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Scaffold(
+                                                  body: Profile(
+                                                      username: widget.data
+                                                          .author['username']),
+                                                  backgroundColor: Colors.white,
+                                                )))),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10),
                                 ),
-                              )))
-                          : Container(),
-                      Container(
-                          padding: EdgeInsets.only(top: 30, left: 10),
-                          alignment: Alignment.topLeft,
-                          width: 100,
-                          height: 100,
-                          child: Container(
-                              child: Container(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(13.0),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(9),
-                                    child: Icon(Icons.chevron_left),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white.withOpacity(0.1)),
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      color: Colors.white.withOpacity(.4),
+                                Column(
+                                  children: [
+                                    Text(
+                                      widget.data.author["username"],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
+                              ],
                             ),
-                          )))
+                          )),
+                      Container(
+                          padding: EdgeInsets.only(top: 40, left: 15),
+                          alignment: Alignment.topLeft,
+                          width: 50,
+                          height: 80,
+                          child: FittedBox(
+                            child: FloatingActionButton(
+                              heroTag: "btn4",
+                              child: Icon(
+                                Icons.chevron_left,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              backgroundColor: Colors.white,
+                              elevation: 8,
+                              foregroundColor: Colors.black,
+                              // shape: RoundedRectangleBorder(
+
+                              //     borderRadius: BorderRadius.circular(22)),
+                            ),
+                          ))
                     ],
                   ),
                 ),
               ),
+              Container(
+                height: 86,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FittedBox(
+                      child: FloatingActionButton(
+                        heroTag: "btn1",
+                        child: Icon(LineIcons.bookmark),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBarUpdate);
+                        },
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey[300]),
+                            borderRadius: BorderRadius.circular(22)),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                    FittedBox(
+                      child: FloatingActionButton(
+                        heroTag: "btn2",
+                        child: Icon(
+                          widget.data.like == true
+                              ? LineIcons.heartAlt
+                              : LineIcons.heart,
+                          color: widget.data.like == true
+                              ? Colors.red
+                              : Colors.black,
+                        ),
+                        onPressed: () async {
+                          var likeTest =
+                              await LikePost.likePost(widget.data.id);
+                          // ignore: unrelated_type_equality_checks
+                          likeTest == true
+                              ? setState(() {
+                                  widget.data.likePost();
+                                })
+                              : ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                        },
+                        backgroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey[300]),
+                            borderRadius: BorderRadius.circular(22)),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
+                    FittedBox(
+                      child: FloatingActionButton(
+                        heroTag: "btn3",
+                        child: PopupMenuButtonPostPicture(data: widget.data),
+                        onPressed: () {},
+                        backgroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey[300]),
+                            borderRadius: BorderRadius.circular(22)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               widget.data.alt != null
                   ? Container(
-                      padding: EdgeInsets.only(top: 20, right: 20, bottom: 20),
+                      padding: EdgeInsets.only(top: 5, right: 20, bottom: 5),
                       child: Text(
                         widget.data.alt,
                         textDirection: TextDirection.rtl,
@@ -308,159 +450,41 @@ class StatePostPicture extends State<PostPicture> {
                       ),
                     )
                   : Container(),
+
               Container(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                            child: CircleAvatar(
-                              radius: 21,
-                              backgroundColor: Colors.grey[300],
-                              child: ClipOval(
-                                child: widget.data.author["image"] != null
-                                    ? Image(
-                                        image: NetworkImage(
-                                            "${widget.data.author['image']}"),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : null,
-                              ),
+                child: _products.length == 0 && _isLoading
+                    ? loadingView()
+                    : _products.length == 0
+                        ? listIsEmpty()
+                        : Padding(
+                            child: StaggeredGridView.countBuilder(
+                              crossAxisCount: 4,
+                              mainAxisSpacing: 4,
+                              crossAxisSpacing: 4,
+                              shrinkWrap: true,
+                              controller: _scrollController,
+                              itemCount: _products.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    print(_products[index]);
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) => PostPicture(
+                                            data: _products[index],
+                                          ),
+                                        ));
+                                  },
+                                  child:
+                                      samplesExplore(index, _products[index]),
+                                );
+                              },
+                              staggeredTileBuilder: (index) =>
+                                  const StaggeredTile.fit(2),
                             ),
-                            onTap: () => Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => Scaffold(
-                                          body: Profile(
-                                              username: widget
-                                                  .data.author['username']),
-                                          backgroundColor: Colors.white,
-                                        )))),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              widget.data.author["username"],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text(
-                              widget.data.createdAdd,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 17, vertical: 7),
-                      child: Row(
-                        children: [
-                          widget.data.likeUser.length >= 3
-                              ? Stack(
-                                  children: [
-                                    Positioned(
-                                        right: 7,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              widget.data.likeUser.length >= 3
-                                                  ? widget.data.likeUser[2]
-                                                              ["image"] !=
-                                                          null
-                                                      ? NetworkImage(widget.data
-                                                          .likeUser[2]["image"])
-                                                      : null
-                                                  : null,
-                                          radius: 14,
-                                          backgroundColor: Colors.grey[200],
-                                        )),
-                                    Positioned(
-                                        right: 21,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              widget.data.likeUser.length >= 2
-                                                  ? widget.data.likeUser[1]
-                                                              ["image"] !=
-                                                          null
-                                                      ? NetworkImage(widget.data
-                                                          .likeUser[1]["image"])
-                                                      : null
-                                                  : null,
-                                          radius: 14,
-                                          backgroundColor: Colors.orange[200],
-                                        )),
-                                    Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 32)),
-                                    Positioned(
-                                        child: CircleAvatar(
-                                      backgroundImage:
-                                          widget.data.likeUser.length >= 1
-                                              ? widget.data.likeUser[0]
-                                                          ["image"] !=
-                                                      null
-                                                  ? NetworkImage(widget.data
-                                                      .likeUser[0]["image"])
-                                                  : null
-                                              : null,
-                                      radius: 14,
-                                      backgroundColor: Colors.deepOrange[400],
-                                    ))
-                                  ],
-                                )
-                              : Container(),
-                          Padding(padding: EdgeInsets.only(right: 1)),
-                          CircleAvatar(
-                            child: Text(
-                              "${widget.data.likeUser.length}",
-                              style: TextStyle(fontSize: 13),
-                            ),
-                            radius: 14,
-                            backgroundColor: Colors.orange[50],
-                            foregroundColor: Colors.deepOrange,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-             Container(child:  _products.length == 0 && _isLoading
-                  ? loadingView()
-                  : _products.length == 0
-                      ? listIsEmpty()
-                      : Padding(
-                          child: StaggeredGridView.countBuilder(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                             shrinkWrap: true,
-                             controller: _scrollController,
-                            itemCount: _products.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  print(_products[index]);
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => PostPicture(
-                                          data: _products[index],
-                                        ),
-                                      ));
-                                },
-                                child: samplesExplore(index, _products[index]),
-                              );
-                            },
-                            staggeredTileBuilder: (index) =>
-                                const StaggeredTile.fit(2),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 10)),)
+                            padding: EdgeInsets.symmetric(horizontal: 10)),
+              )
             ],
           ),
         ));

@@ -273,20 +273,17 @@ class DashboardMainState extends State<DashboardMain> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                               begin: Alignment.topRight,
-                              colors: [Colors.blue[900], Colors.blue[500]]),
+                              colors: [Colors.blue[900], Colors.blue[700]]),
                           borderRadius: BorderRadius.circular(9.0),
                         ),
-                        height: 44,
+                        height: 21,
                         width: 3,
                       ),
-                      Padding(padding: EdgeInsets.only(right: 4)),
+                      Padding(padding: EdgeInsets.only(right: 9)),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "ali shams عزیز خوش آمدید",
-                            style: TextStyle(fontSize: 14),
-                          ),
+                         
                           Text(
                             "نسخه اولیه تریگت در دسترس شما می باشد",
                             style: TextStyle(color: Colors.grey),

@@ -24,6 +24,7 @@ import 'PostPicture.dart';
 import 'add/addPicture.dart';
 import 'add/addResume.dart';
 import 'add/addService.dart';
+import 'dashboard/notification.dart';
 
 // ignore: must_be_immutable
 class FeedScreen extends StatefulWidget {
@@ -177,9 +178,9 @@ class _FeedScreenState extends State<FeedScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: Colors.white.withOpacity(0.2)),
+                                        color: Colors.white.withOpacity(0.05)),
                                     borderRadius: BorderRadius.circular(19.0),
-                                    color: Colors.white.withOpacity(.4),
+                                    color: Colors.white.withOpacity(.2),
                                   ),
                                 ),
                               ),
@@ -194,20 +195,21 @@ class _FeedScreenState extends State<FeedScreen> {
                         child: Container(
                             child: Container(
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(13.0),
+                            borderRadius: BorderRadius.circular(20.0),
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: Container(
-                                padding: EdgeInsets.all(4),
+                               
+                               
                                 child: userInfo != null
                                     ? PopupMenuButtonPostPicture(
-                                        productsData, userInfo)
+                                        data:productsData,userInfo: userInfo)
                                     : Text(""),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      color: Colors.white.withOpacity(0.1)),
-                                  borderRadius: BorderRadius.circular(13.0),
-                                  color: Colors.white.withOpacity(.4),
+                                      color: Colors.white.withOpacity(0.05)),
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.white.withOpacity(.2),
                                 ),
                               ),
                             ),
@@ -595,22 +597,42 @@ class _FeedScreenState extends State<FeedScreen> {
                     ],
                   )),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: IconButton(
-              icon: Icon(
-                Icons.chat_bubble_outline,
-                size: 25,
-              ),
-              onPressed: () {
-                 Navigator.push(
+        actions: [Padding(padding: EdgeInsets.only(right: 20),child:GestureDetector(child:  Icon(Icons.notifications_outlined),onTap: (){ Navigator.push(
                             context,
                             CupertinoPageRoute(
-                                builder: (context) => ChatPage() ));
+                                builder: (context) =>   NotificationApp()));},),),
+          Padding(
+            padding: EdgeInsets.only(right: 20, top: 8, bottom: 8),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => ChatPage()));
               },
+              child: Container(
+                width: 40,
+                height: 20,
+                // padding: EdgeInsets.only(right: 10.3, left: 10.3),
+                decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                        offset: Offset(0, 2),
+                        color: Color(0xffE94A28).withOpacity(0.2),
+                      )
+                    ],
+                    gradient: LinearGradient(
+                        colors: [Color(0xffE94A28), Color(0xffE52C2C)]),
+                    borderRadius: BorderRadius.circular(25)),
+                child: Icon(
+                  Icons.send_rounded,
+                  size: 18,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
+          
         ],
       ),
       body: streamListView(),
@@ -649,8 +671,8 @@ class _FeedScreenState extends State<FeedScreen> {
         onClose: () => print('DIAL CLOSED'),
         tooltip: 'منو',
         heroTag: 'speed-dial-hero-tag',
-        backgroundColor: Colors.grey[200],
-        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
+        foregroundColor: Color(0xffE94A28),
         elevation: 8.0,
         shape: CircleBorder(),
         // orientation: SpeedDialOrientation.Up,
@@ -660,9 +682,12 @@ class _FeedScreenState extends State<FeedScreen> {
             ? userInfo["ServiceProvider"] == true
                 ? [
                     SpeedDialChild(
+                      backgroundColor: Color(0xffE94A28),
+                      labelBackgroundColor: Colors.white,
+
                       child: Icon(
                         Icons.store_outlined,
-                        color: Colors.deepOrange,
+                        color: Colors.white,
                       ),
                       // backgroundColor: Colors.grey.shade700.withOpacity(0.5),
                       label: '  افزودن خدمات     ',
@@ -674,9 +699,12 @@ class _FeedScreenState extends State<FeedScreen> {
                       onLongPress: () => print('FIRST CHILD LONG PRESS'),
                     ),
                     SpeedDialChild(
+                      backgroundColor: Color(0xffE94A28),
+                      labelBackgroundColor: Colors.white,
+
                       child: Icon(
                         Icons.assignment_ind_outlined,
-                        color: Colors.deepOrange,
+                        color: Colors.white,
                       ),
                       // backgroundColor: Colors.white,
                       label: '  افزودن رزومه   ',
@@ -687,9 +715,12 @@ class _FeedScreenState extends State<FeedScreen> {
                               builder: (context) => AddResume())),
                     ),
                     SpeedDialChild(
+                      backgroundColor: Color(0xffE94A28),
+                      labelBackgroundColor: Colors.white,
+
                       child: Icon(
                         Icons.dashboard_outlined,
-                        color: Colors.deepOrange,
+                        color: Colors.white,
                       ),
                       // backgroundColor: ,
                       label: '  افزودن نمونه کار',
@@ -712,9 +743,12 @@ class _FeedScreenState extends State<FeedScreen> {
                   ]
                 : [
                     SpeedDialChild(
+                      backgroundColor: Color(0xffE94A28),
+                      labelBackgroundColor: Colors.white,
+
                       child: Icon(
                         Icons.shopping_bag_outlined,
-                        color: Colors.deepOrange,
+                        color: Colors.white,
                       ),
                       // backgroundColor: ,
                       label: 'افزودن درخواست     ',

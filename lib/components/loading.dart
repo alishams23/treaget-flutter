@@ -21,3 +21,15 @@ Widget loadingViewCenter() {
     ),
   );
 }
+
+
+Widget loadingViewBottom() {
+  return Align(
+    alignment: Alignment.bottomCenter,
+    child: new LinearProgressIndicator(
+      minHeight: 2.0,
+      color: Colors.deepOrange,
+      backgroundColor: Colors.grey[100],
+    ),
+  );
+}

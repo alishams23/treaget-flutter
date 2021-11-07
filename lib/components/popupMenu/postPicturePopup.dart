@@ -10,7 +10,7 @@ import 'package:treaget/services/Picture_service.dart';
 class PopupMenuButtonPostPicture extends StatefulWidget {
   Post data;
   var userInfo;
-  PopupMenuButtonPostPicture(this.data,this.userInfo);
+  PopupMenuButtonPostPicture({this.data,this.userInfo});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,10 +29,10 @@ class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>
     return PopupMenuButton(
       elevation: 20,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Icon(
+      child: Container(padding: EdgeInsets.all(8),child: Icon(
         Icons.more_horiz,
         color: Colors.black,
-      ),
+      ),),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         
         PopupMenuItem<String>(
@@ -53,7 +53,7 @@ class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>
           },
         ),
         // const PopupMenuDivider(),
-        widget.userInfo["username"] == widget.data.author["username"] ?
+        (widget.userInfo != null && widget.userInfo["username"] == widget.data.author["username"]) ?
         PopupMenuItem<String>(
           child: ListTile(
             leading: const Icon(

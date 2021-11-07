@@ -28,4 +28,27 @@ class PostExploreService {
       return {"current_page": page, "products": post};
     }
   }
+
+  static Future<Map> search({int page,String text}) async {
+    var url = Uri.parse('$website/api/PictureSearchApi/?page=$page&search=$text');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('user.api_token');
+    // var token = checkLogin();
+    var response = await http.get(url, headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Token $token"
+    });
+    // print(response.body);
+    if (response.statusCode == 200) {
+      String source = Utf8Decoder().convert(response.bodyBytes);
+      var responseBody = json.decode(source);
+
+      List<Post> post = [];
+      responseBody["results"].forEach((item) {
+        post.add(Post.fromJson({"item":"picture","data":item}));
+      });
+      return {"current_page": page, "products": post};
+    }
+  }
 }

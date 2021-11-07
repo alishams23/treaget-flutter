@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return Directionality(textDirection: TextDirection.ltr, child: child);
       },
-      title: 'treaget',
+      title: 'تریگت',
       theme: ThemeData(
         primaryColor: Colors.white,
         fontFamily: "Vazir",
@@ -96,31 +96,74 @@ class _ExampleState extends State<Example> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-              rippleColor: Colors.grey[300],
+              // rippleColor: Colors.grey[100],
               hoverColor: Colors.grey[100],
               gap: 8,
-              activeColor: Colors.black,
+              activeColor: Colors.white,
               iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 400),
+              tabBackgroundGradient: LinearGradient(
+                  colors: [Color(0xffE94A28), Color(0xffE52C2C)]),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              tabBorderRadius: 30,
+              duration: Duration(milliseconds: 200),
               tabBackgroundColor: Colors.grey[100],
               color: Colors.grey[500],
               tabs: [
                 GButton(
                   icon: LineIcons.home,
                   text: 'خانه',
+                  shadow: widget.selectedIndex == 0
+                      ? [
+                          BoxShadow(
+                            blurRadius: 5,
+                            spreadRadius: 1,
+                            offset: Offset(0, 5),
+                            color: Color(0xffE94A28).withOpacity(0.4),
+                          )
+                        ]
+                      : [],
                 ),
                 GButton(
                   icon: LineIcons.search,
                   text: 'کاوش',
+                  shadow: widget.selectedIndex == 1
+                      ? [
+                          BoxShadow(
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                            offset: Offset(0, 5),
+                            color: Color(0xffE94A28).withOpacity(0.3),
+                          )
+                        ]
+                      : [],
                 ),
                 GButton(
                   icon: LineIcons.horizontalSliders,
                   text: 'میز کار',
+                  shadow: widget.selectedIndex == 2
+                      ? [
+                          BoxShadow(
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                            offset: Offset(0, 5),
+                            color: Color(0xffE94A28).withOpacity(0.3),
+                          )
+                        ]
+                      : [],
                 ),
                 GButton(
                   icon: LineIcons.user,
                   text: 'پروفایل',
+                  shadow: widget.selectedIndex == 3
+                      ? [
+                          BoxShadow(
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                            offset: Offset(0, 5),
+                            color: Color(0xffE94A28).withOpacity(0.3),
+                          )
+                        ]
+                      : [],
                 ),
               ],
               selectedIndex: widget.selectedIndex,

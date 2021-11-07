@@ -50,7 +50,7 @@ class StateNotification extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Scaffold(backgroundColor: Colors.white,body: Stack(
       children: [
         notifications != null
             ? RefreshIndicator(
@@ -65,7 +65,7 @@ class StateNotification extends State {
             : listIsEmpty(),
         _isLoading == true ? loadingView() : Container()
       ],
-    );
+    ),);
   }
 
   listIsEmpty() {}
