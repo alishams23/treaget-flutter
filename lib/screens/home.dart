@@ -445,7 +445,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget _buildPost(int index, productsData) {
     print(productsData.item);
     return productsData.item == "request"
-        ? RequestCardComponent(productsData, userInfo)
+        ? RequestCardComponent(productsData, userInfo,true)
         : pictureCard(index, productsData);
   }
 

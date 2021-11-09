@@ -8,7 +8,7 @@ import 'package:treaget/components/loading.dart';
 import 'dashboard/mainDashboard.dart';
 import 'dashboard/notification.dart';
 import 'dashboard/orders.dart';
-import 'dashboard/safePayment.dart';
+import 'dashboard/safePayments.dart';
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({Key key}) : super(key: key);
@@ -94,7 +94,7 @@ _getInformaion({bool refresh: false}) async {
             DashboardMain(),
             NotificationApp(),
             Orders(info:info),
-            SafePayment(),
+            SafePayments(info: info,),
             Disputes(),
           ],
         ),

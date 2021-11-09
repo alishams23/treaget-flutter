@@ -18,19 +18,9 @@ Widget samplesExplore(int index, productsData) {
         child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: CachedNetworkImage(
+              
                 imageUrl: "${productsData.image}",
-                placeholder: (context, url) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[400],
-                    highlightColor: Colors.white,
-                    enabled: true,
-                    child: Container(
-                      height: 200,
-                      color: Colors.grey.withOpacity(0.2),
-                      // width: 900,
-                    ),
-                  );
-                })),
+                )),
       ),
       //     Container(
       //       width: 110,

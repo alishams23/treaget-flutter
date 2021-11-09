@@ -34,7 +34,6 @@ class _ViewPostScreenState extends State<Example08>
   List users = [];
   String text;
   int tabIndex = 0;
-  var currentUser;
   ScrollController _scrollController = new ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -96,6 +95,7 @@ class _ViewPostScreenState extends State<Example08>
                                       CupertinoPageRoute(
                                         builder: (context) => PostPicture(
                                           data: _products[index],
+                                          info: userInfo,
                                         ),
                                       ));
                                 },
@@ -129,11 +129,15 @@ class _ViewPostScreenState extends State<Example08>
   @override
   void initState() {
     super.initState();
-    _getPost();
-    _getCurrentUserInfo();
-    _getRequest();
-    _getUser();
-    _scrollController.addListener(_scrollListener);
+    getStart();
+  }
+
+  getStart() async {
+    await _getCurrentUserInfo();
+    await _getPost();
+    await _getRequest();
+    await _getUser();
+    await _scrollController.addListener(_scrollListener);
   }
 
   _scrollListener() {
@@ -158,7 +162,7 @@ class _ViewPostScreenState extends State<Example08>
           if (text != null && text.isNotEmpty) {
             searchRequest(page: _currentPageRequest + 1);
           } else {
-            _getRequest(page: _currentPageRequest);
+            _getRequest(page: _currentPageRequest + 1);
           }
         }
       }
@@ -224,13 +228,8 @@ class _ViewPostScreenState extends State<Example08>
     setState(() {
       _isLoadingRequest = true;
     });
-
     var response = await RequestApi.search(text: text, page: page);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    currentUser = prefs.getString('user.username');
-    currentUser =
-        await InformationProfileService.getInfo(username: currentUser);
     setState(() {
       if (refresh) request.clear();
       if (response['data'] != false) request.addAll(response['data']);
@@ -242,18 +241,14 @@ class _ViewPostScreenState extends State<Example08>
   _getRequest({int page: 1, bool refresh: false}) async {
     setState(() {
       _isLoadingRequest = true;
+      _currentPage += 1;
     });
 
     var response = await RequestApi.explore(page: page);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    currentUser = prefs.getString('user.username');
-    currentUser =
-        await InformationProfileService.getInfo(username: currentUser);
     setState(() {
       if (refresh) request.clear();
       if (response['data'] != false) request.addAll(response['data']);
-      _currentPage += 1;
       _isLoadingRequest = false;
     });
   }
@@ -317,16 +312,21 @@ class _ViewPostScreenState extends State<Example08>
                               ? loadingViewCenter()
                               : request.length == 0
                                   ? listIsEmpty()
-                                  : Padding(
-                                      padding: EdgeInsets.only(top: 15),
+                                  : Container(
+                                     
                                       child: Stack(
                                         children: [
                                           ListView.builder(
                                             itemCount: request.length,
                                             itemBuilder: (BuildContext context,
-                                                int index) {
+                                                int index) {if(index == 0 ){return Padding(padding: EdgeInsets.only(top: 10),child:RequestCardComponent(
+                                                  request[index],
+                                                  userInfo,
+                                                  false) ,);} else{
                                               return RequestCardComponent(
-                                                  request[index], currentUser);
+                                                  request[index],
+                                                  userInfo,
+                                                  false);}
                                             },
                                           ),
                                           request.length != 0 &&
@@ -342,8 +342,8 @@ class _ViewPostScreenState extends State<Example08>
                               : users.length == 0
                                   ? listIsEmpty()
                                   : Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 15, right: 5, left: 5),
+                                      padding:
+                                          EdgeInsets.only(right: 5, left: 5),
                                       child: Stack(
                                         children: [
                                           GridView.builder(
@@ -362,10 +362,18 @@ class _ViewPostScreenState extends State<Example08>
                                             itemCount: users.length,
                                             itemBuilder: (BuildContext context,
                                                 int index) {
-                                              return userList(users[index]);
+                                              if (index == 0 || index == 1) {
+                                                return Container(
+                                                  margin:
+                                                      EdgeInsets.only(top: 10),
+                                                  child: userList(users[index]),
+                                                );
+                                              } else {
+                                                return userList(users[index]);
+                                              }
                                             },
                                           ),
-                                          users.length != 0 && _isLoadingRequest
+                                          users.length != 0 && _isLoadingUser
                                               ? loadingViewBottom()
                                               : Container()
                                         ],
@@ -537,7 +545,7 @@ class _ViewPostScreenState extends State<Example08>
                 child: data["image"] != null
                     ? CachedNetworkImage(
                         imageUrl: "${data['image']}",
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
                         placeholder: (context, url) {
                           return Shimmer.fromColors(
                             baseColor: Colors.grey[400],
@@ -565,8 +573,44 @@ class _ViewPostScreenState extends State<Example08>
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
+                      margin: EdgeInsets.only(bottom: 0, top: 20),
+                      height: 79,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: data["postPicture"].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.black, width: 3),
+                                  borderRadius: BorderRadius.circular(9)),
+                              margin:
+                                  EdgeInsets.only(bottom: 0, left: 5, top: 40),
+                              width: 39,
+                              child: Opacity(
+                                opacity: 0.9,
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: CachedNetworkImage(
+                                        imageUrl:
+                                            "${data["postPicture"][index]["image"]}",
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) {
+                                          return Container(
+                                            height: double.infinity,
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                color: Colors.black
+                                                    .withOpacity(.5)),
+                                          );
+                                        })),
+                              ),
+                            );
+                          }),
+                    ),
+                    Container(
                       width: double.infinity,
-                      margin: EdgeInsets.only(bottom: 0, left: 15, top: 30),
+                      margin: EdgeInsets.only(bottom: 0, left: 15, top: 4),
                       child: Text(
                         "${data['username']}",
                         style: TextStyle(color: Colors.white, fontSize: 14),

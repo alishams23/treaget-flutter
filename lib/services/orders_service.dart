@@ -19,7 +19,7 @@ class OrdersService {
 
     if (response.statusCode == 200) {
       var responseBody = json.decode(Utf8Decoder().convert(response.bodyBytes));
-      print(responseBody);
+     
       
       return {"current_page": page, "results": responseBody};
     }
@@ -64,7 +64,7 @@ class OrdersService {
      List serviceOption=[];
     for (var item in data["serviceOption"]) {
       serviceOption.add("${item["id"]}");
-      print(serviceOption);
+
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$website/api/AddOrderApi/${data["author"]["username"]}/');

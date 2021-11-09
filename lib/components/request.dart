@@ -7,8 +7,8 @@ import 'package:treaget/screens/profile.dart';
 class RequestCardComponent extends StatefulWidget {
   var data;
   var userInfo;
-
-  RequestCardComponent(this.data, this.userInfo);
+bool isHome ;
+  RequestCardComponent(this.data, this.userInfo,this.isHome);
 
   @override
   State<StatefulWidget> createState() => RequestCardComponentState();
@@ -16,10 +16,8 @@ class RequestCardComponent extends StatefulWidget {
 
 class RequestCardComponentState extends State<RequestCardComponent> {
   bool isExpandedState = false;
-
   var username;
   var n;
-
   bool checkAcceptRequestBool() {
     for (n in widget.data.subcategories) {
       if (n["author"]["username"] == widget.userInfo["username"]) {
@@ -43,7 +41,7 @@ class RequestCardComponentState extends State<RequestCardComponent> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(23.0),
-          border: Border.all(color: Colors.grey[50]),
+          border: Border.all(color:widget.isHome ? Colors.grey[50]:Colors.grey[200]),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.05),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/components/empty.dart';
 import 'package:treaget/components/loading.dart';
+import 'package:treaget/screens/message/chat.dart';
 import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/orders_service.dart';
 import 'package:treaget/components/loading.dart';
@@ -26,7 +27,7 @@ class StateOrders extends State<Orders> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _getOrder();
+    _getOrder();
   }
 
   _getOrder({int page: 1, bool refresh: false}) async {
@@ -64,8 +65,8 @@ class StateOrders extends State<Orders> {
                       var data = orders[index];
                       bool isAuthor =
                           widget.info["username"] == data["author"]['username']
-                              ? false
-                              : true;
+                              ? true
+                              : false;
                       var imageData = isAuthor
                           ? data["designer"]['image'] != null
                               ? NetworkImage(data["designer"]['image'])
@@ -457,9 +458,14 @@ class StateOrders extends State<Orders> {
                                                       textStyle: TextStyle(
                                                           fontSize: 13,
                                                           fontFamily: "Vazir")),
-                                                  onPressed: () {
-                                                                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
-                                                  },
+                                                    onPressed: () {
+                           
+                            Navigator.of(context).push(
+                            CupertinoPageRoute(
+                                builder: (_) => Messages(
+                                      user: isAuthor ? data["author"] : data["designer"],
+                                    )),
+                          );},
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment

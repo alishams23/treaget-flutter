@@ -103,8 +103,11 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var currentUserUsername = prefs.getString('user.username');
-    currentUser =
+    var currentUserdata =
         await InformationProfileService.getInfo(username: currentUserUsername);
+        setState(() {
+          currentUser = currentUserdata;
+        });
     if (info["ServiceProvider"] == true) {
       _getPost(refresh: refresh);
       _getResume(refresh: refresh);
@@ -323,7 +326,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                         builder: (context) =>
                                                             PostPicture(
                                                           data:
-                                                              _products[index],
+                                                              _products[index],info: currentUser,
                                                         ),
                                                       ));
                                                 },
@@ -397,7 +400,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return RequestCardComponent(
-                                                request[index], currentUser);
+                                                request[index], currentUser,false);
                                           },
                                         ))),
                         favorite.length == 0 && _isLoading
@@ -426,7 +429,7 @@ class ProfileState extends State<Profile> with SingleTickerProviderStateMixin {
                                                       CupertinoPageRoute(
                                                         builder: (context) =>
                                                             PostPicture(
-                                                          data: favorite[index],
+                                                          data: favorite[index],info:currentUser
                                                         ),
                                                       ));
                                                 },

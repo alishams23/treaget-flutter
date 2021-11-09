@@ -21,7 +21,8 @@ class PostPicture extends StatefulWidget {
   Post data;
   var info;
   // ignore: avoid_init_to_null
-  PostPicture({Key key, this.data: null, this.info: null}) : super(key: key);
+  PostPicture({Key key, this.data: null, @required this.info})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() => StatePostPicture();
 }
@@ -72,6 +73,7 @@ class StatePostPicture extends State<PostPicture> {
                             CupertinoPageRoute(
                               builder: (context) => PostPicture(
                                 data: _products[index],
+                                info: widget.info,
                               ),
                             ));
                       },
@@ -392,7 +394,10 @@ class StatePostPicture extends State<PostPicture> {
                     FittedBox(
                       child: FloatingActionButton(
                         heroTag: "btn3",
-                        child: PopupMenuButtonPostPicture(data: widget.data),
+                        child: PopupMenuButtonPostPicture(
+                          data: widget.data,
+                          userInfo: widget.info,
+                        ),
                         onPressed: () {},
                         backgroundColor: Colors.white,
                         elevation: 0,
@@ -473,6 +478,7 @@ class StatePostPicture extends State<PostPicture> {
                                         CupertinoPageRoute(
                                           builder: (context) => PostPicture(
                                             data: _products[index],
+                                            info: widget.info,
                                           ),
                                         ));
                                   },

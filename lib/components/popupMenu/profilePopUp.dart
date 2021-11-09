@@ -15,20 +15,10 @@ class PopupMenuButtonProfile extends StatelessWidget {
     return PopupMenuButton(
       elevation: 50,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: TextButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-            )),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.grey.withOpacity(0.2)),
-          ),
-          child: Icon(
+      child:  Icon(
             LineIcons.horizontalEllipsis,
             color: Colors.black,
-          )),
+          ),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
         currentUser["username"] != userInfo["username"]
             ? PopupMenuItem<String>(

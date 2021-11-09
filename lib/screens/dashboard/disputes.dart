@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treaget/components/empty.dart';
 import 'package:treaget/components/loading.dart';
 
 class Disputes extends StatefulWidget{
@@ -10,7 +11,7 @@ class Disputes extends StatefulWidget{
 class StateDisputes extends State{
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("در حال آپدیت"),);
+    return listIsEmpty();
   }
   
 }

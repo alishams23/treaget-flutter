@@ -339,7 +339,7 @@ class MessageState extends State<Messages> {
                               color: Colors.deepOrange,
                               backgroundColor: Colors.grey[100],
                             ),
-                      backgroundColor: Colors.white.withOpacity(0.9),
+                      backgroundColor: Colors.white,
                       elevation: 7,
                     ),
                   ),
