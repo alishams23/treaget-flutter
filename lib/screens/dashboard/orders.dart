@@ -8,7 +8,7 @@ import 'package:treaget/screens/profile.dart';
 import 'package:treaget/services/orders_service.dart';
 import 'package:treaget/components/loading.dart';
 import 'package:treaget/global.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class Orders extends StatefulWidget {
   Map info = {};
@@ -54,7 +54,6 @@ class StateOrders extends State<Orders> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        
         orders != []
             ? RefreshIndicator(
                 onRefresh: _handleRefresh,
@@ -262,7 +261,10 @@ class StateOrders extends State<Orders> {
                                                           fontSize: 13,
                                                           fontFamily: "Vazir")),
                                                   onPressed: () {
-                                                                ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            snackBarUpdate);
                                                   },
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -294,160 +296,16 @@ class StateOrders extends State<Orders> {
                                                 ),
                                               )
                                             : Container(),
-                                            (data["accept"] == true && (data["safePayment"] == false || data["safePayment"] == null))?
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.green,
-                                                  shadowColor:
-                                                      Colors.transparent,
-                                                  shape:
-                                                      new RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              new BorderRadius
-                                                                      .circular(
-                                                                  13)),
-                                                  textStyle: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Vazir")),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                        builder: (context) {}));
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: 14,
-                                                    child: Icon(
-                                                      Icons.payments_rounded,
-                                                      color: Colors.white,
-                                                      size: 18,
-                                                    ),
-                                                    backgroundColor: Colors
-                                                        .black
-                                                        .withOpacity(0.3),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10)),
-                                                  Text(
-                                                    'پرداخت امن',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            )):Container(),
-                                            (data["accept"] == null && widget.info["username"] != data["author"]["username"])?
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.green,
-                                                  shadowColor:
-                                                      Colors.transparent,
-                                                  shape:
-                                                      new RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              new BorderRadius
-                                                                      .circular(
-                                                                  13)),
-                                                  textStyle: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Vazir")),
-                                              onPressed: () async{
-                                               
-                                                var resultOrder = await OrdersService.orderTrueApi(data["id"]);
-                                               if ( resultOrder == true) _handleRefresh();
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: 14,
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      color: Colors.white,
-                                                      size: 18,
-                                                    ),
-                                                    backgroundColor: Colors
-                                                        .black
-                                                        .withOpacity(0.3),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10)),
-                                                  Text(
-                                                    'تایید سفارش',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            )):Container(),
-                                            data["accept"] == null?
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Colors.red,
-                                                  shadowColor:
-                                                      Colors.transparent,
-                                                  shape:
-                                                      new RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              new BorderRadius
-                                                                      .circular(
-                                                                  13)),
-                                                  textStyle: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Vazir")),
-                                              onPressed: () async{
-                                         
-                                                var resultOrder = await OrdersService.orderFalseApi(data["id"]);
-                                               if ( resultOrder == true) _handleRefresh();
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: 14,
-                                                    child: Icon(
-                                                      LineIcons.times,
-                                                      color: Colors.white,
-                                                      size: 18,
-                                                    ),
-                                                    backgroundColor: Colors
-                                                        .black
-                                                        .withOpacity(0.3),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 10)),
-                                                  Text(
-                                                    'لغو سفارش',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            )):Container(),Padding(
+                                        (data["accept"] == true &&
+                                                (data["safePayment"] == false ||
+                                                    data["safePayment"] ==
+                                                        null))
+                                            ? Padding(
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 5),
                                                 child: ElevatedButton(
                                                   style: ElevatedButton.styleFrom(
-                                                      primary: Colors.grey
-                                                          .withOpacity(0.2),
+                                                      primary: Colors.green,
                                                       shadowColor:
                                                           Colors.transparent,
                                                       shape: new RoundedRectangleBorder(
@@ -458,14 +316,72 @@ class StateOrders extends State<Orders> {
                                                       textStyle: TextStyle(
                                                           fontSize: 13,
                                                           fontFamily: "Vazir")),
-                                                    onPressed: () {
-                           
-                            Navigator.of(context).push(
-                            CupertinoPageRoute(
-                                builder: (_) => Messages(
-                                      user: isAuthor ? data["author"] : data["designer"],
-                                    )),
-                          );},
+                                                  onPressed: () async {
+                                                    var url =
+                                                        'https://treaget.com/account/addSafePaymentOrder/${data["id"]}/';
+                                                    if (await canLaunch(url)) {
+                                                      await launch(url);
+                                                    } else {
+                                                      throw "cant lunch";
+                                                    }
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 14,
+                                                        child: Icon(
+                                                          Icons
+                                                              .payments_rounded,
+                                                          color: Colors.white,
+                                                          size: 18,
+                                                        ),
+                                                        backgroundColor: Colors
+                                                            .black
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 10)),
+                                                      Text(
+                                                        'پرداخت امن',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ))
+                                            : Container(),
+                                        (data["accept"] == null &&
+                                                widget.info["username"] !=
+                                                    data["author"]["username"])
+                                            ? Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      primary: Colors.green,
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      shape: new RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              new BorderRadius
+                                                                      .circular(
+                                                                  13)),
+                                                      textStyle: TextStyle(
+                                                          fontSize: 13,
+                                                          fontFamily: "Vazir")),
+                                                  onPressed: () async {
+                                                    var resultOrder =
+                                                        await OrdersService
+                                                            .orderTrueApi(
+                                                                data["id"]);
+                                                    if (resultOrder == true)
+                                                      _handleRefresh();
+                                                  },
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -474,27 +390,136 @@ class StateOrders extends State<Orders> {
                                                       CircleAvatar(
                                                         radius: 14,
                                                         child: Icon(
-                                                          Icons.chat_bubble_outline,
-                                                          color: Colors.black,
+                                                          Icons.check,
+                                                          color: Colors.white,
                                                           size: 18,
                                                         ),
-                                                        backgroundColor:
-                                                            Colors.grey[100],
+                                                        backgroundColor: Colors
+                                                            .black
+                                                            .withOpacity(0.3),
                                                       ),
                                                       Padding(
                                                           padding:
                                                               EdgeInsets.only(
                                                                   right: 10)),
                                                       Text(
-                                                        'چت کردن',
+                                                        'تایید سفارش',
                                                         style: TextStyle(
                                                             color:
-                                                                Colors.black),
+                                                                Colors.white),
                                                       ),
                                                     ],
                                                   ),
+                                                ))
+                                            : Container(),
+                                        data["accept"] == null
+                                            ? Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      primary: Colors.red,
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      shape: new RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              new BorderRadius
+                                                                      .circular(
+                                                                  13)),
+                                                      textStyle: TextStyle(
+                                                          fontSize: 13,
+                                                          fontFamily: "Vazir")),
+                                                  onPressed: () async {
+                                                    var resultOrder =
+                                                        await OrdersService
+                                                            .orderFalseApi(
+                                                                data["id"]);
+                                                    if (resultOrder == true)
+                                                      _handleRefresh();
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 14,
+                                                        child: Icon(
+                                                          LineIcons.times,
+                                                          color: Colors.white,
+                                                          size: 18,
+                                                        ),
+                                                        backgroundColor: Colors
+                                                            .black
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 10)),
+                                                      Text(
+                                                        'لغو سفارش',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ))
+                                            : Container(),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Colors.grey
+                                                    .withOpacity(0.2),
+                                                shadowColor: Colors.transparent,
+                                                shape:
+                                                    new RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            new BorderRadius
+                                                                .circular(13)),
+                                                textStyle: TextStyle(
+                                                    fontSize: 13,
+                                                    fontFamily: "Vazir")),
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                CupertinoPageRoute(
+                                                    builder: (_) => Messages(
+                                                          user: isAuthor
+                                                              ? data["author"]
+                                                              : data[
+                                                                  "designer"],
+                                                        )),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 14,
+                                                  child: Icon(
+                                                    Icons.chat_bubble_outline,
+                                                    color: Colors.black,
+                                                    size: 18,
+                                                  ),
+                                                  backgroundColor:
+                                                      Colors.grey[100],
                                                 ),
-                                              )
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 10)),
+                                                Text(
+                                                  'چت کردن',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
                                       ],
                                     ))
                               ],
@@ -503,7 +528,8 @@ class StateOrders extends State<Orders> {
                     }),
               )
             : loadingView(),
-        _isLoading == true ? loadingView() : Container(),orders.length == 0 ?listIsEmpty():Container(),
+        _isLoading == true ? loadingView() : Container(),
+        orders.length == 0 ? listIsEmpty() : Container(),
       ],
     );
   }

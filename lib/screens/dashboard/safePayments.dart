@@ -52,7 +52,7 @@ class StateSafePayments extends State<SafePayments> {
                   child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return SafePayment(data: data[index],currntUser: widget.info,);
+                        return SafePayment(data: data[index],currntUser: widget.info,handleRefresh: _handleRefresh,);
                       }),
                 )
               : listIsEmpty(),

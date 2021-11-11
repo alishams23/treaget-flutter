@@ -5,6 +5,7 @@ import 'package:treaget/components/Form.dart';
 import 'package:treaget/services/auth_services.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:double_back_to_close_app/double_back_to_close_app.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -93,7 +94,21 @@ class LoginScreenState extends State<LoginScreen>
                               letterSpacing: 0.5,
                               color: Colors.blue,
                               fontSize: 14),
-                        ),)])
+                        ),)]),Padding(padding: EdgeInsets.only(top: 20),child: GestureDetector(onTap: () async {
+                                  const url = 'https://treaget.com/password_reset/';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    throw "cant lunch";
+                                  }
+                                },child: Text(
+                          "فراموشی رمز عبور",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                              color: Colors.blue,
+                              fontSize: 14),
+                        ),),)
                   ],
                 ),
                 new GestureDetector(

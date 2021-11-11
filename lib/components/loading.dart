@@ -22,6 +22,17 @@ Widget loadingViewCenter() {
   );
 }
 
+Widget loadingViewCenterWhite() {
+  return Center(
+    // alignment: Alignment.topCenter,
+    child: new CircularProgressIndicator(
+    
+    strokeWidth: 2,
+      color: Colors.white,
+      backgroundColor: Colors.transparent,
+    ),
+  );
+}
 
 Widget loadingViewBottom() {
   return Align(

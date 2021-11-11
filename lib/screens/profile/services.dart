@@ -217,6 +217,7 @@ class StateServices extends State<Services> {
                                     // height: 150,
                                     child: ListView.builder(
                                       shrinkWrap: true,
+                                      physics: ClampingScrollPhysics(),
                                       itemCount:
                                           widget.data["serviceOption"].length,
                                       itemBuilder:

@@ -508,7 +508,11 @@ Widget topPage(Map info, currentUser, context, _getInformaion) {
                                           children: [
                                             Expanded(
                                                 flex: 2,
-                                                child: Padding(
+                                                child: Container(
+                                                  height: 40,
+                                                  width: 20,
+                                                  
+                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color: Colors.grey[200]),
                                                     padding: EdgeInsets.only(
                                                         left: 0),
                                                     child:

@@ -5,7 +5,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:treaget/services/cash_service.dart';
 import 'package:treaget/services/desk_service.dart';
 import 'package:treaget/services/global_service.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../global.dart';
 
 Color darkBlue = Colors.deepOrange[600];
@@ -207,8 +207,11 @@ class DashboardMainState extends State<DashboardMain> {
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13.0),side: BorderSide(color: Colors.black.withOpacity(.06))
-                                  )),
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          side: BorderSide(
+                                              color: Colors.black
+                                                  .withOpacity(.06)))),
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.black.withOpacity(0.3)),
                                   backgroundColor: MaterialStateProperty.all(
@@ -216,9 +219,13 @@ class DashboardMainState extends State<DashboardMain> {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBarUpdate);
+                                onPressed: () async {
+                                  const url = 'https://treaget.com/wallet/';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    throw "cant lunch";
+                                  }
                                 },
                                 child: Container(
                                     padding: EdgeInsets.symmetric(
@@ -230,14 +237,14 @@ class DashboardMainState extends State<DashboardMain> {
                         Flexible(
                             child: ElevatedButton(
                                 style: ButtonStyle(
-                                  
                                   shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(13.0),side: BorderSide(color: Colors.black.withOpacity(.06))
-                                  
-                                  )),
-                                  
+                                          borderRadius:
+                                              BorderRadius.circular(13.0),
+                                          side: BorderSide(
+                                              color: Colors.black
+                                                  .withOpacity(.06)))),
                                   shadowColor: MaterialStateProperty.all(
                                       Colors.black.withOpacity(0.3)),
                                   backgroundColor: MaterialStateProperty.all(
@@ -245,9 +252,13 @@ class DashboardMainState extends State<DashboardMain> {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(0)),
                                 ),
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBarUpdate);
+                                onPressed: () async {
+                                  const url = 'https://treaget.com/wallet/';
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    throw "cant lunch";
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
@@ -283,7 +294,6 @@ class DashboardMainState extends State<DashboardMain> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         
                           Text(
                             "نسخه اولیه تریگت در دسترس شما می باشد",
                             style: TextStyle(color: Colors.grey),
@@ -309,9 +319,10 @@ class DashboardMainState extends State<DashboardMain> {
                         }),
                         Padding(padding: EdgeInsets.symmetric(horizontal: 5)),
                         cardDesk(LineIcons.handshake, {
-                          
                           "text": "درخواست",
-                          "number": data['numberRequest'] == null ? '0':"${data['numberRequest']}"
+                          "number": data['numberRequest'] == null
+                              ? '0'
+                              : "${data['numberRequest']}"
                         }),
                       ],
                     )

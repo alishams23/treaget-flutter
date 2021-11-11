@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:treaget/components/popupMenu/postRequestPopup.dart';
 import 'package:treaget/screens/add/acceptRequest.dart';
 import 'package:treaget/screens/profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RequestCardComponent extends StatefulWidget {
   var data;
   var userInfo;
-bool isHome ;
-  RequestCardComponent(this.data, this.userInfo,this.isHome);
+  bool isHome;
+  RequestCardComponent(this.data, this.userInfo, this.isHome);
 
   @override
   State<StatefulWidget> createState() => RequestCardComponentState();
@@ -41,7 +42,8 @@ class RequestCardComponentState extends State<RequestCardComponent> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(23.0),
-          border: Border.all(color:widget.isHome ? Colors.grey[50]:Colors.grey[200]),
+          border: Border.all(
+              color: widget.isHome ? Colors.grey[50] : Colors.grey[200]),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.05),
@@ -125,7 +127,10 @@ class RequestCardComponentState extends State<RequestCardComponent> {
               textDirection: TextDirection.rtl,
             ),
           ),
-          Text(widget.data.body,style: TextStyle(fontSize: 14),),
+          Text(
+            widget.data.body,
+            style: TextStyle(fontSize: 14),
+          ),
           Padding(padding: EdgeInsets.only(bottom: 10)),
           ExpansionPanelList(
             elevation: 0,
@@ -136,7 +141,6 @@ class RequestCardComponentState extends State<RequestCardComponent> {
             },
             children: [
               ExpansionPanel(
-              
                 headerBuilder: (BuildContext context, bool isExpanded) {
                   return Row(
                     // mainAxisAlignment: MainAxisAlignment.end,
@@ -149,7 +153,8 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(color: Colors.grey[200])),
                         child: Text(
-                          "  پیشنهاد ${widget.data.subcategories.length}",style: TextStyle(fontSize: 12),
+                          "  پیشنهاد ${widget.data.subcategories.length}",
+                          style: TextStyle(fontSize: 12),
                         ),
                       ),
                       (widget.userInfo != null &&
@@ -181,7 +186,8 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                                 padding: EdgeInsets.symmetric(horizontal: 20),
                                 child: Text(
                                   "قبول درخواست  ",
-                                  style: TextStyle(color: Colors.black,fontSize: 11),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 11),
                                 ),
                               ),
                             )
@@ -193,12 +199,41 @@ class RequestCardComponentState extends State<RequestCardComponent> {
                 },
                 body: widget.data.subcategories.length != 0
                     ? Container(
-                        height: 300,
+                        // height: 300,
                         child: ListView.builder(
                           shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
                           itemCount: widget.data.subcategories.length,
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
+                              trailing: widget.data.author["username"] ==
+                                      widget.userInfo["username"]
+                                  ? GestureDetector(
+                                      onTap: () async {
+                                        print(widget.data.id);
+                                        var url =
+                                            'https://treaget.com/account/createSafePayment/${widget.data.id}/${widget.data.subcategories[index]["id"]}';
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        } else {
+                                          throw "cant lunch";
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 2),
+                                        child: Text(
+                                          "ایجاد پرداخت امن  ",
+                                          style: TextStyle(fontSize: 13),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey[300]),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
+                                    )
+                                  : Text(""),
                               title: Text(
                                   '${widget.data.subcategories[index]["time"]}'),
                               subtitle: Text(

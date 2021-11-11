@@ -22,7 +22,7 @@ class SafePaymentService {
     }
   }
 
-  static Future<Map> accept({var pk}) async {
+  static Future<bool> accept({var pk}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$website/api/AcceptSafePaymentApi/?pk=$pk');
     String token = prefs.getString('user.api_token');
@@ -32,12 +32,13 @@ class SafePaymentService {
       "Authorization": "Token $token"
     });
     if (response.statusCode == 200) {
-      return {"result": true};
+      return  true;
     } else {
-      return {"result": false};
+      return  false;
     }
   }
-   static Future<Map> refuse({var pk}) async {
+   static Future<bool> refuse({var pk}) async {
+     
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var url = Uri.parse('$website/api/RefuseSafePaymentApi/?pk=$pk');
     String token = prefs.getString('user.api_token');
@@ -47,9 +48,9 @@ class SafePaymentService {
       "Authorization": "Token $token"
     });
     if (response.statusCode == 200) {
-      return {"result": true};
+      return  true;
     } else {
-      return {"result": false};
+      return  false;
     }
   }
 }
