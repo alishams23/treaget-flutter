@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
+      // ignore: missing_return
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case '/home':

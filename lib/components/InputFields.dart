@@ -26,10 +26,10 @@ class InputFieldArea extends StatelessWidget {
         //   color: Colors.white
         // ),
         decoration: new InputDecoration(
-            icon: new Icon(
+            icon: icon != null ? Icon(
               icon,
               color: Colors.black,
-            ),
+            ):null,
             enabledBorder: new OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: new BorderSide(color: Colors.grey[300])),

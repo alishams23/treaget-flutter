@@ -112,18 +112,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       child: CachedNetworkImage(
                           imageUrl: "${productsData.image}",
                           fit: BoxFit.fitHeight,
-                          placeholder: (context, url) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[400],
-                              highlightColor: Colors.white,
-                              enabled: true,
-                              child: Container(
-                                height: 200,
-                                color: Colors.grey.withOpacity(0.2),
-                                // width: 100,
-                              ),
-                            );
-                          }),
+                          ),
                     ),
                     Positioned(
                       right: 0,

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.treaget">
+    package="com.treaget.treaget">
    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="treaget"
+        android:label="تریگت"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

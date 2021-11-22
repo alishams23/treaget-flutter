@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treaget/components/InputFields.dart';
+import 'package:treaget/screens/rules.dart';
 import 'package:treaget/services/auth_services.dart';
 import 'package:treaget/services/orders_service.dart';
 import 'package:treaget/services/request_service.dart';
@@ -31,14 +32,19 @@ class RegisterState extends State<Register> {
     return null;
   }
 
-sendDataForLogin() async {
-    Map response = await  AuthService.register(username: username,password: password,serviceProvider:serviceProvider,firstName: firstName,lastName: lastName,email: emailName);
+  sendDataForLogin() async {
+    Map response = await AuthService.register(
+        username: username,
+        password: password,
+        serviceProvider: serviceProvider,
+        firstName: firstName,
+        lastName: lastName,
+        email: emailName);
     print(response["data"]['token']);
     if (response["data"]['token'] != null) {
       await storeUserData(response, username);
       Navigator.pushNamedAndRemoveUntil(context, "/home", (_) => false);
     } else {
-     
       ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
           content: new Text(
         "مشکلی در ثبت نام به وجود آمد لطفا فیلد ها را به درستی وارد کنید",
@@ -46,11 +52,13 @@ sendDataForLogin() async {
       )));
     }
   }
-storeUserData(Map userData, username) async {
+
+  storeUserData(Map userData, username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('user.api_token', userData["data"]['token']);
     await prefs.setString('user.username', username);
   }
+
   @override
   Widget build(BuildContext context) {
     var page = MediaQuery.of(context).size;
@@ -76,9 +84,11 @@ storeUserData(Map userData, username) async {
                           Container(
                             margin: const EdgeInsets.only(bottom: 10),
                             child: TextFormField(
-                                onSaved: (var value) {setState(() {
-                                  username = value;
-                                });},
+                                onSaved: (var value) {
+                                  setState(() {
+                                    username = value;
+                                  });
+                                },
                                 obscureText: false,
                                 keyboardType: TextInputType.text,
                                 textCapitalization:
@@ -119,17 +129,16 @@ storeUserData(Map userData, username) async {
                                   String pattern = r'^[0-9a-z]+$';
                                   RegExp regExp = new RegExp(pattern);
                                   if (!regExp.hasMatch(value)) {
-                                    return 'نام کاربری وارد شده معتبر نیست';
+                                    return '  نام کاربری باید فقط شامل حروف انگلیسی کوچک باشد';
                                   }
                                   return null;
-
                                 }),
                           ),
                           new InputFieldArea(
                             hint: "پسورد",
                             obscure: true,
                             icon: Icons.lock_open,
-                            onSaved: (var value){
+                            onSaved: (var value) {
                               setState(() {
                                 password = value;
                               });
@@ -144,9 +153,9 @@ storeUserData(Map userData, username) async {
                             hint: "ایمیل",
                             obscure: false,
                             icon: Icons.email_rounded,
-                            onSaved: (var value){
+                            onSaved: (var value) {
                               setState(() {
-                                emailName =value;
+                                emailName = value;
                               });
                             },
                             validator: (String value) {
@@ -155,11 +164,11 @@ storeUserData(Map userData, username) async {
                               }
                             },
                           ),
-                          new InputFieldArea(
+                          Row(children: [Expanded(flex: 5,child: new InputFieldArea(
                             hint: "نام",
                             obscure: false,
                             icon: Icons.person_outline,
-                            onSaved: (var value){
+                            onSaved: (var value) {
                               setState(() {
                                 firstName = value;
                               });
@@ -169,12 +178,12 @@ storeUserData(Map userData, username) async {
                                 return 'این فیلد اجباری است';
                               }
                             },
-                          ),
-                          new InputFieldArea(
+                          )),Expanded(flex: 5,child: 
+                        Padding(padding: EdgeInsets.only(right: 5),child:   new InputFieldArea(
                             hint: "نام خانوادگی",
                             obscure: false,
-                            icon: Icons.person_outline,
-                            onSaved: (var value){
+                            // icon: Icons.person_outline,
+                            onSaved: (var value) {
                               lastName = value;
                             },
                             validator: (String value) {
@@ -182,7 +191,7 @@ storeUserData(Map userData, username) async {
                                 return 'این فیلد اجباری است';
                               }
                             },
-                          ),
+                          ),),)],)
                         ],
                       ),
                     ),
@@ -232,14 +241,26 @@ storeUserData(Map userData, username) async {
                         padding: EdgeInsets.only(bottom: 20),
                         child: Column(
                           children: [
-                            Text(
-                              "کلیک روی ساخت اکانت به معنای موافقت با قوانین است",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  letterSpacing: 0.5,
-                                  color: Colors.black,
-                                  fontSize: 14),
+            
+                             GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => Scaffold(
+                                              body: Rules(),
+                                              backgroundColor: Colors.white,
+                                            )));
+                              },
+                              child: Text(
+                                " ادامه عملیات به معنی پذیرش قوانین خدمات و حریم خصوصیست",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    // color: Colors.blueGrey,
+                                    fontSize: 12),
+                              ),
                             ),
+                            Padding(padding: EdgeInsets.only(top: 20)),
                             new Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -281,9 +302,9 @@ storeUserData(Map userData, username) async {
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.all(0)),
                               ),
-                              onPressed: () async{
+                              onPressed: () async {
                                 if (formKey.currentState.validate()) {
-                                   formKey.currentState.save();
+                                  formKey.currentState.save();
                                   await sendDataForLogin();
                                 }
                               },

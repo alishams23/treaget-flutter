@@ -1,4 +1,4 @@
-package com.example.treaget
+package com.treaget.treaget
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -547,19 +547,10 @@ class _ViewPostScreenState extends State<Example08>
                         imageUrl: "${data['image']}",
                         fit: BoxFit.cover,
                         placeholder: (context, url) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[400],
-                            highlightColor: Colors.white,
-                            enabled: true,
-                            child: Container(
-                              height: 200,
-                              color: Colors.grey.withOpacity(0.2),
-                              // width: 100,
-                            ),
-                          );
+                          return Container(width: double.infinity,height: double.infinity,color: Colors.grey[50],);
                         })
                     : Image(
-                        image: AssetImage(("assets/images/avatar.png")),
+                        image: AssetImage("assets/images/avatar.png"),
                       )),
             Positioned(
               right: 0,
