@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/models/home_model.dart';
+import 'package:treaget/screens/add/addSpam.dart';
 import 'package:treaget/services/request_service.dart';
 
 class PopupMenuButtonPostRequest extends StatelessWidget {
@@ -36,9 +37,32 @@ class PopupMenuButtonPostRequest extends StatelessWidget {
             Clipboard.setData(ClipboardData(text: "treaget.com/request/${data.id}/"));
              ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-        ),
-        // const PopupMenuDivider(),
-        userInfo["username"] == data.author["username"]?
+        ),userInfo["username"] != data.author["username"]?PopupMenuItem<String>(
+          child: ListTile(
+            leading: const Icon(
+              Icons.error,
+              color: Colors.black,
+            ),
+            title: Text(
+              "گزارش تخلف",
+              style: TextStyle(color: Colors.black),
+              textDirection: TextDirection.rtl,
+            ),
+          ),
+          onTap: () {
+            Future.delayed(
+                const Duration(seconds: 0),
+                () => showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(23.0))),
+                        child: AddSpam(request:data.id ,),
+                      ),
+                    ));
+          },
+        ):
         PopupMenuItem<String>(
           child: ListTile(
             leading: const Icon(
@@ -54,7 +78,7 @@ class PopupMenuButtonPostRequest extends StatelessWidget {
             result = await RequestApi.remove(id:data.id );
             if(result["result"] == true)Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
           },
-        ):null,
+        )
       ],
     );
   }

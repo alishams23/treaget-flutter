@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:treaget/global.dart';
 import 'package:treaget/screens/add/addOrder.dart';
+import 'package:treaget/screens/add/addSpam.dart';
 import 'package:treaget/screens/message/chat.dart';
 
 class PopupMenuButtonProfile extends StatelessWidget {
@@ -93,7 +94,33 @@ class PopupMenuButtonProfile extends StatelessWidget {
               textDirection: TextDirection.rtl,
             ),
           ),
-        ),
+        ),currentUser["username"] != userInfo["username"]
+            ?PopupMenuItem<String>(
+          child: ListTile(
+            leading: const Icon(
+              Icons.error,
+              color: Colors.black,
+            ),
+            title: Text(
+              "گزارش تخلف",
+              style: TextStyle(color: Colors.black),
+              textDirection: TextDirection.rtl,
+            ),
+          ),
+          onTap: () {
+            Future.delayed(
+                const Duration(seconds: 0),
+                () => showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(23.0))),
+                        child: AddSpam(user:userInfo["pk"] ,),
+                      ),
+                    ));
+          },
+        ):null
       ],
     );
   }

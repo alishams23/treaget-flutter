@@ -2,39 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:treaget/models/home_model.dart';
+import 'package:treaget/screens/add/addSpam.dart';
 import 'package:treaget/services/Picture_service.dart';
-
-
 
 // ignore: must_be_immutable
 class PopupMenuButtonPostPicture extends StatefulWidget {
   Post data;
   var userInfo;
-  PopupMenuButtonPostPicture({this.data,this.userInfo});
+  PopupMenuButtonPostPicture({this.data, this.userInfo});
 
   @override
   State<StatefulWidget> createState() {
-    
     return PopupMenuButtonPostPictureState();
   }
- 
 }
 
-
-class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>{
+class PopupMenuButtonPostPictureState
+    extends State<PopupMenuButtonPostPicture> {
   final snackBar = SnackBar(content: Text('کپی شد'));
   var result;
- @override
+  @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
       elevation: 20,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(padding: EdgeInsets.all(8),child: Icon(
-        Icons.more_horiz,
-        color: Colors.black,
-      ),),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        child: Icon(
+          Icons.more_horiz,
+          color: Colors.black,
+        ),
+      ),
       itemBuilder: (context) => <PopupMenuEntry<String>>[
-        
         PopupMenuItem<String>(
           child: ListTile(
             leading: const Icon(
@@ -46,31 +45,63 @@ class PopupMenuButtonPostPictureState extends State <PopupMenuButtonPostPicture>
               textDirection: TextDirection.rtl,
             ),
           ),
-          onTap: (){
-            Clipboard.setData(ClipboardData(text: "treaget.com/account/post/${widget.data.id}/"));
-             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+          onTap: () {
+            Clipboard.setData(ClipboardData(
+                text: "treaget.com/account/post/${widget.data.id}/"));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
-        ),
-        // const PopupMenuDivider(),
-        (widget.userInfo != null && widget.userInfo["username"] == widget.data.author["username"]) ?
-        PopupMenuItem<String>(
+        ),!(widget.userInfo != null &&
+                widget.userInfo["username"] == widget.data.author["username"])
+            ?PopupMenuItem<String>(
           child: ListTile(
             leading: const Icon(
-              Icons.delete,
-              color: Colors.red,
+              Icons.error,
+              color: Colors.black,
             ),
             title: Text(
-              "حذف",
-              style: TextStyle(color: Colors.red),
+              "گزارش تخلف",
+              style: TextStyle(color: Colors.black),
               textDirection: TextDirection.rtl,
             ),
           ),
-          onTap: () async{
-            result = await PictureApi.removePicture(id:widget.data.id );
-            if(result["result"] == true)Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+          onTap: () {
+            Future.delayed(
+                const Duration(seconds: 0),
+                () => showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(23.0))),
+                        child: AddSpam(picture:widget.data.id ,),
+                      ),
+                    ));
           },
-        ):null,
+        ): null,
+        // const PopupMenuDivider(),
+        (widget.userInfo != null &&
+                widget.userInfo["username"] == widget.data.author["username"])
+            ? PopupMenuItem<String>(
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  title: Text(
+                    "حذف",
+                    style: TextStyle(color: Colors.red),
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+                onTap: () async {
+                  result = await PictureApi.removePicture(id: widget.data.id);
+                  if (result["result"] == true)
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (_) => false);
+                },
+              )
+            : null,
+        
       ],
     );
   }
